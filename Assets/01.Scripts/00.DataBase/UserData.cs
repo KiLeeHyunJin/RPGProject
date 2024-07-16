@@ -1,36 +1,64 @@
 using System;
+using System.Collections.Generic;
+
 [Serializable]
 public class UserData
 {
-    public string NickName;
-    public int DeathCount;
-    public int KillCount;
-    public int AssistCount;
-    public int Level;
-    public int PlayCount;
-    public string profileImageName;
-    public int win;
-    public int lose;
-    public UserData()
+    [Serializable]
+    public class User
     {
-        this.NickName = "non";
-        this.profileImageName = null;
-        this.Level = 1;
-        this.DeathCount = 0;
-        this.KillCount = 0;
-        this.PlayCount = 0;
-        this.win = 0;
-        this.lose = 0;
-    }
-    public float GetWinRate()
-    {
-        int totalGames = win + lose;
-        if (totalGames == 0)
+        public Dictionary<string, Character> characters;
+
+        public User()
         {
-            return 0f;
+            characters = new Dictionary<string, Character>();
         }
-        float winRate = (float)win / totalGames * 100;
-        return (float)Math.Round(winRate, 2);
+    }
+
+    [Serializable]
+    public class Character
+    {
+        public Ability ability;
+        public string job;
+        public Inventory inventory;
+        public int level;
+        public string nickName;
+        public string skill;
+
+        public Character()
+        {
+            ability = new Ability();
+            inventory = new Inventory();
+        }
+    }
+
+    [Serializable]
+    public class Ability
+    {
+        public float accuracy;
+        public float atckPower;
+        public float atckSpeed;
+        public float defence;
+        public float jumpPower;
+        public float magicPower;
+        public float moveSpeed;
+        public int point;
+    }
+
+    [Serializable]
+    public class Inventory
+    {
+        public List<Item> consume;
+        public List<Item> ect;
+        public List<Item> equip;
+        public List<Item> money;
+    }
+
+    [Serializable]
+    public class Item
+    {
+        public string itemName;
+        public int itemCount;
     }
 }
 

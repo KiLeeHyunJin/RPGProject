@@ -1,8 +1,6 @@
-using Firebase;
 using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Extensions;
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,8 +16,8 @@ public class CreateNamePanel : MonoBehaviour
 
     protected void Awake()
     {
-        nameApplyButton.onClick.AddListener(NameApply); //´Ğ³×ÀÓ ¼³Á¤ ¹öÆ°¿¡ ´Ğ³×ÀÓ º¯°æ ½Ãµµ ÇÔ¼ö¸¦ ¿¬°á
-        backButton.onClick.AddListener(Back); //³ª°¡±â ¹öÆ°¿¡ ³ª°¡±â ÇÔ¼ö¸¦ ¿¬°á
+        nameApplyButton.onClick.AddListener(NameApply); //ë‹‰ë„¤ì„ ì„¤ì • ë²„íŠ¼ì— ë‹‰ë„¤ì„ ë³€ê²½ ì‹œë„ í•¨ìˆ˜ë¥¼ ì—°ê²°
+        backButton.onClick.AddListener(Back); //ë‚˜ê°€ê¸° ë²„íŠ¼ì— ë‚˜ê°€ê¸° í•¨ìˆ˜ë¥¼ ì—°ê²°
     }
 
     private void NameApply()
@@ -36,11 +34,11 @@ public class CreateNamePanel : MonoBehaviour
             .Child("name")
             .GetValueAsync().ContinueWithOnMainThread(task =>
             {
-                if(task.IsCanceled)
+                if (task.IsCanceled)
                 {
                     return;
                 }
-                else if(task.IsFaulted)
+                else if (task.IsFaulted)
                 {
                     return;
                 }
@@ -51,17 +49,17 @@ public class CreateNamePanel : MonoBehaviour
 
 
 
-        FireBaseManager.Auth.CurrentUser.UpdateUserProfileAsync(profile).ContinueWithOnMainThread(task => 
+        FireBaseManager.Auth.CurrentUser.UpdateUserProfileAsync(profile).ContinueWithOnMainThread(task =>
         {
-            if(task.IsCanceled)
+            if (task.IsCanceled)
             {
-                Utils.ShowInfo("´Ğ³×ÀÓ ¼³Á¤ÀÌ Ãë¼ÒµÇ¾ú½À´Ï´Ù.");
+                Utils.ShowInfo("ë‹‰ë„¤ì„ ì„¤ì •ì´ ì·¨ì†Œë˜ì—ˆìŠµë‹ˆë‹¤.");
                 SetInteractable(true);
                 return;
             }
-            if(task.IsFaulted)
+            if (task.IsFaulted)
             {
-                Utils.ShowError(task.Exception.InnerExceptions, "´Ğ³×ÀÓ ¼³Á¤ÀÌ ½ÇÆĞÇÏ¿´½À´Ï´Ù.");
+                Utils.ShowError(task.Exception.InnerExceptions, "ë‹‰ë„¤ì„ ì„¤ì •ì´ ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤.");
                 SetInteractable(true);
                 return;
             }
@@ -70,7 +68,7 @@ public class CreateNamePanel : MonoBehaviour
             .Child("name")
             .SetRawJsonValueAsync(JsonUtility.ToJson(nickName));
 
-            Utils.ShowInfo("´Ğ³×ÀÓ ¼³Á¤ÀÌ ¼º°øµÇ¾ú½À´Ï´Ù.");
+            Utils.ShowInfo("ë‹‰ë„¤ì„ ì„¤ì •ì´ ì„±ê³µë˜ì—ˆìŠµë‹ˆë‹¤.");
             SetInteractable(true);
         });
     }
@@ -78,8 +76,8 @@ public class CreateNamePanel : MonoBehaviour
 
     private void Back()
     {
-        if(FireBaseManager.Auth.CurrentUser.DisplayName.IsNullOrEmpty())
-            Utils.ShowInfo("´Ğ³×ÀÓÀ» ÀÔ·ÂÇØÁÖ¼¼¿ä.");
+        if (FireBaseManager.Auth.CurrentUser.DisplayName.IsNullOrEmpty())
+            Utils.ShowInfo("ë‹‰ë„¤ì„ì„ ì…ë ¥í•´ì£¼ì„¸ìš”.");
         else
         {
             gameObject.SetActive(false);
@@ -94,17 +92,17 @@ public class CreateNamePanel : MonoBehaviour
         {
             if (task.IsCanceled)
             {
-                Utils.ShowInfo("°èÁ¤ »èÁ¦°¡ Ãë¼ÒµÇ¾ú½À´Ï´Ù.");
+                Utils.ShowInfo("ê³„ì • ì‚­ì œê°€ ì·¨ì†Œë˜ì—ˆìŠµë‹ˆë‹¤.");
                 SetInteractable(true);
                 return;
             }
             if (task.IsFaulted)
             {
-                Utils.ShowError(task.Exception.InnerExceptions, "°èÁ¤ »èÁ¦°¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù..");
+                Utils.ShowError(task.Exception.InnerExceptions, "ê³„ì • ì‚­ì œê°€ ì‹¤íŒ¨í•˜ì˜€ìŠµë‹ˆë‹¤..");
                 SetInteractable(true);
                 return;
             }
-            Utils.ShowInfo("°èÁ¤ »èÁ¦°¡ ¿Ï·áµÇ¾ú½À´Ï´Ù.");
+            Utils.ShowInfo("ê³„ì • ì‚­ì œê°€ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.");
             SetInteractable(true);
             FireBaseManager.Auth.SignOut();
             //panelController.SetActivePanel(LoginPanelController.Panel.Login);
