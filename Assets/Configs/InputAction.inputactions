@@ -1,0 +1,24 @@
+{
+    "name": "InputAction",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "1830f6d1-f8f7-4bfd-8325-c7c02813af95",
+            "actions": [],
+            "bindings": []
+        },
+        {
+            "name": "UI",
+            "id": "c36cd979-9ce4-4602-a8ef-3d44bc1488dd",
+            "actions": [],
+            "bindings": []
+        },
+        {
+            "name": "Camera",
+            "id": "8337ab03-1912-486c-9e02-2706fe49368c",
+            "actions": [],
+            "bindings": []
+        }
+    ],
+    "controlSchemes": []
+}
