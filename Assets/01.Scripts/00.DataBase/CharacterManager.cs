@@ -13,7 +13,7 @@ public class CharacterManager : MonoBehaviour
     public Text resultText;
 
     private FireBaseManager databaseManager;
-
+    const int defaultSlotCount = 10;
     void Start()
     {
         databaseManager = FindObjectOfType<FireBaseManager>();
@@ -35,7 +35,7 @@ public class CharacterManager : MonoBehaviour
         int characterLevel = int.Parse(characterLevelInputField.text);
         string characterClass = characterClassInputField.text;
 
-        Character character = new Character
+        Character character = new()
         {
             nickName = characterName,
             level = characterLevel,
@@ -53,10 +53,10 @@ public class CharacterManager : MonoBehaviour
             },
             inventory = new Inventory
             {
-                consume = 10,
-                ect = 5,
-                equip = 3,
-                money = 1000
+                consume = new(new Item[]{ new(), new(), new(), new(), new(), new(), new(), new(), new() }),
+                ect = new(defaultSlotCount),
+                equip = new(defaultSlotCount),
+                money = new(defaultSlotCount)
             },
             skill = "Basic Attack"
         };

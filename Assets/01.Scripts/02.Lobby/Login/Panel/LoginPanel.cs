@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using WebSocketSharp;
 using System;
+using static UserData;
 
 public class LoginPanel : MonoBehaviour
 {
@@ -18,19 +19,18 @@ public class LoginPanel : MonoBehaviour
     [SerializeField] Button resetPasswordButton; //비밀번호 재설정 버튼
 
 
-    protected void Awake()
+    private void Awake()
     {
         signUpButton.onClick.AddListener(SignUp);
         loginButton.onClick.AddListener(Login);
         resetPasswordButton.onClick.AddListener(ResetPassword);
     }
-
-    private void OnEnable()
+    private void Start()
     {
         SetInteractable(true);
     }
 
-    public void SignUp()
+    private void SignUp()
     {
         Manager.UI.ShowPopUpUI($"SignUp");
     }
@@ -40,7 +40,7 @@ public class LoginPanel : MonoBehaviour
         Manager.UI.ShowPopUpUI($"Reset");
     }
 
-    public void Login()
+    private void Login()
     {
         string id = emailInputField.text;
         string pw = passInputField.text;
