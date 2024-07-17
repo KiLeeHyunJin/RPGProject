@@ -3,19 +3,32 @@ using Firebase.Extensions;
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CreateCharacter : MonoBehaviour
 {
     [SerializeField] UserData.Stat stat;
-    [SerializeField] string nickName;
     [SerializeField] string userId;
-    
+    [SerializeField] string nickName;
+
+    [SerializeField] Button create;
+    [SerializeField] Button remove;
+    [SerializeField] Button check;
+
+    private void Start()
+    {
+        create.onClick.AddListener(CreateCharacterData);
+        remove.onClick.AddListener(RemoveCharacterData);
+        check.onClick.AddListener(CheckCharacterNickName);
+    }
+
+
     void InitUserId()
     {
         userId = FireBaseManager.Auth.CurrentUser.UserId;
     }
 
-    async void CheckNickName()
+    async void CheckCharacterNickName()
     {
         bool usernameExists = await CheckIfUsernameExists(nickName);
         string msg = usernameExists ? "사용할 수 없는 닉네임입니다." : "사용가능한 닉네임입니다.";
@@ -50,9 +63,9 @@ public class CreateCharacter : MonoBehaviour
     {
         // 삭제할 경로 지정
         DatabaseReference characterRef = 
-            FireBaseManager.DB.RootReference.Child(Define.User).Child(userId).Child(Define.Character).Child(nickName);
+            FireBaseManager.DB.GetReference(Define.User).Child(userId).Child(Define.Character).Child(nickName);
         DatabaseReference nameRef = 
-            FireBaseManager.DB.RootReference.Child(Define.SearchNickName).Child(Define.UseNickName).Child(nickName);
+            FireBaseManager.DB.GetReference(Define.SearchNickName).Child(Define.UseNickName).Child(nickName);
 
         characterRef?.RemoveValueAsync();
         nameRef?.RemoveValueAsync();

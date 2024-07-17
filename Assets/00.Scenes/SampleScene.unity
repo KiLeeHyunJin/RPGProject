@@ -1651,6 +1651,9 @@ MonoBehaviour:
     luk: 4
   nickName: Ryuseungone
   userId: 12
+  create: {fileID: 130727156}
+  remove: {fileID: 1792579263}
+  check: {fileID: 1462389439}
 --- !u!1 &1408229850
 GameObject:
   m_ObjectHideFlags: 0
