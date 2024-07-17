@@ -24,6 +24,7 @@ public class UserData
         public int level;
         public string nickName;
         public string skill;
+        public Stat stat;
 
         public Character()
         {
@@ -46,6 +47,15 @@ public class UserData
     }
 
     [Serializable]
+    public class Stat
+    {
+        public int str;
+        public int def;
+        public int man;
+        public int luk;
+    }
+
+    [Serializable]
     public class Inventory
     {
         public List<Item> consume;
@@ -60,5 +70,13 @@ public class UserData
         public string itemName;
         public int itemCount;
     }
+
+    [Serializable]
+    public class Name
+    {
+        public string nickName;
+        public string userId;
+    }
+
 }
 

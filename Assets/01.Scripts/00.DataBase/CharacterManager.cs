@@ -12,18 +12,12 @@ public class CharacterManager : MonoBehaviour
     public InputField characterLevelInputField;
     public Text resultText;
 
-    private FireBaseManager databaseManager;
     const int defaultSlotCount = 10;
-    void Start()
-    {
-        databaseManager = FindObjectOfType<FireBaseManager>();
-    }
-
     public void OnCreateAccountButtonClicked()
     {
         string userId = System.Guid.NewGuid().ToString();
         User user = new User();
-        databaseManager.SaveUser(userId, user);
+        Manager.FireBase.SaveUser(userId, user);
         resultText.text = "Account created.";
     }
 
@@ -51,9 +45,16 @@ public class CharacterManager : MonoBehaviour
                 moveSpeed = 3.0f,
                 point = 100
             },
+            stat = new Stat
+            {
+                str = 4,
+                def = 4,
+                man = 4,
+                luk = 4
+            },
             inventory = new Inventory
             {
-                consume = new(new Item[]{ new(), new(), new(), new(), new(), new(), new(), new(), new() }),
+                consume = new(defaultSlotCount),
                 ect = new(defaultSlotCount),
                 equip = new(defaultSlotCount),
                 money = new(defaultSlotCount)
@@ -61,14 +62,15 @@ public class CharacterManager : MonoBehaviour
             skill = "Basic Attack"
         };
 
-        databaseManager.SaveCharacter(userId, characterId, character);
+        Manager.FireBase.SaveCharacter(userId, characterId, character);
         resultText.text = "Character created.";
     }
 
     public void OnLoadUserButtonClicked()
     {
         string userId = "<user-id>"; // 로그인한 사용자 ID를 사용
-        databaseManager.LoadUser(userId, (user) => {
+        Manager.FireBase.LoadUser(userId, (user) => 
+        {
             if (user != null)
             {
                 // user 데이터를 사용하여 UI 업데이트
@@ -85,7 +87,8 @@ public class CharacterManager : MonoBehaviour
     {
         string userId = "<user-id>"; // 로그인한 사용자 ID를 사용
         string characterId = "<character-id>"; // 불러올 캐릭터 ID
-        databaseManager.LoadCharacter(userId, characterId, (character) => {
+        Manager.FireBase.LoadCharacter(userId, characterId, (character) => 
+        {
             if (character != null)
             {
                 // character 데이터를 사용하여 UI 업데이트

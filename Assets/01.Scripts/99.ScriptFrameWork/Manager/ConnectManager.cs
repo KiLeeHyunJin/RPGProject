@@ -9,6 +9,9 @@ public class ConnectManager : MonoBehaviourPunCallbacks
     //public enum Panel { Login, Menu, Lobby}
 
     [SerializeField] GameObject loginPanel;
+    [SerializeField] GameObject channalPanel;
+    [SerializeField] GameObject selectCharacterPanel;
+    [SerializeField] GameObject creatCharacterPanel;
 
     new AudioSource audio;
     private ClientState state;
