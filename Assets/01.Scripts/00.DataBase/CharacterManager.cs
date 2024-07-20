@@ -11,7 +11,7 @@ public class CharacterManager : MonoBehaviour
     public Text resultText;
 
     const int defaultSlotCount = 10;
-    public void OnCreateAccountButtonClicked()
+    public void OnCreateGuestAccount()
     {
         string userId = System.Guid.NewGuid().ToString();
         User user = new User();
@@ -19,7 +19,7 @@ public class CharacterManager : MonoBehaviour
         resultText.text = "Account created.";
     }
 
-    public void OnCreateCharacterButtonClicked()
+    public void OnCreateCharacter()
     {
         string userId = "<user-id>"; // 로그인한 사용자 ID를 사용
         string characterId = System.Guid.NewGuid().ToString();
@@ -55,7 +55,7 @@ public class CharacterManager : MonoBehaviour
                 consume = new(defaultSlotCount),
                 ect = new(defaultSlotCount),
                 equip = new(defaultSlotCount),
-                money = new(defaultSlotCount)
+                money = default
             },
             skill = "Basic Attack"
         };

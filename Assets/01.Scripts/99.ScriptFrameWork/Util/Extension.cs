@@ -9,16 +9,16 @@ namespace UnityEngine
     public static class Extension
     {
 
-        public static void FontInit(this GameObject obj, Define.Font font)
-        {
-            //TMP_FontAsset fontAsset = font switch
-            //{
-            //    Define.Font.MBold => Manager.Resource.FontBold,
-            //    Define.Font.MLight => Manager.Resource.FontLight,
-            //    _ => null,
-            //};
-            //FontRecursion(obj.transform, fontAsset);
-        }
+        //public static void FontInit(this GameObject obj, Define.Font font)
+        //{
+        //    //TMP_FontAsset fontAsset = font switch
+        //    //{
+        //    //    Define.Font.MBold => Manager.Resource.FontBold,
+        //    //    Define.Font.MLight => Manager.Resource.FontLight,
+        //    //    _ => null,
+        //    //};
+        //    //FontRecursion(obj.transform, fontAsset);
+        //}
 
         static void FontRecursion(Transform parent, TMP_FontAsset _font)
         {

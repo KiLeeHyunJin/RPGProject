@@ -1,5 +1,6 @@
 
 using Firebase.Extensions;
+using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 using static UserData;
@@ -47,7 +48,8 @@ public class FireBaseManager : Singleton<FireBaseManager>
     public void SaveUser(string userId, User user)
     {
         string json = JsonUtility.ToJson(user);
-        DB.RootReference.Child("users").Child(userId).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task => {
+        DB.RootReference.Child("users").Child(userId).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
+        {
             if (task.IsFaulted)
             {
                 Debug.LogError("Error saving user: " + task.Exception);
@@ -59,10 +61,11 @@ public class FireBaseManager : Singleton<FireBaseManager>
         });
     }
 
-    public void SaveCharacter(string userId, string characterId,in Character character)
+    public void SaveCharacter(string userId, string characterId, in Character character)
     {
         string json = JsonUtility.ToJson(character);
-        DB.RootReference.Child("users").Child(userId).Child("characters").Child(characterId).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task => {
+        DB.RootReference.Child("users").Child(userId).Child("characters").Child(characterId).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
+        {
             if (task.IsFaulted)
             {
                 Debug.LogError("Error saving character: " + task.Exception);
@@ -74,9 +77,11 @@ public class FireBaseManager : Singleton<FireBaseManager>
         });
     }
 
+    private string path => Path.Combine(Application.dataPath, $"Resources/Data/SaveLoad");
     public void LoadUser(string userId, System.Action<User> callback)
     {
-        DB.RootReference.Child("users").Child(userId).GetValueAsync().ContinueWithOnMainThread(task => {
+        DB.RootReference.Child("users").Child(userId).GetValueAsync().ContinueWithOnMainThread(task =>
+        {
             if (task.IsFaulted)
             {
                 Debug.LogError("Error loading user: " + task.Exception);
@@ -86,14 +91,19 @@ public class FireBaseManager : Singleton<FireBaseManager>
                 Firebase.Database.DataSnapshot snapshot = task.Result;
                 if (snapshot.Exists)
                 {
-                    string json = snapshot.GetRawJsonValue();
-                    User user = JsonUtility.FromJson<User>(json);
-                    callback(user);
+                    string jsonData = snapshot.GetRawJsonValue();
+                    UserData.User user = JsonUtility.FromJson<UserData.User>(jsonData);
+                    foreach (var character in user.characters)
+                    {
+                        Debug.Log("Character NickName: " + character.Value.nickName);
+                        // 다른 캐릭터 데이터를 처리
+                    }
+                    callback?.Invoke(user);
                 }
                 else
                 {
                     Debug.Log("User does not exist.");
-                    callback(null);
+                    callback?.Invoke(null);
                 }
             }
         });
@@ -101,7 +111,8 @@ public class FireBaseManager : Singleton<FireBaseManager>
 
     public void LoadCharacter(string userId, string characterId, System.Action<Character> callback)
     {
-        DB.RootReference.Child("users").Child(userId).Child("characters").Child(characterId).GetValueAsync().ContinueWithOnMainThread(task => {
+        DB.RootReference.Child("users").Child(userId).Child("characters").Child(characterId).GetValueAsync().ContinueWithOnMainThread(task =>
+        {
             if (task.IsFaulted)
             {
                 Debug.LogError("Error loading character: " + task.Exception);

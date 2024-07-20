@@ -16,6 +16,9 @@ public class ResourceManager : Singleton<ResourceManager>
         else
         {
             T resource = Resources.Load<T>(path);
+            if (resource == null)
+                return null;
+
             resources.Add(key, resource);
             return resource;
         }

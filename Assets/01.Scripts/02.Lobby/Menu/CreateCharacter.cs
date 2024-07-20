@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using static UserData;
 
 public class CreateCharacter : MonoBehaviour
 {
@@ -65,6 +66,7 @@ public class CreateCharacter : MonoBehaviour
         bool usernameExists = await CheckIfUsernameExists(nickName);
         string msg = usernameExists ? "사용할 수 없는 닉네임입니다." : "사용가능한 닉네임입니다.";
         Utils.ShowInfo(msg);
+        Manager.FireBase.LoadUser(userId, null);
     }
 
 
@@ -77,10 +79,24 @@ public class CreateCharacter : MonoBehaviour
             return;
         }
 
-        UserData.Character uploadCharacterData = 
-            new() { nickName = this.nickName, stat = this.stat };
+        UserData.Character uploadCharacterData = OnCreateCharacter();
+            //new() { nickName = this.nickName, stat = this.stat };
         UserData.Name saveName = 
             new() { nickName = this.nickName, userId = this.userId};
+
+        for (int i = 0; i < 10; i++)
+        {
+            uploadCharacterData.inventory.ect.Add(new UserData.Item());
+        }
+        for (int i = 0; i < 10; i++)
+        {
+            uploadCharacterData.inventory.equip.Add(new UserData.Item());
+        }
+        for (int i = 0; i < 10; i++)
+        {
+            uploadCharacterData.inventory.consume.Add(new UserData.Item());
+        }
+
 
         string nickJson = JsonUtility.ToJson(saveName);
         string json = JsonUtility.ToJson(uploadCharacterData);
@@ -132,4 +148,35 @@ public class CreateCharacter : MonoBehaviour
         }
     }
 
+
+    public Character OnCreateCharacter()
+    {
+        return new()
+        {
+            nickName = nickName,
+            level = default,
+            job = default,
+            ability = new Ability
+            {
+                accuracy = 10.0f,
+                atckPower = 20.0f,
+                atckSpeed = 1.5f,
+                defence = 5.0f,
+                jumpPower = 2.0f,
+                magicPower = 15.0f,
+                moveSpeed = 3.0f,
+                point = 100
+            },
+            stat = this.stat,
+            inventory = new Inventory
+            {
+                consume = new(20),
+                ect = new(20),
+                equip = new(20),
+                money = default
+            },
+            skill = "Basic Attack"
+        };
+
+    }
 }

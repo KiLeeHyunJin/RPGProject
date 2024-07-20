@@ -7,11 +7,11 @@ public class UserData
     [Serializable]
     public class User
     {
-        public Dictionary<string, Character> characters;
+        public Dictionary<string,Character> characters;
 
         public User()
         {
-            characters = new Dictionary<string, Character>();
+            characters = new();
         }
     }
 
@@ -19,13 +19,15 @@ public class UserData
     public class Character
     {
         public Ability ability;
-        public string job;
         public Inventory inventory;
+
+        public string job;
         public int level;
         public string nickName;
         public string skill;
-        public Stat stat;
         public ulong skin;
+        public Stat stat;
+
 
         public Character()
         {
@@ -50,32 +52,38 @@ public class UserData
     [Serializable]
     public class Stat
     {
-        public int str;
         public int def;
-        public int man;
         public int luk;
+        public int man;
+        public int str;
     }
 
     [Serializable]
     public class Inventory
     {
+        public Inventory()
+        {
+            consume = new();
+            ect = new();
+            equip = new();
+            consume = new();
+        }
         public List<Item> consume;
         public List<Item> ect;
         public List<Item> equip;
-        public List<Item> money;
+        public long money;
     }
 
     [Serializable]
     public class Item
     {
-        public ulong itemData;
-
         public ulong addAbility;
-
         public ulong addStat;
+
+        public ulong itemData;
+        public string itemName;
         public ulong limitStat;
         public ulong upgradeStat;
-        public string itemName;
     }
 
     [Serializable]
