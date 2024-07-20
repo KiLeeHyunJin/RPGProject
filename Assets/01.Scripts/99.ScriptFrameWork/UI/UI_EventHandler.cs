@@ -1,38 +1,48 @@
-﻿using System;
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class UI_EventHandler : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
 {
-    public Action OnClickHandler = null;
-    public Action OnPressedHandler = null;
-	public Action OnPointerDownHandler = null;
-	public Action OnPointerUpHandler = null;
+    public event Action OnClickHandler = null;
+    public event Action OnPressedHandler = null;
+    public event Action OnPointerDownHandler = null;
+    public event Action OnPointerUpHandler = null;
+    bool _pressed;
 
-	bool _pressed = false;
+    private void Start()
+    {
+        _pressed = default;
+    }
 
-	private void Update()
-	{
-		if (_pressed)
-			OnPressedHandler?.Invoke();
-	}
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        OnClickHandler?.Invoke();
+    }
 
-	public void OnPointerClick(PointerEventData eventData)
-	{
-		OnClickHandler?.Invoke();
-	}
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        _pressed = true;
+        this.ReStartCoroutine(OnPressedHandlerRoutine(), ref pressCo);
+        OnPointerDownHandler?.Invoke();
+    }
 
-	public void OnPointerDown(PointerEventData eventData)
-	{
-		_pressed = true;
-		OnPointerDownHandler?.Invoke();
-	}
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        _pressed = false;
+        if (pressCo != null)
+            StopCoroutine(pressCo);
+        OnPointerUpHandler?.Invoke();
+    }
 
-	public void OnPointerUp(PointerEventData eventData)
-	{
-		_pressed = false;
-		OnPointerUpHandler?.Invoke();
-	}
+    Coroutine pressCo;
+    IEnumerator OnPressedHandlerRoutine()
+    {
+        while (_pressed)
+        {
+            OnPressedHandler?.Invoke();
+            yield return null;
+        }
+    }
 }

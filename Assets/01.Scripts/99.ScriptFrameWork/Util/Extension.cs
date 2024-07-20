@@ -61,7 +61,7 @@ namespace UnityEngine
 
 
         /// <summary>
-        /// �������� �ڷ�ƾ�� �����ϰ� �ٽ� �����մϴ�.
+        /// 실행중인 코루틴을 중지하고 다시 실행합니다.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="gameObject"></param>
@@ -76,7 +76,7 @@ namespace UnityEngine
 
 
         /// <summary>
-        /// �ش� ���̾��� ��Ʈ�� �ö���ִ��� Ȯ���ؼ� ��ȯ�մϴ�.
+        /// 해당 레이어의 비트가 올라와있는지 확인해서 반환합니다.
         /// </summary>
         /// <param name="layerMask"></param>
         /// <param name="layer"></param>
@@ -86,7 +86,7 @@ namespace UnityEngine
             return ((1 << layer) & layerMask) != 0;
         }
         /// <summary>
-        /// �ش� ���̾� �÷��׸� �÷��ݴϴ�.
+        /// 해당 레이어 플래그를 올려줍니다.
         /// </summary>
         /// <param name="layerMask"></param>
         /// <param name="layer"></param>
@@ -95,7 +95,7 @@ namespace UnityEngine
             layerMask |= 1 << layer;
         }
         /// <summary>
-        /// ���ӿ�����Ʈ �ڽ��� name�� �̸��� ���� ��ü�� ��ȯ�մϴ�.
+        /// 게임오브젝트 자식중 name의 이름을 갖는 객체를 반환합니다.
         /// </summary>
         /// <param name="go"></param>
         /// <param name="name"></param>
@@ -109,7 +109,7 @@ namespace UnityEngine
             return null;
         }
         /// <summary>
-        /// ���ӿ�����Ʈ�� �ڽ� �� TŸ�� ����� �̸��� name�� ��ü�� ã�� ��ȯ�մϴ�.
+        /// 게임오브젝트의 자식 중 T타입 요소의 이름이 name인 객체를 찾아 반환합니다.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="go"></param>
@@ -139,7 +139,7 @@ namespace UnityEngine
         }
 
         /// <summary>
-        /// �ش� ������Ʈ�� �����Ѵٸ� ã�Ƽ� ��ȯ�ϰ� ������� �߰��մϴ�.
+        /// 해당 컴포넌트가 존재한다면 찾아서 반환하고 없을경우 추가합니다.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="go"></param>
@@ -154,13 +154,13 @@ namespace UnityEngine
 
         public static void BindEvent(this GameObject go, Action action, Define.UIEvent type = Define.UIEvent.Click)
         {
-            UI_Base.BindEvent(go, action, type);
+            BaseUI.BindEvent(go, action, type);
         }
 
         static System.Random _rand = new System.Random();
 
         /// <summary>
-        /// ������Ʈ�� �̿��� ��� ��Ҹ� �����ϴ�.
+        /// 버블소트를 이용해 모든 요소를 섞습니다.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="list"></param>
@@ -177,7 +177,7 @@ namespace UnityEngine
             }
         }
         /// <summary>
-        /// ����Ʈ�� ũ�� ���� �� ������ �ε����� ��ȯ�մϴ�.
+        /// 리스트의 크기 범위 내 랜덤한 인덱스를 반환합니다.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="list"></param>

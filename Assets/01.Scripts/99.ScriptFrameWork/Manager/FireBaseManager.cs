@@ -29,11 +29,6 @@ public class FireBaseManager : Singleton<FireBaseManager>
         var dependencyStatus = task.Result;
         if (dependencyStatus == Firebase.DependencyStatus.Available)
         {
-            // Create and hold a reference to your FirebaseApp,
-            // where app is a Firebase.FirebaseApp property of your application class.
-            //app = Firebase.FirebaseApp.DefaultInstance;
-
-            // Set a flag here to indicate whether Firebase is ready to use by your app.
             Debug.Log("Firebase Check Success");
             app = Firebase.FirebaseApp.DefaultInstance;
             auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
@@ -46,7 +41,6 @@ public class FireBaseManager : Singleton<FireBaseManager>
             app = null;
             auth = null;
             db = null;
-            // Firebase Unity SDK is not safe to use here.
         }
     }
 

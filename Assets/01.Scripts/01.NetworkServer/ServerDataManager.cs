@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 public class ServerDataManager : Singleton<ServerDataManager>
 {
     const string DownloadPath = "https://drive.google.com/uc?export=download&id=";
-    const string serverVersionTableURL = "https://docs.google.com/spreadsheets/d/1um5DzNP_nYsw0XQ8v8vWW9kjLK5fYv8WOxlOLx9KO0U/export?format=csv";  // ¼­¹ö id
+    const string serverVersionTableURL = "https://docs.google.com/spreadsheets/d/1um5DzNP_nYsw0XQ8v8vWW9kjLK5fYv8WOxlOLx9KO0U/export?format=csv";  // ì„œë²„ id
 
     const string localVersionTablePath = "/versionTable.csv";
     readonly string localVersionPath = Application.streamingAssetsPath + "/AssetBundles";
@@ -30,7 +30,7 @@ public class ServerDataManager : Singleton<ServerDataManager>
 
     void LoadError()
     {
-        Debug.Log("¼­¹ö µ¥ÀÌÅÍ¸¦ °¡Á®¿ÀÁö ¸øÇÏ¿´½À´Ï´Ù.");
+        Debug.Log("ì„œë²„ ë°ì´í„°ë¥¼ ê°€ì ¸ì˜¤ì§€ ëª»í•˜ì˜€ìŠµë‹ˆë‹¤.");
     }
 
     void LoadInit()
@@ -40,7 +40,11 @@ public class ServerDataManager : Singleton<ServerDataManager>
         photonServer.DevRegion = "kr";
         SetServer();
     }
-
+    public void EnterServer(int _serverNum)
+    {
+        this.serverNum = _serverNum;
+        SetServer();
+    }
     [ContextMenu("EnterServer")]
     void SetServer()
     {
@@ -118,11 +122,11 @@ public class ServerDataManager : Singleton<ServerDataManager>
         ChatID,
     }
 
-    enum VersionTable// ¹öÀü Å×ÀÌºí Column(¿­) Á¤º¸
+    enum VersionTable// ë²„ì „ í…Œì´ë¸” Column(ì—´) ì •ë³´
     {
-        ServerName, // ¹øµé ÆÄÀÏ ¸í
-        Version, // ¹øµé ¹öÀü Á¤º¸
-        PunId, // ¹øµé ¼³Ä¡ ¸µÅ©
-        ChatId, // ¹øµé ¼³Ä¡ ¸µÅ©
+        ServerName, // ë²ˆë“¤ íŒŒì¼ ëª…
+        Version, // ë²ˆë“¤ ë²„ì „ ì •ë³´
+        PunId, // ë²ˆë“¤ ì„¤ì¹˜ ë§í¬
+        ChatId, // ë²ˆë“¤ ì„¤ì¹˜ ë§í¬
     }
 }

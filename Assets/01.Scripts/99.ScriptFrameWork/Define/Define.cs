@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 public class Define
 {
@@ -23,6 +22,8 @@ public class Define
     public readonly static string Skill = "skill";
     public readonly static string Stat = "stat";
 
+    public readonly static int ByteSize = 8;
+
     //마지막 배열을 요소를 가리킨다
     public static Index EndIndex = ^1;
 
@@ -35,10 +36,50 @@ public class Define
     }
 
     public enum Font
-    { 
+    {
         MBold,
         MLight,
     }
 
+    public enum StatType
+    {
+        Str,
+        Def,
+        Man,
+        Luk,
+    }
 
+    public enum ItemType
+    {
+        Ect,
+        Consume,
+        Equip,
+    }
+
+    public enum ItemStateType
+    {
+        Add,
+        Limit,
+        Upgrade,
+    }
+
+    public enum LongSize
+    {
+        One,
+        Two,
+        Three,
+        Four,
+        Five,
+        Six,
+        Seven,
+        Eight,
+    }
+
+    public enum IntSize
+    {
+        One,
+        Two,
+        Three,
+        Four,
+    }
 }

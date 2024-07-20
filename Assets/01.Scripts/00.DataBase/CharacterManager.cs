@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static UserData;
 using UnityEngine.UI;
+using static UserData;
 
 public class CharacterManager : MonoBehaviour
 {
@@ -69,7 +67,7 @@ public class CharacterManager : MonoBehaviour
     public void OnLoadUserButtonClicked()
     {
         string userId = "<user-id>"; // 로그인한 사용자 ID를 사용
-        Manager.FireBase.LoadUser(userId, (user) => 
+        Manager.FireBase.LoadUser(userId, (user) =>
         {
             if (user != null)
             {
@@ -87,7 +85,7 @@ public class CharacterManager : MonoBehaviour
     {
         string userId = "<user-id>"; // 로그인한 사용자 ID를 사용
         string characterId = "<character-id>"; // 불러올 캐릭터 ID
-        Manager.FireBase.LoadCharacter(userId, characterId, (character) => 
+        Manager.FireBase.LoadCharacter(userId, characterId, (character) =>
         {
             if (character != null)
             {

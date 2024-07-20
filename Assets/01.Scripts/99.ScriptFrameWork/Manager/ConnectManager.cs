@@ -6,15 +6,14 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class ConnectManager : MonoBehaviourPunCallbacks
 {
-    //public enum Panel { Login, Menu, Lobby}
-
     [SerializeField] GameObject loginPanel;
     [SerializeField] GameObject channalPanel;
     [SerializeField] GameObject selectCharacterPanel;
     [SerializeField] GameObject creatCharacterPanel;
 
     new AudioSource audio;
-    private ClientState state;
+    ClientState state;
+
     private void Awake()
     {
         audio = GetComponent<AudioSource>();
@@ -36,14 +35,8 @@ public class ConnectManager : MonoBehaviourPunCallbacks
         Debug.Log(currentState);
     }
 
-    //private void SetActivePanel(Panel panel)
-    //{
-    //    loginPanel.gameObject?.SetActive(panel == Panel.Login);
-    //}
-
     public override void OnJoinedRoom()
     {
-       // if(data.GetLobbyState(LobbyData.LobbyState.Random) == false)
         Debug.Log($"Join Room Success");
     }
 
@@ -63,12 +56,10 @@ public class ConnectManager : MonoBehaviourPunCallbacks
     }
     public override void OnJoinedLobby()
     {
-        //SetActivePanel(Panel.Lobby);
     }
 
     public override void OnLeftLobby()
     {
-        //SetActivePanel(Panel.Menu);
     }
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
@@ -79,14 +70,11 @@ public class ConnectManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("isConnect");
         PhotonNetwork.NickName = FireBaseManager.Auth.CurrentUser.DisplayName;
-        
-        //SetActivePanel(Panel.Menu);
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        //if (data.GetLobbyState(LobbyData.LobbyState.Random) == false) //랜덤 매칭이 아닐 경우 로비 업데이트
-        //    lobbyPanel.UpdateRoomList(roomList);
+
     }
     public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
     {
@@ -110,8 +98,7 @@ public class ConnectManager : MonoBehaviourPunCallbacks
     {
         if (cause == DisconnectCause.DisconnectByServerLogic)
             return;
-        //SetActivePanel(Panel.Login);
-        Debug.Log("OnDisconnected");
+        Utils.ShowInfo("OnDisconnected");
     }
 
 }

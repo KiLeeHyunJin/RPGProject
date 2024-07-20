@@ -7,27 +7,59 @@ using UnityEngine.UI;
 
 public class CreateCharacter : MonoBehaviour
 {
+    enum Buttons
+    {
+
+    }
+
     [SerializeField] UserData.Stat stat;
     [SerializeField] string userId;
     [SerializeField] string nickName;
+    [SerializeField] int point;
 
     [SerializeField] Button create;
-    [SerializeField] Button remove;
     [SerializeField] Button check;
-
+    [SerializeField] Button addStr;
     private void Start()
     {
+        InitUserId();
         create.onClick.AddListener(CreateCharacterData);
-        remove.onClick.AddListener(RemoveCharacterData);
         check.onClick.AddListener(CheckCharacterNickName);
+        stat.SetStat(4);
+
+        point = 4;
     }
 
+
+
+
+    void AddStat(Define.StatType statType)
+    {
+        if(point < 0)
+            return;
+
+        stat.SetValue(statType, 1);
+        point--;
+    }
+
+    void MinusStat(Define.StatType statType)
+    {
+        if (stat.GetValue(statType) <= 0)
+            return;
+
+        stat.SetValue(statType, -1);
+        point++;
+    }
 
     void InitUserId()
     {
-        userId = FireBaseManager.Auth.CurrentUser.UserId;
+        if(FireBaseManager.Auth != null)
+            userId = FireBaseManager.Auth.CurrentUser.UserId;
     }
 
+
+
+    //닉네임 사용 가능 여부 확인 호출 
     async void CheckCharacterNickName()
     {
         bool usernameExists = await CheckIfUsernameExists(nickName);
@@ -35,12 +67,20 @@ public class CreateCharacter : MonoBehaviour
         Utils.ShowInfo(msg);
     }
 
+
+    //캐릭터 생성
     void CreateCharacterData()
     {
+        if(point > 0)
+        {
+            Utils.ShowInfo("능력치 포인트를 전부 배분하지 않았습니다.");
+            return;
+        }
+
         UserData.Character uploadCharacterData = 
             new() { nickName = this.nickName, stat = this.stat };
         UserData.Name saveName = 
-            new() { nickName = this.nickName };
+            new() { nickName = this.nickName, userId = this.userId};
 
         string nickJson = JsonUtility.ToJson(saveName);
         string json = JsonUtility.ToJson(uploadCharacterData);
@@ -59,6 +99,7 @@ public class CreateCharacter : MonoBehaviour
         });
     }
 
+    //캐릭터 삭제
     void RemoveCharacterData()
     {
         // 삭제할 경로 지정
@@ -71,11 +112,13 @@ public class CreateCharacter : MonoBehaviour
         nameRef?.RemoveValueAsync();
     }
 
+
+    //닉네임 사용 가능 여부 확인하는 메소드
     async Task<bool> CheckIfUsernameExists(string username)
     {
         DatabaseReference userRef =
             FireBaseManager.DB.GetReference(Define.SearchNickName).Child(Define.UseNickName);
-        Query query = userRef.OrderByChild("nickName").EqualTo(username);
+        Query query = userRef.OrderByChild(Define.NickName).EqualTo(username);
 
         try
         {

@@ -10,6 +10,7 @@ public static class Manager
     public static SoundManager Sound { get { return SoundManager.Instance; } }
     public static UIManager UI { get { return UIManager.Instance; } }
     public static FireBaseManager FireBase { get { return FireBaseManager.Instance; } }
+    public static ServerDataManager Server { get { return ServerDataManager.Instance; } }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()

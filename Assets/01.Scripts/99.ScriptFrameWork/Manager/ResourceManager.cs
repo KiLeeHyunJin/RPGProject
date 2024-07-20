@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ResourceManager : Singleton<ResourceManager>
 {
-    private Dictionary<string, Object> resources = new Dictionary<string, Object>();
+    private Dictionary<string, Object> resources = new();
 
     public T Load<T>(string path) where T : Object
     {

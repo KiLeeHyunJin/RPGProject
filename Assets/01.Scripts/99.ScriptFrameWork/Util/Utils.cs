@@ -1,11 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
-using System.Text;
 using UnityEngine;
-using static Define;
 
 public class Utils
 {
@@ -30,8 +24,9 @@ public class Utils
 
     public static T GetOrAddComponent<T>(GameObject go) where T : UnityEngine.Component
     {
-        T component = go.GetComponent<T>();
-        if (component == null)
+        if (go == null)
+            return null;
+        if (!go.TryGetComponent<T>(out var component))
             component = go.AddComponent<T>();
         return component;
     }
@@ -58,7 +53,7 @@ public class Utils
         return null;
     }
 
-    public static T FindChild<T>(Transform parent, string name = null, bool recursive = false)where T : UnityEngine.Object
+    public static T FindChild<T>(Transform parent, string name = null, bool recursive = false) where T : UnityEngine.Object
     {
         if (parent == null)
             return null;
@@ -73,7 +68,7 @@ public class Utils
         {
             foreach (Transform child in parent)
             {
-                if(child.TryGetComponent<T>(out T component))
+                if (child.TryGetComponent<T>(out T component))
                 {
                     if (string.IsNullOrEmpty(name) || component.name == name)
                         return component;

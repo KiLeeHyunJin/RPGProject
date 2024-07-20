@@ -25,6 +25,7 @@ public class UserData
         public string nickName;
         public string skill;
         public Stat stat;
+        public ulong skin;
 
         public Character()
         {
@@ -67,8 +68,14 @@ public class UserData
     [Serializable]
     public class Item
     {
+        public ulong itemData;
+
+        public ulong addAbility;
+
+        public ulong addStat;
+        public ulong limitStat;
+        public ulong upgradeStat;
         public string itemName;
-        public int itemCount;
     }
 
     [Serializable]
@@ -77,6 +84,5 @@ public class UserData
         public string nickName;
         public string userId;
     }
-
 }
 
