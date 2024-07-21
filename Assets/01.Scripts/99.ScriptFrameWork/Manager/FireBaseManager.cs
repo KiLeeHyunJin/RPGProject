@@ -1,5 +1,6 @@
 
 using Firebase.Extensions;
+using Newtonsoft.Json;
 using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -77,7 +78,6 @@ public class FireBaseManager : Singleton<FireBaseManager>
         });
     }
 
-    private string path => Path.Combine(Application.dataPath, $"Resources/Data/SaveLoad");
     public void LoadUser(string userId, System.Action<User> callback)
     {
         DB.RootReference.Child("users").Child(userId).GetValueAsync().ContinueWithOnMainThread(task =>
@@ -92,13 +92,17 @@ public class FireBaseManager : Singleton<FireBaseManager>
                 if (snapshot.Exists)
                 {
                     string jsonData = snapshot.GetRawJsonValue();
-                    UserData.User user = JsonUtility.FromJson<UserData.User>(jsonData);
-                    foreach (var character in user.characters)
-                    {
-                        Debug.Log("Character NickName: " + character.Value.nickName);
-                        // 다른 캐릭터 데이터를 처리
-                    }
+                    UserData.User user = JsonConvert.DeserializeObject<User>(jsonData);
                     callback?.Invoke(user);
+
+
+#if UNITY_EDITOR
+                    foreach (var character in user.characters)
+                        Debug.Log("Character NickName: " + character.Value.nickName);
+
+                    System.IO.File.WriteAllText($"save.txt", jsonData);
+#endif
+
                 }
                 else
                 {

@@ -23,7 +23,7 @@ public class Define
     public readonly static string Stat = "stat";
 
     public readonly static int ByteSize = 8;
-
+    public readonly static int SlotDefaultSize = 2;
     //마지막 배열을 요소를 가리킨다
     public static Index EndIndex = ^1;
 

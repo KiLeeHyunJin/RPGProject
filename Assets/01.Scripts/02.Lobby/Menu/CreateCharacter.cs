@@ -1,13 +1,20 @@
 using Firebase.Database;
 using Firebase.Extensions;
+using Newtonsoft.Json;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 using static UserData;
 
 public class CreateCharacter : MonoBehaviour
 {
+    User user;
     enum Buttons
     {
 
@@ -27,16 +34,14 @@ public class CreateCharacter : MonoBehaviour
         create.onClick.AddListener(CreateCharacterData);
         check.onClick.AddListener(CheckCharacterNickName);
         stat.SetStat(4);
-
-        point = 4;
+        user = new();
+        //point = 4;
     }
 
-
-
-
+    #region Stat
     void AddStat(Define.StatType statType)
     {
-        if(point < 0)
+        if (point < 0)
             return;
 
         stat.SetValue(statType, 1);
@@ -51,10 +56,11 @@ public class CreateCharacter : MonoBehaviour
         stat.SetValue(statType, -1);
         point++;
     }
+    #endregion Stat
 
     void InitUserId()
     {
-        if(FireBaseManager.Auth != null)
+        if (FireBaseManager.Auth != null)
             userId = FireBaseManager.Auth.CurrentUser.UserId;
     }
 
@@ -73,30 +79,23 @@ public class CreateCharacter : MonoBehaviour
     //캐릭터 생성
     void CreateCharacterData()
     {
-        if(point > 0)
+        if (point > 0)
         {
             Utils.ShowInfo("능력치 포인트를 전부 배분하지 않았습니다.");
             return;
         }
 
         UserData.Character uploadCharacterData = OnCreateCharacter();
-            //new() { nickName = this.nickName, stat = this.stat };
-        UserData.Name saveName = 
-            new() { nickName = this.nickName, userId = this.userId};
+        //new() { nickName = this.nickName, stat = this.stat };
+        UserData.Name saveName =
+            new() { nickName = this.nickName, userId = this.userId };
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < Define.SlotDefaultSize; i++)
         {
             uploadCharacterData.inventory.ect.Add(new UserData.Item());
-        }
-        for (int i = 0; i < 10; i++)
-        {
+            uploadCharacterData.inventory.consume.Add(new UserData.Item());
             uploadCharacterData.inventory.equip.Add(new UserData.Item());
         }
-        for (int i = 0; i < 10; i++)
-        {
-            uploadCharacterData.inventory.consume.Add(new UserData.Item());
-        }
-
 
         string nickJson = JsonUtility.ToJson(saveName);
         string json = JsonUtility.ToJson(uploadCharacterData);
@@ -115,13 +114,15 @@ public class CreateCharacter : MonoBehaviour
         });
     }
 
+   
+
     //캐릭터 삭제
     void RemoveCharacterData()
     {
         // 삭제할 경로 지정
-        DatabaseReference characterRef = 
+        DatabaseReference characterRef =
             FireBaseManager.DB.GetReference(Define.User).Child(userId).Child(Define.Character).Child(nickName);
-        DatabaseReference nameRef = 
+        DatabaseReference nameRef =
             FireBaseManager.DB.GetReference(Define.SearchNickName).Child(Define.UseNickName).Child(nickName);
 
         characterRef?.RemoveValueAsync();
@@ -170,9 +171,9 @@ public class CreateCharacter : MonoBehaviour
             stat = this.stat,
             inventory = new Inventory
             {
-                consume = new(20),
-                ect = new(20),
-                equip = new(20),
+                consume = new(Define.SlotDefaultSize),
+                ect = new(Define.SlotDefaultSize),
+                equip = new(Define.SlotDefaultSize),
                 money = default
             },
             skill = "Basic Attack"
