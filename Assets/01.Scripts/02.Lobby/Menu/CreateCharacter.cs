@@ -8,6 +8,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using static UnityEngine.UIElements.UxmlAttributeDescription;
 using static UserData;
@@ -27,15 +28,23 @@ public class CreateCharacter : MonoBehaviour
 
     [SerializeField] Button create;
     [SerializeField] Button check;
+    [SerializeField] Button remove;
     [SerializeField] Button addStr;
     private void Start()
     {
         InitUserId();
-        create.onClick.AddListener(CreateCharacterData);
-        check.onClick.AddListener(CheckCharacterNickName);
+        ButtonAddListener(create, CreateCharacterData);
+        ButtonAddListener(remove, RemoveCharacterData);
+        ButtonAddListener(check, CheckCharacterNickName);
         stat.SetStat(4);
         user = new();
         //point = 4;
+    }
+
+    void ButtonAddListener(Button btn, UnityAction call)
+    {
+        if (btn != null)
+            btn.onClick.AddListener(call);
     }
 
     #region Stat
@@ -125,7 +134,17 @@ public class CreateCharacter : MonoBehaviour
         DatabaseReference nameRef =
             FireBaseManager.DB.GetReference(Define.SearchNickName).Child(Define.UseNickName).Child(nickName);
 
-        characterRef?.RemoveValueAsync();
+        characterRef?.RemoveValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Utils.ShowError(task.Exception.InnerExceptions, "Error saving user");
+            }
+            else
+            {
+                Utils.ShowInfo("캐릭터를 삭제하였습니다.");
+            }
+        });
         nameRef?.RemoveValueAsync();
     }
 
