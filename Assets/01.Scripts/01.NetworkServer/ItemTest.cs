@@ -3,11 +3,11 @@ using UnityEngine;
 public class ItemTest : MonoBehaviour
 {
     [SerializeField] UserData.Item item;
-    [SerializeField] DecapsuleItemData itemData;
+    [SerializeField] ClientItemData itemData;
 
     public void SaveItem()
     {
-        item.SaveItemData(itemData);
+        item.CapsuleItemData(itemData);
     }
 
     public void ParseItem()

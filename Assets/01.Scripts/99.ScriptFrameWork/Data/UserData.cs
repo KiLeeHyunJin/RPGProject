@@ -5,6 +5,14 @@ using System.Collections.Generic;
 public class UserData
 {
     [Serializable]
+    public class Name
+    {
+        public string nickName;
+        public string userId;
+    }
+
+
+    [Serializable]
     public class User
     {
         public Dictionary<string,Character> characters;
@@ -39,13 +47,15 @@ public class UserData
     [Serializable]
     public class Ability
     {
-        public float accuracy;
-        public float atckPower;
-        public float atckSpeed;
-        public float defence;
-        public float jumpPower;
-        public float magicPower;
         public float moveSpeed;
+        public float atckSpeed;
+        public float jumpPower;
+
+        public float atckPower;
+        public float defence;
+        public float magicPower;
+
+        public float accuracy;
         public int point;
     }
 
@@ -86,11 +96,6 @@ public class UserData
         public ulong upgradeStat;
     }
 
-    [Serializable]
-    public class Name
-    {
-        public string nickName;
-        public string userId;
-    }
+
 }
 

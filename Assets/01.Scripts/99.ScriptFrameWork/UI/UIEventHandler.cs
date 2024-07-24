@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UI_EventHandler : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
+public class UIEventHandler : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
 {
     public event Action OnClickHandler = null;
     public event Action OnPressedHandler = null;
@@ -31,8 +31,7 @@ public class UI_EventHandler : MonoBehaviour, IPointerClickHandler, IPointerDown
     public void OnPointerUp(PointerEventData eventData)
     {
         _pressed = false;
-        if (pressCo != null)
-            StopCoroutine(pressCo);
+        this.StopCoroutine(ref pressCo);
         OnPointerUpHandler?.Invoke();
     }
 

@@ -3,13 +3,23 @@ using static UserData;
 public static class UserCharacterExtension
 {
     #region Character
-    public static void SetSkin(this Character character, int _hair, int _skin, int _face)
+    public static void CapsuleCharacterSkin(this Character character, int _hair, int _skin, int _face)
     {
         character.skin = default;
         character.skin += (ulong)(_face << (int)Define.ByteSize * (int)Define.LongSize.Six);
         character.skin += (ulong)(_skin << (int)Define.ByteSize * (int)Define.LongSize.Seven);
         character.skin += (ulong)(_hair << (int)Define.ByteSize * (int)Define.LongSize.Eight);
     }
+
+    public static (int _hair, int _skin, int _face) DecapsuleCharacterSkin(this Character character)
+    {
+        ulong data = character.skin;
+        int face = (int)(data << (int)Define.ByteSize * (int)Define.LongSize.Three) >> (int)Define.ByteSize * (int)Define.LongSize.Eight;
+        int skin = (int)(data << (int)Define.ByteSize * (int)Define.LongSize.Two) >> (int)Define.ByteSize * (int)Define.LongSize.Eight;
+        int hair = (int)(data << (int)Define.ByteSize * (int)Define.LongSize.One) >> (int)Define.ByteSize * (int)Define.LongSize.Eight;
+        return ( hair,  skin,  face);
+    }
+
     #endregion Character
 
     #region Stat
@@ -54,7 +64,7 @@ public static class UserCharacterExtension
     #endregion Stat
 
     #region Item
-    public static void SaveItemData(this Item item, DecapsuleItemData itemData)
+    public static void CapsuleItemData(this Item item, ClientItemData itemData)
     {
         item.SetItemStat(itemData.limitStat, Define.ItemStateType.Limit);
         item.SetItemStat(itemData.addStat, Define.ItemStateType.Add);

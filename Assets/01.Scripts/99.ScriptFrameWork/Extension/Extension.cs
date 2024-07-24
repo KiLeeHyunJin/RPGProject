@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.UI;
+
 namespace UnityEngine
 {
     public static class Extension
@@ -28,18 +28,37 @@ namespace UnityEngine
         //    }
         //}
 
+        /// <summary>
+        /// 버튼의 Null상태를 확인한 후 액션을 제거 후 추가
+        /// </summary>
+        public static bool NullCheckAndAddListener(this UI.Button btn, Events.UnityAction action,bool allRemoveListner = false)
+        {
+            if (btn != null)
+            {
+                if (allRemoveListner)
+                    btn.onClick.RemoveAllListeners();
+                else
+                    btn.onClick.RemoveListener(action);
+                btn.onClick.AddListener(action);
+                return true;
+            }
+            return false;
+        }
 
-
-
+        public static void StopCoroutine(this MonoBehaviour mono, ref Coroutine co)
+        {
+            if(co != null)
+                mono.StopCoroutine(co);
+        }
 
         /// <summary>
         /// 실행중인 코루틴을 중지하고 다시 실행합니다.
         /// </summary>
-        public static void ReStartCoroutine<T>(this T gameObject, IEnumerator routine, ref Coroutine co) where T : MonoBehaviour
+        public static void ReStartCoroutine(this MonoBehaviour mono, IEnumerator routine, ref Coroutine co)
         {
             if (co != null)
-                gameObject.StopCoroutine(co);
-            co = gameObject.StartCoroutine(routine);
+                mono.StopCoroutine(co);
+            co = mono.StartCoroutine(routine);
         }
 
 
@@ -103,7 +122,7 @@ namespace UnityEngine
         /// <summary>
         /// 스크롤바 위치를 초기화합니다.
         /// </summary>
-        public static void ResetVertical(this ScrollRect scrollRect)
+        public static void ResetVertical(this UI.ScrollRect scrollRect)
         {
             scrollRect.verticalNormalizedPosition = 1;
         }
@@ -111,7 +130,7 @@ namespace UnityEngine
         /// <summary>
         /// 스크롤바 위치를 초기화합니다.
         /// </summary>
-        public static void ResetHorizontal(this ScrollRect scrollRect)
+        public static void ResetHorizontal(this UI.ScrollRect scrollRect)
         {
             scrollRect.horizontalNormalizedPosition = 1;
         }

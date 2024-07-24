@@ -1,7 +1,7 @@
 using System;
 
 [Serializable]
-public class DecapsuleItemData
+public class ClientItemData
 {
     public string itemName;
     public int level;
@@ -27,9 +27,9 @@ public class DecapsuleItemData
         availNum = (int)((itemData << (int)Define.ByteSize * (int)Define.LongSize.Four) >> (int)Define.ByteSize * (int)Define.LongSize.Eight);
         type = (Define.ItemType)_type;
 
-        StatParse(ref addStat,      capsuleItem.addStat);
-        StatParse(ref limitStat,    capsuleItem.limitStat);
-        StatParse(ref upgradeStat,  capsuleItem.upgradeStat);
+        ParseStat(ref addStat,      capsuleItem.addStat);
+        ParseStat(ref limitStat,    capsuleItem.limitStat);
+        ParseStat(ref upgradeStat,  capsuleItem.upgradeStat);
 
         #region
         //ulong _addStat = capsuleItem.addStat;
@@ -54,7 +54,7 @@ public class DecapsuleItemData
 
     }
 
-    void StatParse(ref UserData.Stat stat, ulong dataLong)
+    void ParseStat(ref UserData.Stat stat, ulong dataLong)
     {
         stat.str = (int)((dataLong << (int)Define.ByteSize * (int)Define.LongSize.One) >> (int)Define.ByteSize * (int)Define.LongSize.Eight);
         stat.def = (int)((dataLong << (int)Define.ByteSize * (int)Define.LongSize.Two) >> (int)Define.ByteSize * (int)Define.LongSize.Eight);

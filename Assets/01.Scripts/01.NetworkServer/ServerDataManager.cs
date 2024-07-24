@@ -117,8 +117,6 @@ public class ServerDataManager : Singleton<ServerDataManager>
         refeshState?.Invoke(serverVersionTable != null);
     }
 
-
-
     string ExtractSubstring(string inputString)
     {
         const string startMarker = "d/";

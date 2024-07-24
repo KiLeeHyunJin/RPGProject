@@ -5,6 +5,34 @@ using UnityEngine;
 
 public class Utils
 {
+
+    public static void OpenFolder(string path)
+    {
+        try
+        {
+            if (!Directory.Exists(path))
+            {
+                Message.LogError($"경로가 존재하지 않습니다: {path}");
+                return;
+            }
+
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo()
+            {
+                FileName = path,
+                UseShellExecute = true,
+                Verb = "open"
+            });
+        }
+        catch (Exception ex)
+        {
+            Message.LogError($"폴더를 여는 도중 오류가 발생했습니다: {ex.Message}");
+        }
+    }
+
+   
+
+
+
     public static List<string> GetAssetBundleNames()
     {
         string path = $"{Define.dir}/Windows";
@@ -39,7 +67,11 @@ public class Utils
         PopUpUI panel = Manager.UI.ShowPopUpUI("InfoPanel");
         (panel as InfoPanel).ShowError(exceptions, info);
     }
-
+    public static void ShowError(System.Exception exception, string info)
+    {
+        PopUpUI panel = Manager.UI.ShowPopUpUI("InfoPanel");
+        (panel as InfoPanel).ShowError(exception.Message, info);
+    }
 
     /// <summary>
     /// 열거형 타입으로 변환을 해서 반환합니다.

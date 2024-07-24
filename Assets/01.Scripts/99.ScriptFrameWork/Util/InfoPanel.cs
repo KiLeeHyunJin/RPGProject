@@ -22,7 +22,10 @@ public class InfoPanel : PopUpUI
         //gameObject.SetActive(true);
         infoText.text = message;
     }
-
+    public void ShowError(string msg, string str)
+    {
+        ShowInfo($"{str}\n ErrorCode : {msg}");
+    }
     public void ShowError(ReadOnlyCollection<Exception> exceptions, string str)
     {
         foreach (System.Exception innerException in exceptions)
