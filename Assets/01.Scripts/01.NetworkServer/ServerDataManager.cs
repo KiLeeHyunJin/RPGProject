@@ -28,6 +28,10 @@ public class ServerDataManager : Singleton<ServerDataManager>
     protected override void Awake()
     {
         base.Awake();
+
+        serverNum = 0;
+        isLoadServerTable = default;
+
         VersionRefresh((state) =>
         {
             Action action = state ? 
@@ -37,8 +41,7 @@ public class ServerDataManager : Singleton<ServerDataManager>
             };
             action.Invoke();
         });
-        serverNum = 0;
-        isLoadServerTable = default;
+
     }
 
     public void VersionRefresh(Action<bool> refeshState)
@@ -46,8 +49,12 @@ public class ServerDataManager : Singleton<ServerDataManager>
         if (loadVersionTableCo == null)
             loadVersionTableCo = StartCoroutine(LoadServerVersionTable(refeshState));
     }
+
     public void EnterServer(int _serverNum)
     {
+        if (isLoadServerTable == false)
+            return;
+
         if (_serverNum > ServerCount)
         {
             Utils.ShowInfo($"ServerCount : {ServerCount} , Select Server Num {_serverNum}");

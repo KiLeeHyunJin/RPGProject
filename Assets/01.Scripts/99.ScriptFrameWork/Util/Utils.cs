@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class Utils
 {
+    public static T[] GetEnumArray<T>() where T : Enum
+    {
+        return (T[])Enum.GetValues(typeof(T));
+    }
 
     public static void OpenFolder(string path)
     {
@@ -12,7 +16,7 @@ public class Utils
         {
             if (!Directory.Exists(path))
             {
-                Message.LogError($"°æ·Î°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù: {path}");
+                Message.LogError($"ê²½ë¡œê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤: {path}");
                 return;
             }
 
@@ -25,7 +29,7 @@ public class Utils
         }
         catch (Exception ex)
         {
-            Message.LogError($"Æú´õ¸¦ ¿©´Â µµÁß ¿À·ù°¡ ¹ß»ıÇß½À´Ï´Ù: {ex.Message}");
+            Message.LogError($"í´ë”ë¥¼ ì—¬ëŠ” ë„ì¤‘ ì˜¤ë¥˜ê°€ ë°œìƒí–ˆìŠµë‹ˆë‹¤: {ex.Message}");
         }
     }
 
@@ -74,7 +78,7 @@ public class Utils
     }
 
     /// <summary>
-    /// ¿­°ÅÇü Å¸ÀÔÀ¸·Î º¯È¯À» ÇØ¼­ ¹İÈ¯ÇÕ´Ï´Ù.
+    /// ì—´ê±°í˜• íƒ€ì…ìœ¼ë¡œ ë³€í™˜ì„ í•´ì„œ ë°˜í™˜í•©ë‹ˆë‹¤.
     /// </summary>
     public static T ParseEnum<T>(string value, bool ignoreCase = true)
     {
@@ -82,7 +86,7 @@ public class Utils
     }
 
     /// <summary>
-    /// ÄÄÆ÷³ÍÆ®°¡ ÀÖÀ¸¸é ¹İÈ¯À» ÇÏ°í ¾øÀ¸¸é Ãß°¡¸¦ ÇÕ´Ï´Ù.
+    /// ì»´í¬ë„ŒíŠ¸ê°€ ìˆìœ¼ë©´ ë°˜í™˜ì„ í•˜ê³  ì—†ìœ¼ë©´ ì¶”ê°€ë¥¼ í•©ë‹ˆë‹¤.
     /// </summary>
     public static T GetOrAddComponent<T>(GameObject go) where T : UnityEngine.Component
     {
@@ -94,7 +98,7 @@ public class Utils
     }
 
     /// <summary>
-    /// °ÔÀÓ¿ÀºêÁ§Æ® ÀÚ½ÄÁß nameÀÇ ÀÌ¸§À» °®´Â °´Ã¼¸¦ ¹İÈ¯ÇÕ´Ï´Ù.
+    /// ê²Œì„ì˜¤ë¸Œì íŠ¸ ìì‹ì¤‘ nameì˜ ì´ë¦„ì„ ê°–ëŠ” ê°ì²´ë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
     /// </summary>
     public static GameObject FindChild(GameObject go, string name = null, bool recursive = false)
     {
@@ -105,7 +109,7 @@ public class Utils
     }
 
     /// <summary>
-    /// °ÔÀÓ¿ÀºêÁ§Æ®ÀÇ ÀÚ½Ä Áß TÅ¸ÀÔ ¿ä¼ÒÀÇ ÀÌ¸§ÀÌ nameÀÎ °´Ã¼¸¦ Ã£¾Æ ¹İÈ¯ÇÕ´Ï´Ù.
+    /// ê²Œì„ì˜¤ë¸Œì íŠ¸ì˜ ìì‹ ì¤‘ Tíƒ€ì… ìš”ì†Œì˜ ì´ë¦„ì´ nameì¸ ê°ì²´ë¥¼ ì°¾ì•„ ë°˜í™˜í•©ë‹ˆë‹¤.
     /// </summary>
     public static T FindChild<T>(GameObject go, string name = null, bool recursive = false) where T : UnityEngine.Object
     {

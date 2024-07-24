@@ -4,22 +4,41 @@ using UnityEngine;
 
 public class ServerData
 {
+    public class Characters
+    {
+        public Dictionary<string, CharacterServerData> characters;
+
+        public Characters()
+        {
+            characters = new();
+        }
+    }
+
     public class CharacterServerData
     {
-        public string nickName; //´Ğ³×ÀÓ
-        public short jobLv;     //Á÷¾÷, ·¹º§(1¹ÙÀÌÆ® ¾¿)
+        public string nickName; //ë‹‰ë„¤ì„
+        public short jobLv;     //ì§ì—…, ë ˆë²¨(1ë°”ì´íŠ¸ ì”©)
 
-        public long cloth;      //cÄ¡Àå
-        public int skin;        //¿ÜÇü    (1¹ÙÀÌÆ® ¾¿)
+        public long cloth;      //ëª¨ì, ìƒì˜, í•˜ì˜, ì‹ ë°œ, ì¥ê°‘, ë¬´ê¸°, 
+        public int skin;        //ì™¸í˜•    (1ë°”ì´íŠ¸ ì”©)
 
-        public int speed;       //ÀÌµ¿¼Óµµ, Á¡ÇÁ·Â,  °ø°İ¼Óµµ, Ãß°¡Å¸)
-        public int atck;        //¹°¸®°ø°İ, ¸¶¹ı°ø°İ, Ä¡¸í µ¥¹ÌÁö)
-        public int other;       //¸íÁß·ü, Ä¡¸í·ü, ¹æ¾î·Â, È¸ÇÇ·Â, 
-
-        public int ability;    //½ºÅÈ (1¹ÙÀÌÆ® ¾¿)
-
-        public long point;      //´É·ÂÄ¡, 0Â÷, 1Â÷, 2Â÷, 3Â÷, 4Â÷   
+        public AbilityServerData ability;      //ëŠ¥ë ¥ì¹˜
+        public InventoryServerData inventory;  //ì¸ë²¤
     }
+
+    public class AbilityServerData
+    {
+        public int speed;       //ì´ë™ì†ë„, ì í”„ë ¥,  ê³µê²©ì†ë„, ì¶”ê°€íƒ€)
+        public int atck;        //ë¬¼ë¦¬ê³µê²©, ë§ˆë²•ê³µê²©, ì¹˜ëª… ë°ë¯¸ì§€)
+        public int other;       //ëª…ì¤‘ë¥ , ì¹˜ëª…ë¥ , ë°©ì–´ë ¥, íšŒí”¼ë ¥, 
+
+        public int stat;        //ìŠ¤íƒ¯ (1ë°”ì´íŠ¸ ì”©)
+
+        public string skills;
+
+        public long point;      //ëŠ¥ë ¥ì¹˜, 0ì°¨, 1ì°¨, 2ì°¨, 3ì°¨, 4ì°¨   
+    }
+
 
     public class InventoryServerData
     {
@@ -38,16 +57,21 @@ public class ServerData
 
     public class ItemServerData
     {
-        public string itemName; //ÀÌ¸§
+        public string itemName; //ì´ë¦„
 
-        public long code;       //Á¾·ù, Ä«Å×°í¸®, ÀÌ¹ÌÁö, ½ºÅ©¸³ÅÍºí
-        public long itemData;   //Å¸ÀÔ, ·¹º§, °³¼ö, ÀÛ¼ö,
+        public long code;       //ì¢…ë¥˜, ì¹´í…Œê³ ë¦¬, ì´ë¯¸ì§€, ìŠ¤í¬ë¦½í„°ë¸”
+        public long itemData;   //íƒ€ì…, ë ˆë²¨, ê°œìˆ˜, ì‘ìˆ˜,
 
-        public int limitStat;   //Èû, ¹ÎÃ¸, Áö·Â, ¿î,
+        public int limitStat;   //í˜, ë¯¼ì²©, ì§€ë ¥, ìš´,
 
-        public long addAbility; //Èû, ¹ÎÃ¸, Áö·Â, ¿î, °ø°İ, ¸¶¹ı, ¹æ¾î, ÀÌ¼Ó, 
-        public long addStat;    //Èû, ¹ÎÃ¸, Áö·Â, ¿î, °ø°İ, ¸¶¹ı, ¹æ¾î, ÀÌ¼Ó, 
-        public long upgradeStat;//Èû, ¹ÎÃ¸, Áö·Â, ¿î, °ø°İ, ¸¶¹ı, ¹æ¾î, ÀÌ¼Ó, 
+        public long addAbility; //í˜, ë¯¼ì²©, ì§€ë ¥, ìš´, ê³µê²©, ë§ˆë²•, ë°©ì–´, ì´ì†, 
+        public long addStat;    //í˜, ë¯¼ì²©, ì§€ë ¥, ìš´, ê³µê²©, ë§ˆë²•, ë°©ì–´, ì´ì†, 
+        public long upgradeStat;//í˜, ë¯¼ì²©, ì§€ë ¥, ìš´, ê³µê²©, ë§ˆë²•, ë°©ì–´, ì´ì†, 
+    }
+
+    public class StorageBox
+    {
+        public List<ItemServerData> storage;
     }
 
 }

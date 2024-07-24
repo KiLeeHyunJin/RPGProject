@@ -68,6 +68,15 @@ public class UserData
         public int str;
     }
 
+    public class AdditionalStat
+    {
+        public int magic;
+        public int power;
+        public int defence;
+        public int speed;
+    }
+
+
     [Serializable]
     public class Inventory
     {
@@ -87,13 +96,24 @@ public class UserData
     [Serializable]
     public class Item
     {
-        public ulong addAbility;
-        public ulong addStat;
-
-        public ulong itemData;
         public string itemName;
-        public ulong limitStat;
-        public ulong upgradeStat;
+
+        public int level;
+
+        public int type;
+        public int possableCount;
+        public int count;
+
+        public Stat limitStat;
+
+        public Stat addAbility;
+        public AdditionalStat baseAdditional;
+
+        public Stat addStat;
+        public AdditionalStat addAdditional;
+
+        public Stat upgradeStat;
+        public AdditionalStat upgradeAdditional;
     }
 
 

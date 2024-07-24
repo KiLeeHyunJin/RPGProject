@@ -33,9 +33,11 @@ public class Define
     #endregion FireBasePath
 
 
-    public readonly static int ByteSize = 8;
+    public readonly static int Byte = 8;
 
-
+    public readonly static int Long = 8;
+    public readonly static int Int = 4;
+    public readonly static int Short = 2;
 
 
     //마지막 배열을 요소를 가리킨다
@@ -96,4 +98,11 @@ public class Define
         Three,
         Four,
     }
+
+    public enum ShortSize
+    { 
+        One,
+        Two,
+    }
+
 }

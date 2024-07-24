@@ -6,17 +6,17 @@ public static class UserCharacterExtension
     public static void CapsuleCharacterSkin(this Character character, int _hair, int _skin, int _face)
     {
         character.skin = default;
-        character.skin += (ulong)(_face << (int)Define.ByteSize * (int)Define.LongSize.Six);
-        character.skin += (ulong)(_skin << (int)Define.ByteSize * (int)Define.LongSize.Seven);
-        character.skin += (ulong)(_hair << (int)Define.ByteSize * (int)Define.LongSize.Eight);
+        character.skin += (ulong)(_face << (int)Define.Byte * (int)Define.LongSize.Six);
+        character.skin += (ulong)(_skin << (int)Define.Byte * (int)Define.LongSize.Seven);
+        character.skin += (ulong)(_hair << (int)Define.Byte * (int)Define.LongSize.Eight);
     }
 
     public static (int _hair, int _skin, int _face) DecapsuleCharacterSkin(this Character character)
     {
         ulong data = character.skin;
-        int face = (int)(data << (int)Define.ByteSize * (int)Define.LongSize.Three) >> (int)Define.ByteSize * (int)Define.LongSize.Eight;
-        int skin = (int)(data << (int)Define.ByteSize * (int)Define.LongSize.Two) >> (int)Define.ByteSize * (int)Define.LongSize.Eight;
-        int hair = (int)(data << (int)Define.ByteSize * (int)Define.LongSize.One) >> (int)Define.ByteSize * (int)Define.LongSize.Eight;
+        int face = (int)(data << (int)Define.Byte * (int)Define.LongSize.Three) >> (int)Define.Byte * (int)Define.LongSize.Eight;
+        int skin = (int)(data << (int)Define.Byte * (int)Define.LongSize.Two) >> (int)Define.Byte * (int)Define.LongSize.Eight;
+        int hair = (int)(data << (int)Define.Byte * (int)Define.LongSize.One) >> (int)Define.Byte * (int)Define.LongSize.Eight;
         return ( hair,  skin,  face);
     }
 
@@ -75,11 +75,11 @@ public static class UserCharacterExtension
 
     static void SetItemData(this UserData.Item item, int _level, int _count, int _type, int availNum)
     {
-        item.itemData = default;
-        item.itemData += ((ulong)_count << (int)Define.ByteSize * (int)Define.LongSize.Five);
-        item.itemData += ((ulong)_count << (int)Define.ByteSize * (int)Define.LongSize.Six);
-        item.itemData += ((ulong)_level << (int)Define.ByteSize * (int)Define.LongSize.Seven);
-        item.itemData += ((ulong)_type << (int)Define.ByteSize * (int)Define.LongSize.Eight);
+        //item.itemData = default;
+        //item.itemData += ((ulong)_count << (int)Define.Byte * (int)Define.LongSize.Five);
+        //item.itemData += ((ulong)_count << (int)Define.Byte * (int)Define.LongSize.Six);
+        //item.itemData += ((ulong)_level << (int)Define.Byte * (int)Define.LongSize.Seven);
+        //item.itemData += ((ulong)_type << (int)Define.Byte * (int)Define.LongSize.Eight);
     }
 
     static void SetItemStat(this Item item, Stat stat, Define.ItemStateType statType)
@@ -89,36 +89,36 @@ public static class UserCharacterExtension
 
     static void SetItemStat(this Item item, int str, int def, int man, int luk, Define.ItemStateType statType)
     {
-        SetItemStat(out ulong outStat, str, def, man, luk);
-        switch (statType)
-        {
-            case Define.ItemStateType.Add:
-                item.addStat = outStat;
-                break;
-            case Define.ItemStateType.Limit:
-                item.limitStat = outStat;
-                break;
-            case Define.ItemStateType.Upgrade:
-                item.upgradeStat = outStat;
-                break;
-        }
+        //SetItemStat(out ulong outStat, str, def, man, luk);
+        //switch (statType)
+        //{
+        //    case Define.ItemStateType.Add:
+        //        item.addStat = outStat;
+        //        break;
+        //    case Define.ItemStateType.Limit:
+        //        item.limitStat = outStat;
+        //        break;
+        //    case Define.ItemStateType.Upgrade:
+        //        item.upgradeStat = outStat;
+        //        break;
+        //}
     }
 
     static void SetItemStat(out ulong stat, int str, int def, int man, int luk)
     {
         stat = default;
-        stat += ((ulong)luk << (int)Define.ByteSize * (int)Define.LongSize.Five);
-        stat += ((ulong)man << (int)Define.ByteSize * (int)Define.LongSize.Six);
-        stat += ((ulong)def << (int)Define.ByteSize * (int)Define.LongSize.Seven);
-        stat += ((ulong)str << (int)Define.ByteSize * (int)Define.LongSize.Eight);
+        stat += ((ulong)luk << (int)Define.Byte * (int)Define.LongSize.Five);
+        stat += ((ulong)man << (int)Define.Byte * (int)Define.LongSize.Six);
+        stat += ((ulong)def << (int)Define.Byte * (int)Define.LongSize.Seven);
+        stat += ((ulong)str << (int)Define.Byte * (int)Define.LongSize.Eight);
 
     }
 
     static void SetItemAility(this Item item, int atck, int man)
     {
-        item.addAbility = default;
-        item.addAbility += ((ulong)man << (int)Define.ByteSize * (int)Define.LongSize.Seven);
-        item.addAbility += ((ulong)atck << (int)Define.ByteSize * (int)Define.LongSize.Eight);
+        //item.addAbility = default;
+        //item.addAbility += ((ulong)man << (int)Define.Byte * (int)Define.LongSize.Seven);
+        //item.addAbility += ((ulong)atck << (int)Define.Byte * (int)Define.LongSize.Eight);
 
     }
     #endregion Item
