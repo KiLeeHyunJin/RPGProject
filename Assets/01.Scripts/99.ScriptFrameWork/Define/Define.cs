@@ -3,11 +3,18 @@ using System;
 public class Define
 {
     public readonly static int InventoryCount = 30;
+    public readonly static int SlotDefaultSize = 2;
+
+    #region Directory
 
     public readonly static string dir = "./Bundle";
     public readonly static string bundleTable = "/BundleTable.txt";
     public readonly static string android = "/Android";
     public readonly static string window = "/Windows";
+
+    #endregion
+
+    #region FireBasePath
 
     public readonly static string SearchNickName = "nickNames";
     public readonly static string UseNickName = "useName";
@@ -22,8 +29,15 @@ public class Define
     public readonly static string Skill = "skill";
     public readonly static string Stat = "stat";
 
+
+    #endregion FireBasePath
+
+
     public readonly static int ByteSize = 8;
-    public readonly static int SlotDefaultSize = 2;
+
+
+
+
     //마지막 배열을 요소를 가리킨다
     public static Index EndIndex = ^1;
 

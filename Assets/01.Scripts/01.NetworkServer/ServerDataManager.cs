@@ -16,21 +16,46 @@ public class ServerDataManager : Singleton<ServerDataManager>
     [SerializeField] ServerSettings photonServer;
     [SerializeField] List<string[]> serverVersionTable;
     [SerializeField] int serverNum;
-
+    Coroutine loadVersionTableCo;
+    bool isLoadServerTable;
+    public int ServerCount
+    {
+        get
+        {
+            return serverVersionTable == null ? 0 :serverVersionTable.Count - 1;
+        }
+    }
     protected override void Awake()
     {
         base.Awake();
         VersionRefresh((state) =>
         {
-            Action action = state ? LoadInit : LoadError;
+            Action action = state ? 
+            LoadInit : () => 
+            {
+                Utils.ShowInfo("서버 데이터를 가져오지 못하였습니다."); 
+            };
             action.Invoke();
         });
         serverNum = 0;
+        isLoadServerTable = default;
     }
 
-    void LoadError()
+    public void VersionRefresh(Action<bool> refeshState)
     {
-        Debug.Log("서버 데이터를 가져오지 못하였습니다.");
+        if (loadVersionTableCo == null)
+            loadVersionTableCo = StartCoroutine(LoadServerVersionTable(refeshState));
+    }
+    public void EnterServer(int _serverNum)
+    {
+        if (_serverNum > ServerCount)
+        {
+            Utils.ShowInfo($"ServerCount : {ServerCount} , Select Server Num {_serverNum}");
+            return;
+        }
+
+        serverNum = _serverNum;
+        SetServer();
     }
 
     void LoadInit()
@@ -38,13 +63,12 @@ public class ServerDataManager : Singleton<ServerDataManager>
         photonServer.AppSettings.Protocol = ExitGames.Client.Photon.ConnectionProtocol.Udp;
         photonServer.AppSettings.FixedRegion = "kr";
         photonServer.DevRegion = "kr";
-        SetServer();
+        isLoadServerTable = true;
+        //SetServer();
     }
-    public void EnterServer(int _serverNum)
-    {
-        this.serverNum = _serverNum;
-        SetServer();
-    }
+
+    
+
     [ContextMenu("EnterServer")]
     void SetServer()
     {
@@ -54,13 +78,12 @@ public class ServerDataManager : Singleton<ServerDataManager>
         photonServer.AppSettings.AppVersion     = serverData[(int)ServerDataType.Version];
     }
 
-    public void VersionRefresh(Action<bool> refeshState)
-    {
-        StartCoroutine(LoadServerVersionTable(refeshState));
-    }
+
 
     IEnumerator LoadServerVersionTable(Action<bool> refeshState)
     {
+        isLoadServerTable = default;
+
         if (Application.internetReachability == NetworkReachability.NotReachable)
         {
             refeshState?.Invoke(false);
@@ -74,24 +97,22 @@ public class ServerDataManager : Singleton<ServerDataManager>
         int length = rows.Length;
 
         if (serverVersionTable != null)
+        {
+            if (serverVersionTable.Capacity < length)
+                serverVersionTable.Capacity = length;
+
             serverVersionTable.Clear();
+        }
         else
+        {
             serverVersionTable = new(length);
+        }
 
         for (int i = 1; i < length; i++)
         {
             string[] versionData = rows[i].Split(',');
             serverVersionTable.Add(versionData);
         }
-
-        //if (System.IO.Directory.Exists(localVersionPath) == false)
-        //    System.IO.Directory.CreateDirectory(localVersionPath);
-
-        //System.IO.FileStream fs = new($"{localVersionPath}{localVersionTablePath}", System.IO.FileMode.Create);
-
-        //byte[] data = uwr.downloadHandler.data;
-        //fs.Write(data, 0, data.Length);
-        //fs.Dispose();
 
         refeshState?.Invoke(serverVersionTable != null);
     }
@@ -120,13 +141,5 @@ public class ServerDataManager : Singleton<ServerDataManager>
         Version,
         ServerID,
         ChatID,
-    }
-
-    enum VersionTable// 버전 테이블 Column(열) 정보
-    {
-        ServerName, // 번들 파일 명
-        Version, // 번들 버전 정보
-        PunId, // 번들 설치 링크
-        ChatId, // 번들 설치 링크
     }
 }

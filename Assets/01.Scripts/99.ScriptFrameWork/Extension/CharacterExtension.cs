@@ -1,6 +1,6 @@
 using static UserData;
 
-public static class CharacterExtension
+public static class UserCharacterExtension
 {
     #region Character
     public static void SetSkin(this Character character, int _hair, int _skin, int _face)
