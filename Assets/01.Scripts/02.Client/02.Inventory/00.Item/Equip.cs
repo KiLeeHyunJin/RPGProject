@@ -6,7 +6,8 @@ public class Equip : Item
 {
     public int level;
     public int possableCount;
-
+    public Define.EquipType wearType;
+    public int category;
     public Stat limitStat;
 
     public Stat addAbility;

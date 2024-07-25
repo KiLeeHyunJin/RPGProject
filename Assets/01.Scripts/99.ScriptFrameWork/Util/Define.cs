@@ -40,6 +40,28 @@ public class Define
 
     }
 
+    public enum EquipType
+    {
+        Cap,
+        Shirt,
+        Pants,
+        Shoes,
+        Glove,
+        Weapon
+    }
+
+    public enum ConsumeType
+    {
+        Heal,
+        During,
+    }
+
+    public enum HealType
+    {
+        Hp,
+        Mp,
+    }
+
 
 
 }

@@ -104,7 +104,7 @@ public static class UserCharacterExtension
 
     #region Item
 
-    public static (int itemType, int category, int img, int scriptable) ParseCode(this ItemEctServerData item)
+    public static (int itemType, int count, int img, int scriptable) ParseCode(this ItemEctServerData item)
     {
         return
             (
@@ -112,16 +112,6 @@ public static class UserCharacterExtension
                 item.code.ExtractByte(DataDefine.LongSize.Two),
                 item.code.ExtractByte(DataDefine.LongSize.Three),
                 item.code.ExtractByte(DataDefine.LongSize.Four)
-            );
-    }
-    public static (int itemType, int level, int count, int possable) ParseData(this ItemEctServerData item)
-    {
-        return
-            (
-                item.itemData.ExtractByte(DataDefine.LongSize.One),
-                item.itemData.ExtractByte(DataDefine.LongSize.Two),
-                item.itemData.ExtractByte(DataDefine.LongSize.Three),
-                item.itemData.ExtractByte(DataDefine.LongSize.Four)
             );
     }
 
@@ -136,25 +126,28 @@ public static class UserCharacterExtension
             );
     }
 
-    public static (int str, int def, int man, int luk, int atck, int magic, int defence, int speed) ParseAddAbilityEquip(this ItemEquipServerData item)
+    public static (Stat stat, AdditionalStat additional) ParseAddAbilityEquip(this ItemEquipServerData item)
     {
-        return
+        
+        Stat stat = new
             (
-                item.addAbility.ExtractByte(DataDefine.LongSize.One),
-                item.addAbility.ExtractByte(DataDefine.LongSize.Two),
-                item.addAbility.ExtractByte(DataDefine.LongSize.Three),
-                item.addAbility.ExtractByte(DataDefine.LongSize.Four),
-                item.addAbility.ExtractByte(DataDefine.LongSize.Five),
-                item.addAbility.ExtractByte(DataDefine.LongSize.Six),
-                item.addAbility.ExtractByte(DataDefine.LongSize.Seven),
-                item.addAbility.ExtractByte(DataDefine.LongSize.Eight)
+            item.addAbility.ExtractByte(DataDefine.LongSize.One),
+            item.addAbility.ExtractByte(DataDefine.LongSize.Two),
+            item.addAbility.ExtractByte(DataDefine.LongSize.Three),
+            item.addAbility.ExtractByte(DataDefine.LongSize.Four)
             );
+        AdditionalStat additional = new(
+            item.addAbility.ExtractByte(DataDefine.LongSize.Five),
+            item.addAbility.ExtractByte(DataDefine.LongSize.Six),
+            item.addAbility.ExtractByte(DataDefine.LongSize.Seven),
+            item.addAbility.ExtractByte(DataDefine.LongSize.Eight));
+        return
+            (stat, additional);
     }
 
-    public static (int limitStr, int limitDef, int limitMan, int limitLuk) ParseLimitStat(this ItemEquipServerData item)
+    public static Stat ParseLimitStat(this ItemEquipServerData item)
     {
-        return
-            (
+        return new(
                 item.limitStat.ExtractByte(DataDefine.IntSize.One),
                 item.limitStat.ExtractByte(DataDefine.IntSize.Two),
                 item.limitStat.ExtractByte(DataDefine.IntSize.Three),
@@ -164,34 +157,65 @@ public static class UserCharacterExtension
 
 
 
-    public static (int str, int def, int man, int luk, int atck, int magic, int defence, int speed) ParseAddStat(this ItemEquipServerData item)
+    public static (Stat stat, AdditionalStat additional) ParseAddStat(this ItemEquipServerData item)
     {
         return
             (
+            new(
                 item.addStat.ExtractByte(DataDefine.LongSize.One),
                 item.addStat.ExtractByte(DataDefine.LongSize.Two),
                 item.addStat.ExtractByte(DataDefine.LongSize.Three),
-                item.addStat.ExtractByte(DataDefine.LongSize.Four),
+                item.addStat.ExtractByte(DataDefine.LongSize.Four))
+               ,
+            new(
                 item.addStat.ExtractByte(DataDefine.LongSize.Five),
                 item.addStat.ExtractByte(DataDefine.LongSize.Six),
                 item.addStat.ExtractByte(DataDefine.LongSize.Seven),
                 item.addStat.ExtractByte(DataDefine.LongSize.Eight)
-            );
+                ));
     }
-    public static (int str, int def, int man, int luk, int atck, int magic, int defence, int speed) ParseUpgradeStat(this ItemEquipServerData item)
+    public static (Stat stat, AdditionalStat additional) ParseUpgradeStat(this ItemEquipServerData item)
     {
         return
             (
+             new(
                 item.upgradeStat.ExtractByte(DataDefine.LongSize.One),
                 item.upgradeStat.ExtractByte(DataDefine.LongSize.Two),
                 item.upgradeStat.ExtractByte(DataDefine.LongSize.Three),
-                item.upgradeStat.ExtractByte(DataDefine.LongSize.Four),
+                item.upgradeStat.ExtractByte(DataDefine.LongSize.Four)
+                ),
+            new(
                 item.upgradeStat.ExtractByte(DataDefine.LongSize.Five),
                 item.upgradeStat.ExtractByte(DataDefine.LongSize.Six),
                 item.upgradeStat.ExtractByte(DataDefine.LongSize.Seven),
                 item.upgradeStat.ExtractByte(DataDefine.LongSize.Eight)
+                ));
+    }
+
+    public static Equip ExtractItem(this ItemEquipServerData item)
+    {
+        Equip equip = new();
+        equip.limitStat = item.ParseLimitStat();
+        (equip.addAbility, equip.addAdditional) = item.ParseAddAbilityEquip();
+
+        (equip.addStat, equip.addAdditional) = item.ParseAddStat();
+        (equip.upgradeStat, equip.upgradeAdditional) = item.ParseUpgradeStat();
+
+
+        return null;
+    }
+
+    public static (int wearType, int level, int category, int possable) ParseData(this ItemEquipServerData item)
+    {
+        return
+            (
+                item.itemData.ExtractByte(DataDefine.LongSize.One),
+                item.itemData.ExtractByte(DataDefine.LongSize.Two),
+                item.itemData.ExtractByte(DataDefine.LongSize.Three),
+                item.itemData.ExtractByte(DataDefine.LongSize.Four)
             );
     }
+
     #endregion Item
 
 }

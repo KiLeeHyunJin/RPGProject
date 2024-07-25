@@ -73,8 +73,7 @@ public class ServerData
     public class ItemEctServerData
     {
         public string itemName; //이름
-        public long code;       //종류, 카테고리, 이미지, 스크립터블
-        public long itemData;   //타입, 레벨, 개수, 작수,
+        public long code;       //종류, 개수, 이미지, 스크립터블
 
     }
     public class ItemConsumeServerData : ItemEctServerData
@@ -86,6 +85,8 @@ public class ServerData
     public class ItemEquipServerData : ItemConsumeServerData
     {
         public int limitStat;   //힘, 민첩, 지력, 운,
+        public long itemData;   //장착타입, 장착 레벨, 카테고리 , 작수,
+
         //addAbility; //힘, 민첩, 지력, 운, 공격, 마법, 방어, 이속, 
         public long addStat;    //힘, 민첩, 지력, 운, 공격, 마법, 방어, 이속, 
         public long upgradeStat;//힘, 민첩, 지력, 운, 공격, 마법, 방어, 이속, 

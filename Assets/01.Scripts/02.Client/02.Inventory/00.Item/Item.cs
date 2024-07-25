@@ -9,6 +9,8 @@ public class Item
 
     public ItemType itemType;
     public int count;
+    public int imgData;
+    public int scriptableData;
 
     public string info;
 }
