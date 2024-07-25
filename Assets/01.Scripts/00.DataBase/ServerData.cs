@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class ServerData
 {
-    public class USerServerData
+    public class UserServerData
     {
-        public Dictionary<string, CharacterServerData> characters;
-
-        public USerServerData()
+        public UserServerData()
         {
             characters = new();
         }
+        public Dictionary<string, CharacterServerData> characters;
     }
 
     public class CharacterServerData
@@ -42,6 +41,12 @@ public class ServerData
 
     public class InventoryServerData
     {
+        public InventoryServerData()
+        {
+            ect = new();
+            equip = new();
+            consume = new();
+        }
         public void SetInvenSize(int equipCount, int consumeCount, int ectCount)
         {
             equip.Capacity = equipCount;
@@ -49,17 +54,12 @@ public class ServerData
             ect.Capacity = ectCount;
         }
 
-        public InventoryServerData()
-        {
-            ect = new();
-            equip = new();
-            consume = new();
-        }
-
         public List<ItemServerData> consume;
         public List<ItemServerData> ect;
         public List<ItemServerData> equip;
+
         public long money;
+        public int slotCount;
     }
 
     public class ItemServerData
