@@ -4,8 +4,15 @@ using UnityEngine;
 
 public static class DataTypeExtension 
 {
+
+    public static System.Threading.Tasks.Task SetData(this Firebase.Database.FirebaseDatabase DB, string path,string json)
+    {
+        return DB.GetReference(path).SetRawJsonValueAsync(json);
+    }
+
+
     /// <summary>
-    /// Æ¯Á¤ À§Ä¡ÀÇ ¹ÙÀÌÆ®¸¦ ÃßÃâÇÑ´Ù.
+    /// íŠ¹ì • ìœ„ì¹˜ì˜ ë°”ì´íŠ¸ë¥¼ ì¶”ì¶œí•œë‹¤.
     /// </summary>
     /// 
     public static int ExtractByte(this long mover, DataDefine.LongSize extract)
@@ -34,7 +41,7 @@ public static class DataTypeExtension
     }
 
     /// <summary>
-    /// Æ¯Á¤ À§Ä¡·Î ºñÆ®¸¦ ¹Ğ¾î³½´Ù.
+    /// íŠ¹ì • ìœ„ì¹˜ë¡œ ë¹„íŠ¸ë¥¼ ë°€ì–´ë‚¸ë‹¤.
     /// </summary>
     public static short Shift(this short mover, DataDefine.ShortSize shiftValue)
     {

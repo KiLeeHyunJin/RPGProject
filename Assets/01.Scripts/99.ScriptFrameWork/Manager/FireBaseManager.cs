@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
-using static UserData;
+using static ServerData;
 
 public class FireBaseManager : Singleton<FireBaseManager>
 {
@@ -14,6 +14,8 @@ public class FireBaseManager : Singleton<FireBaseManager>
     public static Firebase.FirebaseApp App { get { return app; } }
     public static Firebase.Auth.FirebaseAuth Auth { get { return auth; } }
     public static Firebase.Database.FirebaseDatabase DB { get { return db; } }
+
+
 
     protected override void Awake()
     {
@@ -46,7 +48,7 @@ public class FireBaseManager : Singleton<FireBaseManager>
         }
     }
 
-    public void SaveUser(string userId, User user)
+    public void SaveUser(string userId, UserServerData user)
     {
         string json = JsonUtility.ToJson(user);
         DB.RootReference.Child("users").Child(userId).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
@@ -62,7 +64,7 @@ public class FireBaseManager : Singleton<FireBaseManager>
         });
     }
 
-    public void SaveCharacter(string userId, string characterId, in Character character)
+    public void SaveCharacter(string userId, string characterId, in CharacterServerData character)
     {
         string json = JsonUtility.ToJson(character);
         DB.RootReference.Child("users").Child(userId).Child("characters").Child(characterId).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
@@ -78,7 +80,7 @@ public class FireBaseManager : Singleton<FireBaseManager>
         });
     }
 
-    public void LoadUser(string userId, System.Action<User> callback)
+    public void LoadUser(string userId, System.Action<UserServerData> callback)
     {
         DB.RootReference.Child("users").Child(userId).GetValueAsync().ContinueWithOnMainThread(task =>
         {
@@ -92,10 +94,8 @@ public class FireBaseManager : Singleton<FireBaseManager>
                 if (snapshot.Exists)
                 {
                     string jsonData = snapshot.GetRawJsonValue();
-                    UserData.User user = JsonConvert.DeserializeObject<User>(jsonData);
+                    UserServerData user = JsonConvert.DeserializeObject<UserServerData>(jsonData);
                     callback?.Invoke(user);
-
-
 #if UNITY_EDITOR
                     foreach (var character in user.characters)
                         Debug.Log("Character NickName: " + character.Value.nickName);
@@ -113,7 +113,7 @@ public class FireBaseManager : Singleton<FireBaseManager>
         });
     }
 
-    public void LoadCharacter(string userId, string characterId, System.Action<Character> callback)
+    public void LoadCharacter(string userId, string characterId, System.Action<CharacterServerData> callback)
     {
         DB.RootReference.Child("users").Child(userId).Child("characters").Child(characterId).GetValueAsync().ContinueWithOnMainThread(task =>
         {
@@ -127,7 +127,7 @@ public class FireBaseManager : Singleton<FireBaseManager>
                 if (snapshot.Exists)
                 {
                     string json = snapshot.GetRawJsonValue();
-                    Character character = JsonUtility.FromJson<Character>(json);
+                    CharacterServerData character = JsonUtility.FromJson<CharacterServerData>(json);
                     callback(character);
                 }
                 else

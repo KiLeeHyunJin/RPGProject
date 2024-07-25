@@ -1,18 +1,14 @@
-using Firebase.Auth;
-using Firebase;
 using Firebase.Extensions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using WebSocketSharp;
-using System;
-using static UserData;
 
 public class LoginPanel : MonoBehaviour
 {
 
     [SerializeField] TMP_InputField emailInputField;
-    [SerializeField] TMP_InputField passInputField; 
+    [SerializeField] TMP_InputField passInputField;
 
     [SerializeField] Button signUpButton; //회원가입 버튼
     [SerializeField] Button loginButton; //로그인 버튼
@@ -64,9 +60,9 @@ public class LoginPanel : MonoBehaviour
             }
             SetInteractable(true);
 
-            if(FireBaseManager.Auth.CurrentUser.IsEmailVerified)
+            if (FireBaseManager.Auth.CurrentUser.IsEmailVerified)
             {
-                if(FireBaseManager.Auth.CurrentUser.DisplayName.IsNullOrEmpty() == false)
+                if (FireBaseManager.Auth.CurrentUser.DisplayName.IsNullOrEmpty() == false)
                 {
                     Photon.Pun.PhotonNetwork.ConnectUsingSettings();
                 }

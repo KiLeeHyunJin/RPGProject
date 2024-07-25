@@ -24,9 +24,20 @@ public class Utils
         (panel as InfoPanel).ShowError(exception.Message, info);
     }
 
-/// <summary>
-/// 해당 주소의 폴더를 열어줍니다.
-/// </summary>
+
+
+    public static string GetCharacterInventoryPath(string userId, string nickName, Define.ItemType itemType)
+    {
+        return $"{GetCharacterPath(userId, nickName)}/{DataDefine.Inventory}/{itemType.ToString().ToLower()}";
+    }
+    public static string GetCharacterPath(string userId, string nickName)
+    {
+        return $"{DataDefine.User}/{userId}/{DataDefine.Character}/{nickName}";
+    }
+
+    /// <summary>
+    /// 해당 주소의 폴더를 열어줍니다.
+    /// </summary>
     public static void OpenFolder(string path)
     {
         try

@@ -32,28 +32,14 @@ public class Define
         MLight,
     }
 
-    public enum StatType
-    {
-        Str,
-        Def,
-        Man,
-        Luk,
-    }
-
     public enum ItemType
-    {
-        Ect,
-        Consume,
+    { 
         Equip,
+        Consume,
+        Ect,
+
     }
 
-    public enum ItemStateType
-    {
-        Add,
-        Limit,
-        Upgrade,
-    }
 
-   
 
 }

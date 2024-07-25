@@ -18,27 +18,13 @@ public class DataDefine
     public readonly static string Stat = "stat";
 
 
+
     public readonly static int Byte = 8;
 
     public readonly static int Long = 8;
     public readonly static int Int = 4;
     public readonly static int Short = 2;
 
-    public enum CharacterData
-    {
-        Job,
-        Level,
-        Cloth,
-        Skin,
-    }
-
-    public enum AbilityData
-    {
-        Speed,
-        Atack,
-        Other,
-
-    }
 
     public enum LongSize
     {

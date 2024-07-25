@@ -2,15 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Item : MonoBehaviour
+public class Equip : Item
 {
-    public string itemName;
-
     public int level;
-
-    public int type;
     public int possableCount;
-    public int count;
 
     public Stat limitStat;
 
@@ -22,5 +17,4 @@ public class Item : MonoBehaviour
 
     public Stat upgradeStat;
     public AdditionalStat upgradeAdditional;
-
 }

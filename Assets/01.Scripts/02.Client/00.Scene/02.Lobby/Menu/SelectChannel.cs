@@ -1,11 +1,12 @@
 using Firebase.Extensions;
 using System.Collections.Generic;
 using UnityEngine;
+using static ServerData;
 
 public class SelectChannel : MonoBehaviour
 {
     [SerializeField] int serverNum;
-    List<UserData.Character> characterDic;
+    List<CharacterServerData> characterDic;
 
 
     private void Start()
@@ -33,7 +34,7 @@ public class SelectChannel : MonoBehaviour
                 if (snapshot.Exists)
                 {
                     string json = snapshot.GetRawJsonValue();
-                    UserData.User user = JsonUtility.FromJson<UserData.User>(json);
+                    UserServerData user = JsonUtility.FromJson<UserServerData>(json);
                     //characterDic = user.characters;
                     DebugCharacterName();
                 }

@@ -1,21 +1,15 @@
 using Firebase.Database;
 using Firebase.Extensions;
-using Newtonsoft.Json;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using static UnityEngine.UIElements.UxmlAttributeDescription;
-using static UserData;
+using static ServerData;
 
 public class CreateCharacter : MonoBehaviour
 {
-    User user;
+    UserServerData user;
     enum Buttons
     {
 
@@ -75,17 +69,10 @@ public class CreateCharacter : MonoBehaviour
             return;
         }
 
-        UserData.Character uploadCharacterData = OnCreateCharacter();
-        //new() { nickName = this.nickName, stat = this.stat };
-        UserData.Name saveName =
+        CharacterServerData uploadCharacterData = //OnCreateCharacter();
+        new() { nickName = this.nickName };
+        Name saveName =
             new() { nickName = this.nickName, userId = this.userId };
-
-        for (int i = 0; i < Define.SlotDefaultSize; i++)
-        {
-            uploadCharacterData.inventory.ect.Add(new Item());
-            uploadCharacterData.inventory.consume.Add(new Item());
-            uploadCharacterData.inventory.equip.Add(new Item());
-        }
 
         string nickJson = JsonUtility.ToJson(saveName);
         string json = JsonUtility.ToJson(uploadCharacterData);
@@ -104,7 +91,7 @@ public class CreateCharacter : MonoBehaviour
         });
     }
 
-   
+
 
     //캐릭터 삭제
     void RemoveCharacterData()
@@ -150,34 +137,9 @@ public class CreateCharacter : MonoBehaviour
     }
 
 
-    public Character OnCreateCharacter()
+    public CharacterServerData OnCreateCharacter()
     {
-        return new()
-        {
-            nickName = nickName,
-            level = default,
-            job = default,
-            ability = new Ability
-            {
-                accuracy = 10.0f,
-                atckPower = 20.0f,
-                atckSpeed = 1.5f,
-                defence = 5.0f,
-                jumpPower = 2.0f,
-                magicPower = 15.0f,
-                moveSpeed = 3.0f,
-                point = 100
-            },
-            stat = this.stat,
-            inventory = new Inventory
-            {
-                consume = new(Define.SlotDefaultSize),
-                ect = new(Define.SlotDefaultSize),
-                equip = new(Define.SlotDefaultSize),
-                money = default
-            },
-            skill = "Basic Attack"
-        };
+        return null;
 
     }
 }
