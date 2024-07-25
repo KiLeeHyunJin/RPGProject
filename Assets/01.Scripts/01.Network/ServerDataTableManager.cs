@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class ServerDataManager : Singleton<ServerDataManager>
+public class ServerDataTableManager : Singleton<ServerDataTableManager>
 {
     const string DownloadPath = "https://drive.google.com/uc?export=download&id=";
     const string serverVersionTableURL = "https://docs.google.com/spreadsheets/d/1um5DzNP_nYsw0XQ8v8vWW9kjLK5fYv8WOxlOLx9KO0U/export?format=csv";  // 서버 id
@@ -50,6 +50,7 @@ public class ServerDataManager : Singleton<ServerDataManager>
             loadVersionTableCo = StartCoroutine(LoadServerVersionTable(refeshState));
     }
 
+    [ContextMenu("EnterServer")]
     public void EnterServer(int _serverNum)
     {
         if (isLoadServerTable == false)
@@ -71,12 +72,8 @@ public class ServerDataManager : Singleton<ServerDataManager>
         photonServer.AppSettings.FixedRegion = "kr";
         photonServer.DevRegion = "kr";
         isLoadServerTable = true;
-        //SetServer();
     }
 
-    
-
-    [ContextMenu("EnterServer")]
     void SetServer()
     {
         string[] serverData = serverVersionTable[serverNum];

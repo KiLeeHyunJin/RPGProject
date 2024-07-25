@@ -5,11 +5,28 @@ using UnityEngine;
 
 public class Utils
 {
-    public static T[] GetEnumArray<T>() where T : Enum
+
+    public static void ShowInfo(string info)
     {
-        return (T[])Enum.GetValues(typeof(T));
+        PopUpUI panel = Manager.UI.ShowPopUpUI("InfoPanel");
+        (panel as InfoPanel).ShowInfo(info);
     }
 
+    public static void ShowError(System.Collections.ObjectModel.ReadOnlyCollection<Exception> exceptions, string info)
+    {
+        PopUpUI panel = Manager.UI.ShowPopUpUI("InfoPanel");
+        (panel as InfoPanel).ShowError(exceptions, info);
+    }
+
+    public static void ShowError(System.Exception exception, string info)
+    {
+        PopUpUI panel = Manager.UI.ShowPopUpUI("InfoPanel");
+        (panel as InfoPanel).ShowError(exception.Message, info);
+    }
+
+/// <summary>
+/// 해당 주소의 폴더를 열어줍니다.
+/// </summary>
     public static void OpenFolder(string path)
     {
         try
@@ -32,10 +49,6 @@ public class Utils
             Message.LogError($"폴더를 여는 도중 오류가 발생했습니다: {ex.Message}");
         }
     }
-
-   
-
-
 
     public static List<string> GetAssetBundleNames()
     {
@@ -60,21 +73,13 @@ public class Utils
         return assetBundleNames;
     }
 
-    public static void ShowInfo(string info)
-    {
-        PopUpUI panel = Manager.UI.ShowPopUpUI("InfoPanel");
-        (panel as InfoPanel).ShowInfo(info);
-    }
 
-    public static void ShowError(System.Collections.ObjectModel.ReadOnlyCollection<Exception> exceptions, string info)
+    /// <summary>
+    /// 해당 열거형 타입의 요소를 배열로 만들어 반환합니다.
+    /// </summary>
+    public static T[] GetEnumArray<T>() where T : Enum
     {
-        PopUpUI panel = Manager.UI.ShowPopUpUI("InfoPanel");
-        (panel as InfoPanel).ShowError(exceptions, info);
-    }
-    public static void ShowError(System.Exception exception, string info)
-    {
-        PopUpUI panel = Manager.UI.ShowPopUpUI("InfoPanel");
-        (panel as InfoPanel).ShowError(exception.Message, info);
+        return (T[])Enum.GetValues(typeof(T));
     }
 
     /// <summary>

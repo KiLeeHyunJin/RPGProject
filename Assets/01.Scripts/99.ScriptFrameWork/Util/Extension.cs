@@ -7,57 +7,6 @@ namespace UnityEngine
     public static class Extension
     {
         /// <summary>
-        /// 특정 위치의 바이트를 추출한다.
-        /// </summary>
-        /// 
-
-
-
-        public static int ExtractByte(this long mover, Define.LongSize extract)
-        {
-            int lastPosValue = (int)Utils.GetEnumArray<Define.LongSize>()[Define.EndIndex];
-            int leftShiftValue = lastPosValue - (int)extract;
-            mover <<= leftShiftValue;
-            return (int)mover >> lastPosValue;
-        }
-
-        public static int ExtractByte(this int mover, Define.IntSize extract)
-        {
-            int lastPosValue = (int)Utils.GetEnumArray<Define.IntSize>()[Define.EndIndex];
-            int leftShiftValue = lastPosValue - (int)extract;
-            mover <<= leftShiftValue;
-            return mover >> lastPosValue;
-        }
-
-        public static int ExtractByte(this short mover, Define.ShortSize extract)
-        {
-            int computeValue = mover;
-            int lastPosValue = (int)Utils.GetEnumArray<Define.ShortSize>()[Define.EndIndex];
-            int leftShiftValue = lastPosValue - (int)extract;
-            computeValue <<=  leftShiftValue;
-            return computeValue >> lastPosValue;
-        }
-
-        /// <summary>
-        /// 특정 위치로 비트를 밀어낸다.
-        /// </summary>
-        public static short Shift(this short mover, Define.ShortSize shiftValue)
-        {
-            return (short)(mover << (Define.Byte * (int)shiftValue));
-        }
-
-        public static int Shift(this int mover, Define.IntSize shiftValue)
-        {
-            return (int)(mover << (Define.Byte * (int)shiftValue));
-        }
-
-        public static long Shift(this long mover, Define.LongSize shiftValue)
-        {
-            return (long)(mover << (Define.Byte * (int)shiftValue));
-        }
-
-
-        /// <summary>
         /// 버튼의 Null상태를 확인한 후 액션을 제거 후 추가
         /// </summary>
         public static bool NullCheckAndAddListener(this UI.Button btn, Events.UnityAction action, bool allRemoveListner = false)

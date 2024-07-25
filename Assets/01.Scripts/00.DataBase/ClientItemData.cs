@@ -12,11 +12,11 @@ public class ClientItemData
     public int atck;
     public int man;
 
-    public UserData.Stat limitStat;
-    public UserData.Stat addStat;
-    public UserData.Stat upgradeStat;
+    public Stat limitStat;
+    public Stat addStat;
+    public Stat upgradeStat;
 
-    public void ParseItemData(UserData.Item capsuleItem)
+    public void ParseItemData(Item capsuleItem)
     {
         /*
         itemName = capsuleItem.itemName;
@@ -55,12 +55,12 @@ public class ClientItemData
         */
     }
 
-    void ParseStat(ref UserData.Stat stat, ulong dataLong)
+    void ParseStat(ref Stat stat, ulong dataLong)
     {
-        stat.str = (int)((dataLong << (int)Define.Byte * (int)Define.LongSize.One) >> (int)Define.Byte * (int)Define.LongSize.Eight);
-        stat.def = (int)((dataLong << (int)Define.Byte * (int)Define.LongSize.Two) >> (int)Define.Byte * (int)Define.LongSize.Eight);
-        stat.man = (int)((dataLong << (int)Define.Byte * (int)Define.LongSize.Three) >> (int)Define.Byte * (int)Define.LongSize.Eight);
-        stat.luk = (int)((dataLong << (int)Define.Byte * (int)Define.LongSize.Four) >> (int)Define.Byte * (int)Define.LongSize.Eight);
+        //stat.str = (int)((dataLong << (int)DataDefine.Byte * (int)DataDefine.LongSize.One) >> (int)DataDefine.Byte * (int)DataDefine.LongSize.Eight);
+        //stat.def = (int)((dataLong << (int)DataDefine.Byte * (int)DataDefine.LongSize.Two) >> (int)DataDefine.Byte * (int)DataDefine.LongSize.Eight);
+        //stat.man = (int)((dataLong << (int)DataDefine.Byte * (int)DataDefine.LongSize.Three) >> (int)DataDefine.Byte * (int)DataDefine.LongSize.Eight);
+        //stat.luk = (int)((dataLong << (int)DataDefine.Byte * (int)DataDefine.LongSize.Four) >> (int)DataDefine.Byte * (int)DataDefine.LongSize.Eight);
     }
 }
 

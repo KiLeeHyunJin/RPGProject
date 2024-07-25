@@ -26,15 +26,12 @@ namespace YoutubePlayer.Samples.PlayVideo
             string videoId = videoPlayer.VideoId;
 
             string videoUrl = await videoPlayer.InvidiousInstance.GetVideoUrl(videoId);
+            string filePath = System.IO.Path.Combine(path, $"{videoId}.mp4");
 
-            if(await WebUtils.ValidURL(videoUrl) && await WebUtils.CanDownload(videoUrl) == false)
+            if (await WebUtils.ValidURL(videoUrl, true) == false)
             {
                 videoUrl = videoPlayer.VideoPlayer.url;
             }
-            else
-                videoUrl = videoPlayer.VideoPlayer.url;
-
-            string filePath = System.IO.Path.Combine(path, $"{videoId}.mp4");
             try
             {
                 Message.Log($"Downloading video ${videoId} to {filePath}");

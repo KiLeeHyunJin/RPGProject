@@ -15,7 +15,7 @@ public class SelectChannel : MonoBehaviour
 
     public void EnterServer()
     {
-        ServerDataManager.Instance.EnterServer(serverNum);
+        ServerDataTableManager.Instance.EnterServer(serverNum);
     }
 
 

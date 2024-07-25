@@ -1,21 +1,9 @@
-using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class Define
+public class DataDefine
 {
-    public readonly static int InventoryCount = 30;
-    public readonly static int SlotDefaultSize = 2;
-
-    #region Directory
-
-    public readonly static string dir = "./Bundle";
-    public readonly static string bundleTable = "/BundleTable.txt";
-    public readonly static string android = "/Android";
-    public readonly static string window = "/Windows";
-
-    #endregion
-
-    #region FireBasePath
-
     public readonly static string SearchNickName = "nickNames";
     public readonly static string UseNickName = "useName";
     public readonly static string User = "users";
@@ -30,53 +18,26 @@ public class Define
     public readonly static string Stat = "stat";
 
 
-    #endregion FireBasePath
-
-
     public readonly static int Byte = 8;
 
     public readonly static int Long = 8;
     public readonly static int Int = 4;
     public readonly static int Short = 2;
 
-
-    //마지막 배열을 요소를 가리킨다
-    public static Index EndIndex = ^1;
-
-    public enum UIEvent
+    public enum CharacterData
     {
-        Click,
-        Pressed,
-        PointerDown,
-        PointerUp,
+        Job,
+        Level,
+        Cloth,
+        Skin,
     }
 
-    public enum Font
+    public enum AbilityData
     {
-        MBold,
-        MLight,
-    }
+        Speed,
+        Atack,
+        Other,
 
-    public enum StatType
-    {
-        Str,
-        Def,
-        Man,
-        Luk,
-    }
-
-    public enum ItemType
-    {
-        Ect,
-        Consume,
-        Equip,
-    }
-
-    public enum ItemStateType
-    {
-        Add,
-        Limit,
-        Upgrade,
     }
 
     public enum LongSize
@@ -100,9 +61,8 @@ public class Define
     }
 
     public enum ShortSize
-    { 
+    {
         One,
         Two,
     }
-
 }

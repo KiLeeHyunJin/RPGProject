@@ -45,39 +45,6 @@ public class UserData
     }
 
     [Serializable]
-    public class Ability
-    {
-        public float moveSpeed;
-        public float atckSpeed;
-        public float jumpPower;
-
-        public float atckPower;
-        public float defence;
-        public float magicPower;
-
-        public float accuracy;
-        public int point;
-    }
-
-    [Serializable]
-    public class Stat
-    {
-        public int def;
-        public int luk;
-        public int man;
-        public int str;
-    }
-
-    public class AdditionalStat
-    {
-        public int magic;
-        public int power;
-        public int defence;
-        public int speed;
-    }
-
-
-    [Serializable]
     public class Inventory
     {
         public Inventory()
@@ -93,29 +60,7 @@ public class UserData
         public long money;
     }
 
-    [Serializable]
-    public class Item
-    {
-        public string itemName;
-
-        public int level;
-
-        public int type;
-        public int possableCount;
-        public int count;
-
-        public Stat limitStat;
-
-        public Stat addAbility;
-        public AdditionalStat baseAdditional;
-
-        public Stat addStat;
-        public AdditionalStat addAdditional;
-
-        public Stat upgradeStat;
-        public AdditionalStat upgradeAdditional;
-    }
-
+    
 
 }
 

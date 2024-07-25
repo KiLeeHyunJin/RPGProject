@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class ServerData
 {
-    public class Characters
+    public class USerServerData
     {
         public Dictionary<string, CharacterServerData> characters;
 
-        public Characters()
+        public USerServerData()
         {
             characters = new();
         }
@@ -42,13 +42,20 @@ public class ServerData
 
     public class InventoryServerData
     {
+        public void SetInvenSize(int equipCount, int consumeCount, int ectCount)
+        {
+            equip.Capacity = equipCount;
+            consume.Capacity = consumeCount;
+            ect.Capacity = ectCount;
+        }
+
         public InventoryServerData()
         {
-            consume = new();
             ect = new();
             equip = new();
             consume = new();
         }
+
         public List<ItemServerData> consume;
         public List<ItemServerData> ect;
         public List<ItemServerData> equip;

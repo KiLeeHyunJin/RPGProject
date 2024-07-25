@@ -21,7 +21,7 @@ public class CreateCharacter : MonoBehaviour
 
     }
 
-    [SerializeField] UserData.Stat stat;
+    [SerializeField] Stat stat;
     [SerializeField] string userId;
     [SerializeField] string nickName;
     [SerializeField] int point;
@@ -36,7 +36,6 @@ public class CreateCharacter : MonoBehaviour
         ButtonAddListener(create, CreateCharacterData);
         ButtonAddListener(remove, RemoveCharacterData);
         ButtonAddListener(check, CheckCharacterNickName);
-        stat.SetStat(4);
         user = new();
         //point = 4;
     }
@@ -47,25 +46,7 @@ public class CreateCharacter : MonoBehaviour
             btn.onClick.AddListener(call);
     }
 
-    #region Stat
-    void AddStat(Define.StatType statType)
-    {
-        if (point < 0)
-            return;
 
-        stat.SetValue(statType, 1);
-        point--;
-    }
-
-    void MinusStat(Define.StatType statType)
-    {
-        if (stat.GetValue(statType) <= 0)
-            return;
-
-        stat.SetValue(statType, -1);
-        point++;
-    }
-    #endregion Stat
 
     void InitUserId()
     {
@@ -101,16 +82,16 @@ public class CreateCharacter : MonoBehaviour
 
         for (int i = 0; i < Define.SlotDefaultSize; i++)
         {
-            uploadCharacterData.inventory.ect.Add(new UserData.Item());
-            uploadCharacterData.inventory.consume.Add(new UserData.Item());
-            uploadCharacterData.inventory.equip.Add(new UserData.Item());
+            uploadCharacterData.inventory.ect.Add(new Item());
+            uploadCharacterData.inventory.consume.Add(new Item());
+            uploadCharacterData.inventory.equip.Add(new Item());
         }
 
         string nickJson = JsonUtility.ToJson(saveName);
         string json = JsonUtility.ToJson(uploadCharacterData);
 
-        FireBaseManager.DB.GetReference(Define.SearchNickName).Child(Define.UseNickName).Child(nickName).SetRawJsonValueAsync(nickJson);
-        FireBaseManager.DB.GetReference(Define.User).Child(userId).Child(Define.Character).Child(nickName).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
+        FireBaseManager.DB.GetReference(DataDefine.SearchNickName).Child(DataDefine.UseNickName).Child(nickName).SetRawJsonValueAsync(nickJson);
+        FireBaseManager.DB.GetReference(DataDefine.User).Child(userId).Child(DataDefine.Character).Child(nickName).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
         {
             if (task.IsFaulted)
             {
@@ -130,9 +111,9 @@ public class CreateCharacter : MonoBehaviour
     {
         // 삭제할 경로 지정
         DatabaseReference characterRef =
-            FireBaseManager.DB.GetReference(Define.User).Child(userId).Child(Define.Character).Child(nickName);
+            FireBaseManager.DB.GetReference(DataDefine.User).Child(userId).Child(DataDefine.Character).Child(nickName);
         DatabaseReference nameRef =
-            FireBaseManager.DB.GetReference(Define.SearchNickName).Child(Define.UseNickName).Child(nickName);
+            FireBaseManager.DB.GetReference(DataDefine.SearchNickName).Child(DataDefine.UseNickName).Child(nickName);
 
         characterRef?.RemoveValueAsync().ContinueWithOnMainThread(task =>
         {
@@ -153,8 +134,8 @@ public class CreateCharacter : MonoBehaviour
     async Task<bool> CheckIfUsernameExists(string username)
     {
         DatabaseReference userRef =
-            FireBaseManager.DB.GetReference(Define.SearchNickName).Child(Define.UseNickName);
-        Query query = userRef.OrderByChild(Define.NickName).EqualTo(username);
+            FireBaseManager.DB.GetReference(DataDefine.SearchNickName).Child(DataDefine.UseNickName);
+        Query query = userRef.OrderByChild(DataDefine.NickName).EqualTo(username);
 
         try
         {
