@@ -2,7 +2,6 @@ using Firebase.Extensions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using WebSocketSharp;
 
 public class LoginPanel : MonoBehaviour
 {
@@ -64,7 +63,7 @@ public class LoginPanel : MonoBehaviour
             {
                 if (FireBaseManager.Auth.CurrentUser.DisplayName.IsNullOrEmpty() == false)
                 {
-                    Photon.Pun.PhotonNetwork.ConnectUsingSettings();
+                    //Photon.Pun.PhotonNetwork.ConnectUsingSettings();
                 }
                 else
                 {

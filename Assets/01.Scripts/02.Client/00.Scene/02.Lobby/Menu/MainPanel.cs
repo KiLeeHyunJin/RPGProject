@@ -1,9 +1,4 @@
-using Firebase.Auth;
-using Firebase;
 using Firebase.Extensions;
-using Photon.Pun;
-using System;
-using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -66,7 +61,7 @@ public class MainPanel : MonoBehaviour
             Utils.ShowInfo("계정 삭제가 완료되었습니다.");
             SetInteractable(true);
             FireBaseManager.Auth.SignOut();
-            PhotonNetwork.Disconnect();
+            //PhotonNetwork.Disconnect();
         });
     }
 

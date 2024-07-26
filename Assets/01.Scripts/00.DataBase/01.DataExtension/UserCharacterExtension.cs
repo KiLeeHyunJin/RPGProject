@@ -115,12 +115,12 @@ public static class UserCharacterExtension
             );
     }
 
-    public static (int addType, int efxType, int value, int stayTIme) ParseAddAbilityConsume(this ItemConsumeServerData item)
+    public static (Define.HealType addType, Define.ConsumeType efxType, int value, int stayTIme) ParseAddAbilityConsume(this ItemConsumeServerData item)
     {
         return
             (
-                item.addAbility.ExtractByte(DataDefine.LongSize.One),
-                item.addAbility.ExtractByte(DataDefine.LongSize.Two),
+                (Define.HealType)item.addAbility.ExtractByte(DataDefine.LongSize.One),
+                (Define.ConsumeType)item.addAbility.ExtractByte(DataDefine.LongSize.Two),
                 item.addAbility.ExtractByte(DataDefine.LongSize.Three),
                 item.addAbility.ExtractByte(DataDefine.LongSize.Four)
             );
@@ -191,30 +191,41 @@ public static class UserCharacterExtension
                 item.upgradeStat.ExtractByte(DataDefine.LongSize.Eight)
                 ));
     }
-
+    public static (Define.EquipType wearType, int level, int category, int possable) ParseData(this ItemEquipServerData item)
+    {
+        return
+            (
+                (Define.EquipType)item.itemData.ExtractByte(DataDefine.LongSize.One),
+                item.itemData.ExtractByte(DataDefine.LongSize.Two),
+                item.itemData.ExtractByte(DataDefine.LongSize.Three),
+                item.itemData.ExtractByte(DataDefine.LongSize.Four)
+            );
+    }
+    public static Item ExtractItem(this ItemEctServerData item)
+    {
+        Item ect = new(item.ParseCode());
+        return ect;
+    }
+    public static Consume ExtractItem(this ItemConsumeServerData item)
+    {
+        Consume consume = new(item.ParseCode(), item.ParseAddAbilityConsume());
+        return consume;
+    }
     public static Equip ExtractItem(this ItemEquipServerData item)
     {
-        Equip equip = new();
+        Equip equip = new(item.ParseCode(), item.ParseData());
+
         equip.limitStat = item.ParseLimitStat();
         (equip.addAbility, equip.addAdditional) = item.ParseAddAbilityEquip();
 
-        (equip.addStat, equip.addAdditional) = item.ParseAddStat();
+        (equip.baseStat, equip.addAdditional) = item.ParseAddStat();
         (equip.upgradeStat, equip.upgradeAdditional) = item.ParseUpgradeStat();
 
 
         return null;
     }
 
-    public static (int wearType, int level, int category, int possable) ParseData(this ItemEquipServerData item)
-    {
-        return
-            (
-                item.itemData.ExtractByte(DataDefine.LongSize.One),
-                item.itemData.ExtractByte(DataDefine.LongSize.Two),
-                item.itemData.ExtractByte(DataDefine.LongSize.Three),
-                item.itemData.ExtractByte(DataDefine.LongSize.Four)
-            );
-    }
+
 
     #endregion Item
 

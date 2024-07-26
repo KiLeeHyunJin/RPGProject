@@ -5,8 +5,27 @@ using static Define;
 
 public class Consume : Item
 {
+    public Consume(
+        (int itemType, int count, int img, int scriptable) value,
+        (HealType addType, ConsumeType efxType, int value, int stayTime) _value) : base(value)
+    {
+        ConsumeData(_value);
+    }
+    void ConsumeData((HealType addType, ConsumeType efxType, int value, int stayTime) _value)
+    {
+        useType = _value.addType;
+        efxType = _value.efxType;
+        value = _value.value;
+        duringValue = _value.stayTime;
+    }
+
     public HealType useType;
     public ConsumeType efxType;
     public int value;
     public int duringValue;
+
+    public long SeverConsumeData()
+    {
+        return default;
+    }
 }

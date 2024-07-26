@@ -1,6 +1,5 @@
 using Firebase.Database;
 using Firebase.Extensions;
-using Photon.Pun;
 using System;
 using TMPro;
 using UnityEngine;
@@ -80,13 +79,13 @@ public class MenuPanel : MonoBehaviour
 
     public void JoinLobby()
     {
-        PhotonNetwork.JoinLobby();
+        //PhotonNetwork.JoinLobby();
     }
 
     void Logout()
     {
         FireBaseManager.Auth.SignOut();
-        PhotonNetwork.Disconnect();
+       //PhotonNetwork.Disconnect();
     }
 
     public void OpenPlayButtons(bool state)

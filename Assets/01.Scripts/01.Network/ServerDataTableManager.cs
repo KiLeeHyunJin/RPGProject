@@ -1,4 +1,4 @@
-using Photon.Pun;
+using Fusion.Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,7 +13,8 @@ public class ServerDataTableManager : Singleton<ServerDataTableManager>
     const string localVersionTablePath = "/versionTable.csv";
     readonly string localVersionPath = Application.streamingAssetsPath + "/AssetBundles";
 
-    [SerializeField] ServerSettings photonServer;
+    [SerializeField] PhotonAppSettings photonServer;
+    //[SerializeField] Fusion.NetworkProjectConfig networkConfig;
     [SerializeField] List<string[]> serverVersionTable;
     [SerializeField] int serverNum;
     Coroutine loadVersionTableCo;
@@ -22,7 +23,7 @@ public class ServerDataTableManager : Singleton<ServerDataTableManager>
     {
         get
         {
-            return serverVersionTable == null ? 0 :serverVersionTable.Count - 1;
+            return serverVersionTable == null ? 0 : serverVersionTable.Count - 1;
         }
     }
     protected override void Awake()
@@ -34,10 +35,10 @@ public class ServerDataTableManager : Singleton<ServerDataTableManager>
 
         VersionRefresh((state) =>
         {
-            Action action = state ? 
-            LoadInit : () => 
+            Action action = state ?
+            LoadInit : () =>
             {
-                Utils.ShowInfo("서버 데이터를 가져오지 못하였습니다."); 
+                Utils.ShowInfo("서버 데이터를 가져오지 못하였습니다.");
             };
             action.Invoke();
         });
@@ -70,16 +71,16 @@ public class ServerDataTableManager : Singleton<ServerDataTableManager>
     {
         photonServer.AppSettings.Protocol = ExitGames.Client.Photon.ConnectionProtocol.Udp;
         photonServer.AppSettings.FixedRegion = "kr";
-        photonServer.DevRegion = "kr";
+        //photonServer.DevRegion = "kr";
         isLoadServerTable = true;
     }
 
     void SetServer()
     {
         string[] serverData = serverVersionTable[serverNum];
-        photonServer.AppSettings.AppIdRealtime  = serverData[(int)ServerDataType.ServerID];
-        photonServer.AppSettings.AppIdChat      = serverData[(int)ServerDataType.ChatID];
-        photonServer.AppSettings.AppVersion     = serverData[(int)ServerDataType.Version];
+        photonServer.AppSettings.AppIdRealtime = serverData[(int)ServerDataType.ServerID];
+        photonServer.AppSettings.AppIdChat = serverData[(int)ServerDataType.ChatID];
+        photonServer.AppSettings.AppVersion = serverData[(int)ServerDataType.Version];
     }
 
 
@@ -138,7 +139,7 @@ public class ServerDataTableManager : Singleton<ServerDataTableManager>
     }
 
     enum ServerDataType
-    { 
+    {
         Name,
         Version,
         ServerID,

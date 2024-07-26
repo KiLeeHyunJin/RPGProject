@@ -1,13 +1,8 @@
 using Firebase.Auth;
-using Firebase;
 using Firebase.Extensions;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Photon.Pun;
 
 public class EditUserDataPanel : MonoBehaviour
 {
@@ -56,7 +51,7 @@ public class EditUserDataPanel : MonoBehaviour
             Utils.ShowInfo("닉네임 변경이 완료되었습니다.");
             SetInteractable(true);
             NameText.text = userProfile.DisplayName;
-            PhotonNetwork.LocalPlayer.NickName = userProfile.DisplayName;
+            //PhotonNetwork.LocalPlayer.NickName = userProfile.DisplayName;
         });
     }
     private void PassApply()

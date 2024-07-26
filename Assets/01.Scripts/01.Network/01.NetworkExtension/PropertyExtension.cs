@@ -1,36 +1,35 @@
-using Photon.Realtime;
 
 public static class PropertyExtension
 {
 
     //key값이 있으면 해당 해시테이블에서 값을 가져와 T타입으로 변환해서 반환
     //없을 경우 해당 타입의 디폴트 값을 반환
-    public static T GetProperty<T>(this Player player, string key)
-    {
-        ExitGames.Client.Photon.
-            Hashtable property = player.CustomProperties;
-        return property.ContainsKey(key) ? (T)property[key] : default;
-    }
-    public static T GetProperty<T>(this Room room, string key)
-    {
-        ExitGames.Client.Photon.
-            Hashtable property = room.CustomProperties;
-        return property.ContainsKey(key) ? (T)property[key] : default;
-    }
+    //public static T GetProperty<T>(this Player player, string key)
+    //{
+    //    ExitGames.Client.Photon.
+    //        Hashtable property = player.CustomProperties;
+    //    return property.ContainsKey(key) ? (T)property[key] : default;
+    //}
+    //public static T GetProperty<T>(this Room room, string key)
+    //{
+    //    ExitGames.Client.Photon.
+    //        Hashtable property = room.CustomProperties;
+    //    return property.ContainsKey(key) ? (T)property[key] : default;
+    //}
 
-    public static void SetProperty<T>(this Player player, string key, T value)
-    {
-        ExitGames.Client.Photon.
-            Hashtable hashTable = new() { { key, value } };
-        player.SetCustomProperties(hashTable);
-    }
+    //public static void SetProperty<T>(this Player player, string key, T value)
+    //{
+    //    ExitGames.Client.Photon.
+    //        Hashtable hashTable = new() { { key, value } };
+    //    player.SetCustomProperties(hashTable);
+    //}
 
-    public static void SetProperty<T>(this Room room, string key, T value)
-    {
-        ExitGames.Client.Photon.
-            Hashtable hashTable = new() { { key, value } };
-        room.SetCustomProperties(hashTable);
-    }
+    //public static void SetProperty<T>(this Room room, string key, T value)
+    //{
+    //    ExitGames.Client.Photon.
+    //        Hashtable hashTable = new() { { key, value } };
+    //    room.SetCustomProperties(hashTable);
+    //}
 
     //set할때는 새로 만들고 해야함 이유는 각자 찾아보셈
     //(답 :

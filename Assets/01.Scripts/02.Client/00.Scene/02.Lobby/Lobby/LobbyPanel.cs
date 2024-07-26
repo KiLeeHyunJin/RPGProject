@@ -1,5 +1,4 @@
-using Photon.Pun;
-using Photon.Realtime;
+
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -29,36 +28,36 @@ public class LobbyPanel : MonoBehaviour
     }
     void LeaveLobby()
     {
-        PhotonNetwork.LeaveLobby();
+        //PhotonNetwork.LeaveLobby();
     }
     void CreateRoomMenu()
     {
         createRoomPanel.gameObject.SetActive(true);
     }
-    public void UpdateRoomList(List<RoomInfo> roomList)
-    {
-        foreach (RoomInfo room in roomList)
-        {
-            if (roomDictionary.ContainsKey(room.Name))
-            {
-               if (room.RemovedFromList || room.IsOpen == false || room.IsVisible == false)
-               {
-                   RoomEntry roomEntry = roomDictionary[room.Name];
-                   if (roomEntry != null)
-                       Destroy(roomEntry.gameObject);
-                   roomDictionary.Remove(room.Name);
-               }
-               else
-                   roomDictionary[room.Name].SetRoomInfo(room);
-            }
-            else
-            {
-                RoomEntry entry = Instantiate(roomEntryPrefab, roomContent);
-                entry.SetRoomInfo(room);
-                roomDictionary.Add(room.Name, entry);
-            }
-        }
-    }
+    //public void UpdateRoomList(List<RoomInfo> roomList)
+    //{
+    //    foreach (RoomInfo room in roomList)
+    //    {
+    //        if (roomDictionary.ContainsKey(room.Name))
+    //        {
+    //           if (room.RemovedFromList || room.IsOpen == false || room.IsVisible == false)
+    //           {
+    //               RoomEntry roomEntry = roomDictionary[room.Name];
+    //               if (roomEntry != null)
+    //                   Destroy(roomEntry.gameObject);
+    //               roomDictionary.Remove(room.Name);
+    //           }
+    //           else
+    //               roomDictionary[room.Name].SetRoomInfo(room);
+    //        }
+    //        else
+    //        {
+    //            RoomEntry entry = Instantiate(roomEntryPrefab, roomContent);
+    //            entry.SetRoomInfo(room);
+    //            roomDictionary.Add(room.Name, entry);
+    //        }
+    //    }
+    //}
 
 
 }

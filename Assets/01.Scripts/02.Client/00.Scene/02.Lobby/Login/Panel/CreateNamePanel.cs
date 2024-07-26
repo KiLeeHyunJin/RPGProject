@@ -4,7 +4,6 @@ using Firebase.Extensions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using WebSocketSharp;
 
 public class CreateNamePanel : MonoBehaviour
 {
@@ -81,7 +80,7 @@ public class CreateNamePanel : MonoBehaviour
         else
         {
             gameObject.SetActive(false);
-            Photon.Pun.PhotonNetwork.ConnectUsingSettings();
+            //Photon.Pun.PhotonNetwork.ConnectUsingSettings();
         }
     }
 

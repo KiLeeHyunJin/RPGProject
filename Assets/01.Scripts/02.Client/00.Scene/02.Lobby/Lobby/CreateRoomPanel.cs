@@ -1,7 +1,3 @@
-using Photon.Pun;
-using Photon.Realtime;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,8 +27,8 @@ public class CreateRoomPanel : MonoBehaviour
         int halfNum = int.Parse(maxPlayerDropdown.captionText.text[0].ToString()); //ù��° ������ ���� ������ ��ȯ
         int maxPlayer = halfNum << 1; //���� 2��� ����
 
-        RoomOptions roomOptions = new RoomOptions { MaxPlayers = maxPlayer }; //�ִ��ο����� �ɼ� ����
-        PhotonNetwork.CreateRoom(roomName, roomOptions);
+        //RoomOptions roomOptions = new RoomOptions { MaxPlayers = maxPlayer }; //�ִ��ο����� �ɼ� ����
+        //PhotonNetwork.CreateRoom(roomName, roomOptions);
         gameObject.SetActive(false);
     }
     void CreateRoomCancel()

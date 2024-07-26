@@ -10,7 +10,10 @@ public static class DataTypeExtension
         return DB.GetReference(path).SetRawJsonValueAsync(json);
     }
 
-
+    public static bool IsNullOrEmpty(this string str)
+    {
+        return string.IsNullOrEmpty(str);
+    }
     /// <summary>
     /// 특정 위치의 바이트를 추출한다.
     /// </summary>

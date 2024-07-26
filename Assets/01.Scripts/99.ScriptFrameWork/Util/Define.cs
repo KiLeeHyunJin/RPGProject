@@ -37,7 +37,7 @@ public class Define
         Equip,
         Consume,
         Ect,
-
+        Non
     }
 
     public enum EquipType

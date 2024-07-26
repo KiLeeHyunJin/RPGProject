@@ -1,10 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using static Define;
 
-public class Item 
+public class Item
 {
+    public Item((int itemType, int count, int img, int scriptable) value)
+    {
+        itemType = (ItemType)value.itemType;
+        count = value.count;
+        imgData = value.img;
+        scriptableData = value.scriptable;
+    }
+
     public string itemName;
 
     public ItemType itemType;
@@ -13,4 +18,9 @@ public class Item
     public int scriptableData;
 
     public string info;
+
+    public long SeverItemData()
+    {
+        return default;
+    }
 }

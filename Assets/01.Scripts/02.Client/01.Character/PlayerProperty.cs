@@ -1,5 +1,4 @@
-using Photon.Pun;
-using Photon.Realtime;
+
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,7 +6,7 @@ using UnityEngine.UI;
 public class PlayerProperty : MonoBehaviour
 {
     //Chat chat; //대화창
-    [SerializeField] Player player; //우클릭한 대상
+    //[SerializeField] Player player; //우클릭한 대상
 
     [SerializeField] Button whisper; //귓속말 버튼
     [SerializeField] Button playerInfo;
@@ -31,13 +30,14 @@ public class PlayerProperty : MonoBehaviour
     //{
     //    chat = _chat; //대화창 연결
     //}
-    public void SetPlayer(Player _player)
-    {
-        if (_player != null) //우클릭 객체가 비어있는지 확인
-            player = _player; //있다면 대입
-        else
-            gameObject.SetActive(false); //없다면 오류기때문에 비활성화
-    }
+
+    //public void SetPlayer(Player _player)
+    //{
+    //    if (_player != null) //우클릭 객체가 비어있는지 확인
+    //        player = _player; //있다면 대입
+    //    else
+    //        gameObject.SetActive(false); //없다면 오류기때문에 비활성화
+    //}
     public void isWhispering(bool b)
     {
         if (b)
@@ -70,7 +70,7 @@ public class PlayerProperty : MonoBehaviour
     void GetOut()
     {
         //추방시킨다.
-        PhotonNetwork.CloseConnection(player);
+        //PhotonNetwork.CloseConnection(player);
         //임무를 마쳤기에 비활성화
         gameObject.SetActive(false);
     }
