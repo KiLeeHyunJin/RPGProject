@@ -69,18 +69,18 @@ public class ServerDataTableManager : Singleton<ServerDataTableManager>
 
     void LoadInit()
     {
-        photonServer.AppSettings.Protocol = ExitGames.Client.Photon.ConnectionProtocol.Udp;
-        photonServer.AppSettings.FixedRegion = "kr";
+        //photonServer.AppSettings.Protocol = ExitGames.Client.Photon.ConnectionProtocol.Udp;
+        //photonServer.AppSettings.FixedRegion = "kr";
         //photonServer.DevRegion = "kr";
-        isLoadServerTable = true;
+        //isLoadServerTable = true;
     }
 
     void SetServer()
     {
-        string[] serverData = serverVersionTable[serverNum];
-        photonServer.AppSettings.AppIdRealtime = serverData[(int)ServerDataType.ServerID];
-        photonServer.AppSettings.AppIdChat = serverData[(int)ServerDataType.ChatID];
-        photonServer.AppSettings.AppVersion = serverData[(int)ServerDataType.Version];
+        //string[] serverData = serverVersionTable[serverNum];
+        //photonServer.AppSettings.AppIdRealtime = serverData[(int)ServerDataType.ServerID];
+        //photonServer.AppSettings.AppIdChat = serverData[(int)ServerDataType.ChatID];
+        //photonServer.AppSettings.AppVersion = serverData[(int)ServerDataType.Version];
     }
 
 

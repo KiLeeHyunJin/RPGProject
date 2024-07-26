@@ -55,7 +55,7 @@ public class CustomItem : EditorWindow
 
     public void CreateGUI()
     {
-        // ÇÁ·ÎÁ§Æ®ÀÇ ¸ğµç ½ºÇÁ¶óÀÌÆ® ¸ñ·Ï °¡Á®¿À±â
+        // í”„ë¡œì íŠ¸ì˜ ëª¨ë“  ìŠ¤í”„ë¼ì´íŠ¸ ëª©ë¡ ê°€ì ¸ì˜¤ê¸°
         var allObjectGuids = AssetDatabase.FindAssets("t:Sprite", spriePath);
         var allObjects = new List<Sprite>();
         foreach (var guid in allObjectGuids)
@@ -68,25 +68,30 @@ public class CustomItem : EditorWindow
         CreatConsumeData(root);
         CreatEquipData(root);
 
-
-        // ¿ŞÂÊ Ã¢ÀÌ °íÁ¤µÈ µÎ Ã¢ º¸±â ¸¸µé±â
+        Button button = new Button(() => { MakeItem(); })
+        {
+            text = "MakeItem"
+        };
+        root.Add(button);
+        // ì™¼ìª½ ì°½ì´ ê³ ì •ëœ ë‘ ì°½ ë³´ê¸° ë§Œë“¤ê¸°
         var splitView = new TwoPaneSplitView(0, 250, TwoPaneSplitViewOrientation.Horizontal);
 
-        // ºä¸¦ ·çÆ® ¿ä¼Ò¿¡ ÀÚ½ÄÀ¸·Î Ãß°¡ÇÏ¿© ½Ã°¢Àû Æ®¸®¿¡ Ãß°¡ÇÕ´Ï´Ù
+        // ë·°ë¥¼ ë£¨íŠ¸ ìš”ì†Œì— ìì‹ìœ¼ë¡œ ì¶”ê°€í•˜ì—¬ ì‹œê°ì  íŠ¸ë¦¬ì— ì¶”ê°€í•©ë‹ˆë‹¤
         root.Add(splitView);
 
-        // TwoPaneSplitView¿¡´Â Ç×»ó µÎ °³ÀÇ ÀÚ½Ä ¿ä¼Ò°¡ ÇÊ¿äÇÕ´Ï´Ù
+        // TwoPaneSplitViewì—ëŠ” í•­ìƒ ë‘ ê°œì˜ ìì‹ ìš”ì†Œê°€ í•„ìš”í•©ë‹ˆë‹¤
         var leftPane = new ListView();
         splitView.Add(leftPane);
         m_RightPane = new VisualElement();
         splitView.Add(m_RightPane);
 
-        // ¸ğµç ½ºÇÁ¶óÀÌÆ®ÀÇ ÀÌ¸§À¸·Î ¸ñ·Ï º¸±â ÃÊ±âÈ­
-        leftPane.makeItem = () => new Label();
-        leftPane.bindItem = (item, index) => { (item as Label).text = allObjects[index].name; };
-        leftPane.itemsSource = allObjects;
+       
+        // ëª¨ë“  ìŠ¤í”„ë¼ì´íŠ¸ì˜ ì´ë¦„ìœ¼ë¡œ ëª©ë¡ ë³´ê¸° ì´ˆê¸°í™”
+        //leftPane.makeItem = () => new Label();
+        //leftPane.bindItem = (item, index) => { (item as Label).text = allObjects[index].name; };
+        //leftPane.itemsSource = allObjects;
 
-        leftPane.selectionChanged += OnSpriteSelectionChange;
+        //leftPane.selectionChanged += OnSpriteSelectionChange;
     }
 
     private void CreatEctData(VisualElement root)
@@ -103,6 +108,32 @@ public class CustomItem : EditorWindow
         AddTextElement(root, ItemType.Ect, "Infomation" , true, true)
             .RegisterValueChangedCallback(evt =>
         { itemInfo = evt.newValue; });
+    }
+    private void CreatConsumeData(VisualElement root)
+    {
+        AddEnumElement(root, ItemType.Consume, "HealType", addType)
+           .RegisterValueChangedCallback(evt =>
+           { addType = (Define.HealType)evt.newValue; });
+
+        AddEnumElement(root, ItemType.Consume, "EffectType", efxType)
+            .RegisterValueChangedCallback(evt =>
+            {
+                efxType = (Define.ConsumeType)evt.newValue;
+                buff.style.display =
+                efxType == ConsumeType.During ?
+                DisplayStyle.Flex : DisplayStyle.None;
+            });
+
+
+        AddIntegerElement(root, ItemType.Consume, "ConsumeValue")
+            .RegisterValueChangedCallback(evt =>
+            { this.consumeValue = evt.newValue; });
+
+        IntegerField stay = AddIntegerElement(root, ItemType.Consume, "stayTimeValue");
+        stay.RegisterValueChangedCallback(evt =>
+        { this.consumeStayTime = evt.newValue; });
+        buff = stay;
+
     }
 
     private void CreatEquipData(VisualElement root)
@@ -237,33 +268,7 @@ public class CustomItem : EditorWindow
            { this.addAdditional.speed = evt.newValue; });
     }
 
-    private void CreatConsumeData(VisualElement root)
-    {
-        AddEnumElement(root, ItemType.Consume, "HealType", addType)
-           .RegisterValueChangedCallback(evt =>
-           { addType = (Define.HealType)evt.newValue; });
-
-        AddEnumElement(root,ItemType.Consume, "EffectType", efxType)
-            .RegisterValueChangedCallback(evt =>
-        {   
-            efxType = (Define.ConsumeType)evt.newValue;
-            buff.style.display = 
-            efxType == ConsumeType.During ? 
-            DisplayStyle.Flex : DisplayStyle.None;
-        });
-
-
-        AddIntegerElement(root, ItemType.Consume, "ConsumeValue")
-            .RegisterValueChangedCallback(evt =>
-            { this.consumeValue = evt.newValue; });
-
-        IntegerField stay = AddIntegerElement(root, ItemType.Consume, "stayTimeValue");
-        stay.RegisterValueChangedCallback(evt =>
-        { this.consumeStayTime = evt.newValue; });
-        buff = stay;
-
-    }
-
+    
     void AddLabel(VisualElement root, string labelName, FontStyle fontStyle, float fontSize = -1)
     {
         Label label = new Label(labelName);
@@ -346,7 +351,6 @@ public class CustomItem : EditorWindow
     }
 
 
-
     private void OnSpriteSelectionChange(IEnumerable<object> selectedItems)
     {
         // Clear all previous content from the pane
@@ -365,6 +369,7 @@ public class CustomItem : EditorWindow
         // Add the Image control to the right-hand pane
         m_RightPane.Add(spriteImage);
     }
+
     private void MakeItem()
     {
 

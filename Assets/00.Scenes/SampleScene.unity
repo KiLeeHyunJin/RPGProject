@@ -2062,15 +2062,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stat:
-    str: 4
-    def: 4
-    man: 4
-    luk: 4
+    def: 0
+    luk: 0
+    man: 0
+    str: 0
   userId: 12
   nickName: Ryuseungone
   point: 0
   create: {fileID: 130727156}
   check: {fileID: 1462389439}
+  remove: {fileID: 0}
   addStr: {fileID: 0}
 --- !u!114 &1366035369
 MonoBehaviour:
@@ -2084,28 +2085,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed23f4cace5042a408ec067d3ba60b5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item:
-    itemData: 0
-    addAbility: 0
-    addStat: 0
-    limitStat: 0
-    itemName: 
-  itemData:
-    level: 2
-    count: 25
-    type: 0
-    atck: 5
-    man: 1
-    limitStat:
-      str: 8
-      def: 7
-      man: 4
-      luk: 2
-    addStat:
-      str: 0
-      def: 0
-      man: 0
-      luk: 0
 --- !u!1 &1408229850
 GameObject:
   m_ObjectHideFlags: 0

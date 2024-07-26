@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Define;
-
+[Serializable]
 public class Consume : Item
 {
     public Consume(
@@ -26,6 +27,11 @@ public class Consume : Item
 
     public long SeverConsumeData()
     {
-        return default;
+        long returnValue = default;
+        returnValue += ((long)useType).Shift(DataDefine.LongSize.One);
+        returnValue += ((long)efxType).Shift(DataDefine.LongSize.Two);
+        returnValue += ((long)value).Shift(DataDefine.LongSize.Three);
+        returnValue += ((long)duringValue).Shift(DataDefine.LongSize.Four);
+        return returnValue;
     }
 }

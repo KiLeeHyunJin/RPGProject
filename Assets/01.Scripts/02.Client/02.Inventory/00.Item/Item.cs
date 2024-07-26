@@ -19,8 +19,13 @@ public class Item
 
     public string info;
 
-    public long SeverItemData()
+    public int ServerItemData()
     {
-        return default;
+        int returnValue = default;
+        returnValue |= ((int)itemType).Shift(DataDefine.IntSize.One);
+        returnValue |= count.Shift(DataDefine.IntSize.Two);
+        returnValue |= imgData.Shift(DataDefine.IntSize.Three);
+        returnValue |= scriptableData.Shift(DataDefine.IntSize.Four);
+        return returnValue;
     }
 }

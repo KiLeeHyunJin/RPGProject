@@ -1,5 +1,7 @@
+using System;
 using static Define;
 
+[Serializable]
 public class Equip : Item
 {
     public Equip(
@@ -23,23 +25,49 @@ public class Equip : Item
     public int possableCount;
     public int category;
 
-    public Stat limitStat; //Âø¿ë Á¦ÇÑ
+    public Stat limitStat; //ì°©ìš© ì œí•œ
 
-    public Stat baseStat; //±âº» ´É·ÂÄ¡
+    public Stat baseStat; //ê¸°ë³¸ ëŠ¥ë ¥ì¹˜
     public AdditionalStat baseAdditional;
 
-    public Stat addAbility; 
-    public AdditionalStat addAdditional;
 
     public Stat upgradeStat;
     public AdditionalStat upgradeAdditional;
 
-    public (int limitStat, long itemData, long addStat, long upgradeStat) ServerEquipData()
+    public Stat addAbility;
+    public AdditionalStat addAdditional;
+
+    public (int limitStat, int itemData, int baseStat, int upgradeStat, int baseAdditional, int upgradeAdditional, int addAvility) ServerEquipData()
     {
-        int limitStat = default;
-        long itemData = default;
-        long addStat = default;
-        long upgradeStat = default;
-        return (limitStat, itemData, addStat, upgradeStat);
+        int returnItemData = default;
+        returnItemData |= ((int)wearType).Shift(DataDefine.IntSize.One);
+        returnItemData |= level.Shift(DataDefine.IntSize.Two);
+        returnItemData |= category.Shift(DataDefine.IntSize.Three);
+        returnItemData |= possableCount.Shift(DataDefine.IntSize.Four);
+
+        int returnLimitStat = limitStat.ServerData();
+        int returnbaseStat = baseStat.ServerData();
+        int returnUpgradeStat = upgradeStat.ServerData();
+
+        int returnbaseAdditional = baseAdditional.ServerData();
+
+        int returnUpgradeAdditional = upgradeAdditional.ServerData();
+        int returnAddAvility = addAdditional.ServerData();
+        return (returnLimitStat, returnItemData, returnbaseStat, returnUpgradeStat, returnbaseAdditional, returnUpgradeAdditional, returnAddAvility);
+    }
+
+    public ServerData.ItemEquipServerData ServerEquip()
+    {
+        ServerData.ItemEquipServerData equipData = new();
+        (int limitStat, int itemData, int baseStat, int upgradeStat, int baseAdditional, int upgradeAdditional, int addAvility) = ServerEquipData();
+        equipData.code = ServerItemData();
+        equipData.limitStat = limitStat;
+        equipData.itemData = itemData;
+        equipData.baseStat = baseStat;
+        equipData.upgradeStat = upgradeStat;
+        equipData.baseAdditional = baseAdditional;
+        equipData.upgradeAdditional = upgradeAdditional;
+        equipData.addAbility = addAvility;
+        return equipData;
     }
 }

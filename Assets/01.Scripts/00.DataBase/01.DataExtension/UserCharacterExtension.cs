@@ -1,5 +1,7 @@
 using static DataDefine;
+using static Define;
 using static ServerData;
+using static UnityEditor.Progress;
 
 public static class UserCharacterExtension
 {
@@ -106,23 +108,22 @@ public static class UserCharacterExtension
 
     public static (int itemType, int count, int img, int scriptable) ParseCode(this ItemEctServerData item)
     {
-        return
-            (
-                item.code.ExtractByte(DataDefine.LongSize.One),
-                item.code.ExtractByte(DataDefine.LongSize.Two),
-                item.code.ExtractByte(DataDefine.LongSize.Three),
-                item.code.ExtractByte(DataDefine.LongSize.Four)
-            );
-    }
 
+        int _type = item.code.ExtractByte(DataDefine.IntSize.One);
+        int _count = item.code.ExtractByte(DataDefine.IntSize.Two);
+        int _img = item.code.ExtractByte(DataDefine.IntSize.Three);
+        int _scrip = item.code.ExtractByte(DataDefine.IntSize.Four);
+
+        return (_type, _count, _img, _scrip);
+    }
     public static (Define.HealType addType, Define.ConsumeType efxType, int value, int stayTIme) ParseAddAbilityConsume(this ItemConsumeServerData item)
     {
         return
             (
-                (Define.HealType)item.addAbility.ExtractByte(DataDefine.LongSize.One),
-                (Define.ConsumeType)item.addAbility.ExtractByte(DataDefine.LongSize.Two),
-                item.addAbility.ExtractByte(DataDefine.LongSize.Three),
-                item.addAbility.ExtractByte(DataDefine.LongSize.Four)
+                (Define.HealType)item.addAbility.ExtractByte(DataDefine.IntSize.One),
+                (Define.ConsumeType)item.addAbility.ExtractByte(DataDefine.IntSize.Two),
+                item.addAbility.ExtractByte(DataDefine.IntSize.Three),
+                item.addAbility.ExtractByte(DataDefine.IntSize.Four)
             );
     }
 
@@ -131,74 +132,72 @@ public static class UserCharacterExtension
         
         Stat stat = new
             (
-            item.addAbility.ExtractByte(DataDefine.LongSize.One),
-            item.addAbility.ExtractByte(DataDefine.LongSize.Two),
-            item.addAbility.ExtractByte(DataDefine.LongSize.Three),
-            item.addAbility.ExtractByte(DataDefine.LongSize.Four)
+            item.addAbility.ExtractByte(DataDefine.IntSize.One),
+            item.addAbility.ExtractByte(DataDefine.IntSize.Two),
+            item.addAbility.ExtractByte(DataDefine.IntSize.Three),
+            item.addAbility.ExtractByte(DataDefine.IntSize.Four)
             );
         AdditionalStat additional = new(
-            item.addAbility.ExtractByte(DataDefine.LongSize.Five),
-            item.addAbility.ExtractByte(DataDefine.LongSize.Six),
-            item.addAbility.ExtractByte(DataDefine.LongSize.Seven),
-            item.addAbility.ExtractByte(DataDefine.LongSize.Eight));
-        return
-            (stat, additional);
+            item.addAbility.ExtractByte(DataDefine.IntSize.One),
+            item.addAbility.ExtractByte(DataDefine.IntSize.Two),
+            item.addAbility.ExtractByte(DataDefine.IntSize.Three),
+            item.addAbility.ExtractByte(DataDefine.IntSize.Four));
+
+        return (stat, additional);
     }
 
     public static Stat ParseLimitStat(this ItemEquipServerData item)
     {
-        return new(
+        Stat stat = new(
                 item.limitStat.ExtractByte(DataDefine.IntSize.One),
                 item.limitStat.ExtractByte(DataDefine.IntSize.Two),
                 item.limitStat.ExtractByte(DataDefine.IntSize.Three),
-                item.limitStat.ExtractByte(DataDefine.IntSize.Four)
-            );
+                item.limitStat.ExtractByte(DataDefine.IntSize.Four));
+
+        return stat;
     }
-
-
 
     public static (Stat stat, AdditionalStat additional) ParseAddStat(this ItemEquipServerData item)
     {
-        return
-            (
-            new(
-                item.addStat.ExtractByte(DataDefine.LongSize.One),
-                item.addStat.ExtractByte(DataDefine.LongSize.Two),
-                item.addStat.ExtractByte(DataDefine.LongSize.Three),
-                item.addStat.ExtractByte(DataDefine.LongSize.Four))
-               ,
-            new(
-                item.addStat.ExtractByte(DataDefine.LongSize.Five),
-                item.addStat.ExtractByte(DataDefine.LongSize.Six),
-                item.addStat.ExtractByte(DataDefine.LongSize.Seven),
-                item.addStat.ExtractByte(DataDefine.LongSize.Eight)
-                ));
+        Stat stat = new(
+                item.baseStat.ExtractByte(DataDefine.IntSize.One),
+                item.baseStat.ExtractByte(DataDefine.IntSize.Two),
+                item.baseStat.ExtractByte(DataDefine.IntSize.Three),
+                item.baseStat.ExtractByte(DataDefine.IntSize.Four));
+
+        AdditionalStat additional = new(
+                item.baseAdditional.ExtractByte(DataDefine.IntSize.One),
+                item.baseAdditional.ExtractByte(DataDefine.IntSize.Two),
+                item.baseAdditional.ExtractByte(DataDefine.IntSize.Three),
+                item.baseAdditional.ExtractByte(DataDefine.IntSize.Four));
+
+        return (stat, additional);
+
     }
     public static (Stat stat, AdditionalStat additional) ParseUpgradeStat(this ItemEquipServerData item)
     {
-        return
-            (
-             new(
-                item.upgradeStat.ExtractByte(DataDefine.LongSize.One),
-                item.upgradeStat.ExtractByte(DataDefine.LongSize.Two),
-                item.upgradeStat.ExtractByte(DataDefine.LongSize.Three),
-                item.upgradeStat.ExtractByte(DataDefine.LongSize.Four)
-                ),
-            new(
-                item.upgradeStat.ExtractByte(DataDefine.LongSize.Five),
-                item.upgradeStat.ExtractByte(DataDefine.LongSize.Six),
-                item.upgradeStat.ExtractByte(DataDefine.LongSize.Seven),
-                item.upgradeStat.ExtractByte(DataDefine.LongSize.Eight)
-                ));
+        Stat stat = new(
+                item.upgradeStat.ExtractByte(DataDefine.IntSize.One),
+                item.upgradeStat.ExtractByte(DataDefine.IntSize.Two),
+                item.upgradeStat.ExtractByte(DataDefine.IntSize.Three),
+                item.upgradeStat.ExtractByte(DataDefine.IntSize.Four));
+
+        AdditionalStat additional = new(
+                item.upgradeAdditional.ExtractByte(DataDefine.IntSize.One),
+                item.upgradeAdditional.ExtractByte(DataDefine.IntSize.Two),
+                item.upgradeAdditional.ExtractByte(DataDefine.IntSize.Three),
+                item.upgradeAdditional.ExtractByte(DataDefine.IntSize.Four));
+
+        return (stat, additional);
     }
     public static (Define.EquipType wearType, int level, int category, int possable) ParseData(this ItemEquipServerData item)
     {
         return
             (
-                (Define.EquipType)item.itemData.ExtractByte(DataDefine.LongSize.One),
-                item.itemData.ExtractByte(DataDefine.LongSize.Two),
-                item.itemData.ExtractByte(DataDefine.LongSize.Three),
-                item.itemData.ExtractByte(DataDefine.LongSize.Four)
+                (Define.EquipType)item.itemData.ExtractByte(DataDefine.IntSize.One),
+                item.itemData.ExtractByte(DataDefine.IntSize.Two),
+                item.itemData.ExtractByte(DataDefine.IntSize.Three),
+                item.itemData.ExtractByte(DataDefine.IntSize.Four)
             );
     }
     public static Item ExtractItem(this ItemEctServerData item)
@@ -213,16 +212,19 @@ public static class UserCharacterExtension
     }
     public static Equip ExtractItem(this ItemEquipServerData item)
     {
-        Equip equip = new(item.ParseCode(), item.ParseData());
+        (int itemType, int count, int img, int scriptable) value = item.ParseCode();
+        (EquipType wearType, int level, int category, int possable) _value = item.ParseData();
+        Equip equip = new(value, _value)
+        {
+            limitStat = item.ParseLimitStat()
+        };
+        AdditionalStat temp;
+        (equip.addAbility, temp) = item.ParseAddAbilityEquip();
 
-        equip.limitStat = item.ParseLimitStat();
-        (equip.addAbility, equip.addAdditional) = item.ParseAddAbilityEquip();
-
-        (equip.baseStat, equip.addAdditional) = item.ParseAddStat();
+        (equip.baseStat, equip.baseAdditional) = item.ParseAddStat();
         (equip.upgradeStat, equip.upgradeAdditional) = item.ParseUpgradeStat();
 
-
-        return null;
+        return equip;
     }
 
 
