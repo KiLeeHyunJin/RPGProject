@@ -10,9 +10,4 @@ public class CharacterKeyManager : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

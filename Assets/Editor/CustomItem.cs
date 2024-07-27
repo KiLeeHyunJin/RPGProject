@@ -7,11 +7,13 @@ using static Define;
 public class CustomItem : EditorWindow
 {
     public string[] spriePath;
-
+    string scriptablePath = "Assets/03.Prefabs/00.Item";
     public VisualElement m_RightPane;
+
     public ItemType itemType;
     public string itemName;
     public string itemInfo;
+
     public Sprite sprite;
 
     HealType addType;
@@ -35,7 +37,6 @@ public class CustomItem : EditorWindow
     public List<List<VisualElement>> itemList;
 
     VisualElement buff;
-    VisualElement heal;
 
     [MenuItem("Tools/Creat Item(Scriptable)")]
     public static void ShowMyEditor()
@@ -51,6 +52,12 @@ public class CustomItem : EditorWindow
         itemList = new(Utils.GetEnumArray<Define.ItemType>().Length);
         for (int i = 0; i < itemList.Capacity; i++)
             itemList.Add(new());
+        limitStat = new(0,0,0,0);
+        baseStat = new(0, 0, 0, 0);
+        addAbility = new(0, 0, 0, 0);
+
+        baseAdditional = new(0, 0, 0, 0);
+        addAdditional = new(0, 0, 0, 0);
     }
 
     public void CreateGUI()
@@ -335,6 +342,7 @@ public class CustomItem : EditorWindow
 
     private void ChangeItemType(ItemType _itemType)
     {
+        itemType = _itemType;
         for (int i = 0; i < itemList.Count; i++)
         {
             DisplayStyle state = i == (int)_itemType ? DisplayStyle.Flex : DisplayStyle.None;
@@ -372,6 +380,93 @@ public class CustomItem : EditorWindow
 
     private void MakeItem()
     {
-
+        switch (itemType)
+        {
+            case ItemType.Equip:
+                CreatEquip();
+                break;
+            case ItemType.Consume:
+                CreateConsume();
+                break;
+            case ItemType.Ect:
+                CreateEct();
+                break;
+        }
     }
+    private void CreatEquip()
+    {
+        ScriptableEquipItem asset = ScriptableObject.CreateInstance<ScriptableEquipItem>();
+
+        string path = $"{scriptablePath}/equip_{itemName}.asset";
+        path = AssetDatabase.GenerateUniqueAssetPath(path);
+
+        asset.item = new(((int)itemType, 1, 0, 0), (wearType, level, category, possableCount));
+
+        asset.item.info = itemInfo;
+        asset.item.itemName = itemName;
+
+        asset.item.limitStat = limitStat;
+
+        asset.item.addAbility = addAbility;
+        asset.item.addAdditional = addAdditional;
+
+        asset.item.baseStat = baseStat;
+        asset.item.baseAdditional = baseAdditional;
+
+
+
+
+        AssetDatabase.CreateAsset(asset, path);
+        AssetDatabase.SaveAssets();
+
+        EditorUtility.FocusProjectWindow();
+
+        Selection.activeObject = asset;
+    }
+
+    private void CreateConsume()
+    {
+        ScriptableConsumeItem asset = ScriptableObject.CreateInstance<ScriptableConsumeItem>();
+
+        string path = $"{scriptablePath}/consume_{itemName}.asset";
+        path = AssetDatabase.GenerateUniqueAssetPath(path);
+
+        asset.item = new(((int)itemType, 1, 0, 0),(addType,efxType,consumeValue,consumeStayTime));
+
+        asset.item.info = itemInfo;
+        asset.item.itemName = itemName;
+
+
+
+        AssetDatabase.CreateAsset(asset, path);
+        AssetDatabase.SaveAssets();
+
+        EditorUtility.FocusProjectWindow();
+
+        Selection.activeObject = asset;
+    }
+
+    private void CreateEct()
+    {
+        ScriptableEctItem asset = ScriptableObject.CreateInstance<ScriptableEctItem>();
+
+        string path = $"{scriptablePath}/ect_{itemName}.asset";
+        path = AssetDatabase.GenerateUniqueAssetPath(path);
+
+        asset.item = new(((int)itemType, 1, 0, 0));
+
+        asset.item.info = itemInfo;
+        asset.item.itemName = itemName;
+
+
+
+        AssetDatabase.CreateAsset(asset, path);
+        AssetDatabase.SaveAssets();
+
+        EditorUtility.FocusProjectWindow();
+
+        Selection.activeObject = asset;
+    }
+
+
 }

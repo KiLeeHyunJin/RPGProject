@@ -12,6 +12,7 @@ public class Consume : Item
     {
         ConsumeData(_value);
     }
+
     void ConsumeData((HealType addType, ConsumeType efxType, int value, int stayTime) _value)
     {
         useType = _value.addType;
