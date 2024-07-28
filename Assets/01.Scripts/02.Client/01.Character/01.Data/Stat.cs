@@ -1,6 +1,6 @@
 using System;
 [Serializable]
-public class Stat
+public struct Stat
 {
     public Stat(int _str, int _def, int _man, int _luk)
     {

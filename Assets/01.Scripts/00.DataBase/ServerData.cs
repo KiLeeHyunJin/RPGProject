@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using static Define;
 
 
 public class ServerData
@@ -63,7 +64,7 @@ public class ServerData
         }
 
         public List<ItemEctServerData> consume;
-        public List<ItemConsumeServerData> ect;
+        public List<ItemEctServerData> ect;
         public List<ItemEquipServerData> equip;
 
         public long money;
@@ -72,27 +73,63 @@ public class ServerData
 
     public class ItemEctServerData
     {
-        public string itemName; //이름
-        public int code;       //종류, 개수, 이미지, 스크립터블
+        public int code;       //종류 , 개수 , 카테고리
+        public (int itemType, int count, int scriptable) ParseCode()
+        {
+            int _type = code.ExtractByte(DataDefine.IntSize.One);
+            int _category = code.ExtractByte(DataDefine.IntSize.Two);
+            int _count = code.ExtractByte(DataDefine.IntSize.Three);
 
-    }
-    public class ItemConsumeServerData : ItemEctServerData
-    {
-        public int addAbility; //강화 타입, 효과 타입, 값, 지속 시간
+            return (_type, _count, _category);
+        }
+        public Item ExtractItem()
+        {
+            Item ect = new();
+            ect.Init(ParseCode());
+            return ect;
+        }
     }
 
     [Serializable]
-    public class ItemEquipServerData : ItemConsumeServerData
+    public class ItemEquipServerData : ItemEctServerData
     {
-        public int itemData;   //장착타입, 장착 레벨, 카테고리 , 작수,
-
-        //addAbility; //힘, 민첩, 지력, 운, 공격, 마법, 방어, 이속, 
-        public int limitStat;   //힘, 민첩, 지력, 운,
-        public int baseStat;    //힘, 민첩, 지력, 운, 
+        public int itemData;   //장착타입, 장착 레벨 , 작수,
         public int upgradeStat;//힘, 민첩, 지력, 운,
-
-        public int baseAdditional;// 공격, 마법, 방어, 이속, 
         public int upgradeAdditional;//공격, 마법, 방어, 이속, 
+        public (Define.EquipType wearType, int level, int possable) ParseData()
+        {
+            return
+                (
+                    (Define.EquipType)itemData.ExtractByte(DataDefine.IntSize.One),
+                    itemData.ExtractByte(DataDefine.IntSize.Two),
+                    itemData.ExtractByte(DataDefine.IntSize.Three)
+                );
+        }
+
+        public (Stat stat, AdditionalStat additional) ParseUpgradeStat()
+        {
+            Stat stat = new(
+                    upgradeStat.ExtractByte(DataDefine.IntSize.One),
+                    upgradeStat.ExtractByte(DataDefine.IntSize.Two),
+                    upgradeStat.ExtractByte(DataDefine.IntSize.Three),
+                    upgradeStat.ExtractByte(DataDefine.IntSize.Four));
+
+            AdditionalStat additional = new(
+                    upgradeAdditional.ExtractByte(DataDefine.IntSize.One),
+                    upgradeAdditional.ExtractByte(DataDefine.IntSize.Two),
+                    upgradeAdditional.ExtractByte(DataDefine.IntSize.Three),
+                    upgradeAdditional.ExtractByte(DataDefine.IntSize.Four));
+
+            return (stat, additional);
+        }
+        new public Equip ExtractItem()
+        {
+            Equip equip = new();
+            equip.Init(ParseCode());
+            equip.EquipInit(ParseData());
+            (equip.upgradeStat, equip.upgradeAdditional) = ParseUpgradeStat();
+            return equip;
+        }
     }
 
     [Serializable]

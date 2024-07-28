@@ -23,6 +23,29 @@ public class Inventory
         return slotCounts[(int)getType];
     }
 
+    public FieldItem DropItem(ItemType type, int idx, int itemId, int count)
+    {
+        FieldItem drop= new();
+
+        drop.itemType = type;
+        drop.itemId = itemId;
+        drop.count = count;
+
+        return drop;
+    }
+
+    public void GetItem(FieldItem item)
+    {
+        List<Item> list = slotData[(int)item.itemType];
+
+        int itemCount = item.count;
+        ItemType itemType = item.itemType;
+
+
+
+        Item input = new();
+    }
+
     public bool AddItem(ItemType type,int idx)
     {
         if (slotData[(int)type].Count <= slotCounts[idx])

@@ -1,7 +1,7 @@
 using System;
 
 [Serializable]
-public class AdditionalStat
+public struct AdditionalStat
 {
     //힘, 민첩, 지력, 운, 공격, 마법, 방어, 이속, 
     public AdditionalStat(int _atck, int _magic, int _defence, int _speed)

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static Define;
@@ -13,7 +14,7 @@ public class CustomItem : EditorWindow
     public ItemType itemType;
     public string itemName;
     public string itemInfo;
-
+    public int itemPrice;
     public Sprite sprite;
 
     HealType addType;
@@ -115,6 +116,10 @@ public class CustomItem : EditorWindow
         AddTextElement(root, ItemType.Ect, "Infomation" , true, true)
             .RegisterValueChangedCallback(evt =>
         { itemInfo = evt.newValue; });
+
+        AddIntegerElement(root, ItemType.Ect, "Infomation", true)
+        .RegisterValueChangedCallback(evt =>
+        { itemPrice = evt.newValue; });
     }
     private void CreatConsumeData(VisualElement root)
     {
@@ -393,28 +398,32 @@ public class CustomItem : EditorWindow
                 break;
         }
     }
+    private ScriptableEctItem SetBaseData(ScriptableEctItem asset)
+    {
+        asset.WarningItemType = itemType;
+        asset.WarningItemInfo = itemInfo;
+        asset.WarningItemName = itemName;
+        asset.WarningPrice = itemPrice;
+        return asset;
+    }
     private void CreatEquip()
     {
         ScriptableEquipItem asset = ScriptableObject.CreateInstance<ScriptableEquipItem>();
 
-        string path = $"{scriptablePath}/equip_{itemName}.asset";
+        string path = AssetDatabase.GenerateUniqueAssetPath(GetPath());
         path = AssetDatabase.GenerateUniqueAssetPath(path);
 
-        asset.item = new(((int)itemType, 1, 0, 0), (wearType, level, category, possableCount));
+        SetBaseData(asset);
 
-        asset.item.info = itemInfo;
-        asset.item.itemName = itemName;
+        asset.WarningWearType = wearType;
+        asset.WarningLevel = level;
+        asset.WaringCategory = category;
+        asset.WarningPossableCount = possableCount;
 
-        asset.item.limitStat = limitStat;
+        asset.WarningLimitStat = limitStat;
 
-        asset.item.addAbility = addAbility;
-        asset.item.addAdditional = addAdditional;
-
-        asset.item.baseStat = baseStat;
-        asset.item.baseAdditional = baseAdditional;
-
-
-
+        asset.WarningBaseStat = baseStat;
+        asset.WarningBaseAdditional = baseAdditional;
 
         AssetDatabase.CreateAsset(asset, path);
         AssetDatabase.SaveAssets();
@@ -428,15 +437,13 @@ public class CustomItem : EditorWindow
     {
         ScriptableConsumeItem asset = ScriptableObject.CreateInstance<ScriptableConsumeItem>();
 
-        string path = $"{scriptablePath}/consume_{itemName}.asset";
+        string path = AssetDatabase.GenerateUniqueAssetPath(GetPath());
         path = AssetDatabase.GenerateUniqueAssetPath(path);
-
-        asset.item = new(((int)itemType, 1, 0, 0),(addType,efxType,consumeValue,consumeStayTime));
-
-        asset.item.info = itemInfo;
-        asset.item.itemName = itemName;
-
-
+        SetBaseData(asset);
+        asset.WarningEfxType = efxType;
+        asset.WarningUseType = addType;
+        asset.WarningValue = consumeValue;
+        asset.WarningDuringValue = consumeStayTime;
 
         AssetDatabase.CreateAsset(asset, path);
         AssetDatabase.SaveAssets();
@@ -449,16 +456,9 @@ public class CustomItem : EditorWindow
     private void CreateEct()
     {
         ScriptableEctItem asset = ScriptableObject.CreateInstance<ScriptableEctItem>();
+        string path = AssetDatabase.GenerateUniqueAssetPath(GetPath());
 
-        string path = $"{scriptablePath}/ect_{itemName}.asset";
-        path = AssetDatabase.GenerateUniqueAssetPath(path);
-
-        asset.item = new(((int)itemType, 1, 0, 0));
-
-        asset.item.info = itemInfo;
-        asset.item.itemName = itemName;
-
-
+        SetBaseData(asset);
 
         AssetDatabase.CreateAsset(asset, path);
         AssetDatabase.SaveAssets();
@@ -468,5 +468,15 @@ public class CustomItem : EditorWindow
         Selection.activeObject = asset;
     }
 
-
+    private string GetPath()
+    {
+        return itemType switch
+        {
+            ItemType.Equip => $"{scriptablePath}/02.Equip/{itemType}_{itemName}.asset",
+            ItemType.Consume => $"{scriptablePath}/01.Consume/{itemType}_{itemName}.asset",
+            ItemType.Ect => $"{scriptablePath}/00.Ect/{itemType}_{itemName}.asset",
+            ItemType.Non => $"{scriptablePath}/02.Equip/{itemType}_{itemName}.asset",
+            _ => $"{scriptablePath}/02.Equip/{itemType}_{itemName}.asset",
+        };
+    }
 }
