@@ -11,6 +11,14 @@ public class Equip : Item
         level = _value.level;
         possableCount = _value.possable;
     }
+    public void SetEquipData(EquipType _wearType, int _level, Stat _limitStat, Stat _baseStat, AdditionalStat _baseAdditional)
+    {
+        wearType = _wearType;
+        level = _level;
+        limitStat = _limitStat;
+        baseStat = _baseStat;
+        baseAdditional = _baseAdditional;
+    }
     public int possableCount;
 
     public Stat upgradeStat;

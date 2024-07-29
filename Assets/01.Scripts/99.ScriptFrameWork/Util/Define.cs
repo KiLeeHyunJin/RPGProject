@@ -2,16 +2,18 @@ using System;
 
 public class Define
 {
-    public readonly static int InventoryCount = 30;
     public readonly static int SlotDefaultSize = 2;
+
+    public readonly static int InventoryCount = 30;
     public readonly static int ItemBundleSize = 100;
 
     #region Directory
 
     public readonly static string dir = "./Bundle";
-    public readonly static string bundleTable = "/BundleTable.txt";
     public readonly static string android = "/Android";
     public readonly static string window = "/Windows";
+
+    public readonly static string bundleTable = "/BundleTable.txt";
 
     public readonly static string ItemScripatablePath = "Assets/03.Prefabs/00.Item";
     public readonly static string ItemScripatableEctPath = "/00.Ect";

@@ -10,9 +10,11 @@ public class ScriptableEquipItem : ScriptableEctItem
     public int WarningPossableCount { set { possableCount = value; } }
     public Stat WarningLimitStat { set { limitStat = value; } }
     public Stat WarningBaseStat { set { baseStat = value; } }
-    public Stat WarningUpgradeStat { set { upgradeStat = value; } }
     public AdditionalStat WarningBaseAdditional { set { baseAdditional = value; } }
-    public AdditionalStat WarningUpgradeAdditional { set { upgradeAdditional = value; } }
+
+    //public AdditionalStat WarningUpgradeAdditional { set { upgradeAdditional = value; } }
+    //public Stat WarningUpgradeStat { set { upgradeStat = value; } }
+
     #endregion set
 
     #region get
@@ -21,9 +23,11 @@ public class ScriptableEquipItem : ScriptableEctItem
     public int PossableCount { get { return possableCount; } }
     public Stat LimitStat { get { return limitStat; } }
     public Stat BaseStat { get { return baseStat; } }
-    public Stat UpgradeStat { get { return upgradeStat; } }
     public AdditionalStat BaseAdditional { get { return baseAdditional; } }
-    public AdditionalStat UpgradeAdditional { get { return upgradeAdditional; } }
+
+    //public AdditionalStat UpgradeAdditional { get { return upgradeAdditional; } }
+    //public Stat UpgradeStat { get { return upgradeStat; } }
+
     #endregion get
 
     [SerializeField] private EquipType wearType;
@@ -32,6 +36,6 @@ public class ScriptableEquipItem : ScriptableEctItem
     [SerializeField] private Stat limitStat; //착용 제한
     [SerializeField] private Stat baseStat; //기본 능력치
     [SerializeField] private AdditionalStat baseAdditional;
-    [SerializeField] private Stat upgradeStat;
-    [SerializeField] private AdditionalStat upgradeAdditional;
+    //[SerializeField] private Stat upgradeStat;
+    //[SerializeField] private AdditionalStat upgradeAdditional;
 }

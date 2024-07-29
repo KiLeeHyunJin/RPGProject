@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6430efe57e0e74b4c8543e3645231a06, type: 3}
   m_Name: Equip_fgdgdf
   m_EditorClassIdentifier: 
-  category: 0
+  category: 23
   itemName: fgdgdf
   itemInfo: 
   itemType: 0

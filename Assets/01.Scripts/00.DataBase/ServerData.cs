@@ -71,11 +71,11 @@ public class ServerData
     public class ItemEctServerData
     {
         public int code;       //종류 , 개수 , 카테고리
-        public (int itemType, int count, int scriptable) ParseCode()
+        public (int itemType, int count, int category) ParseCode()
         {
             int _type = code.ExtractByte(DataDefine.IntSize.One);
-            int _category = code.ExtractByte(DataDefine.IntSize.Two);
-            int _count = code.ExtractByte(DataDefine.IntSize.Three);
+            int _count = code.ExtractByte(DataDefine.IntSize.Two);
+            int _category = code.ExtractByte(DataDefine.IntSize.Three);
 
             return (_type, _count, _category);
         }

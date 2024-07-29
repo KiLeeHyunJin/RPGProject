@@ -7,6 +7,25 @@ namespace UnityEngine
 {
     public static class Extension
     {
+        public static void DefaultValue<T>(this T[] array) where T : struct
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = default;
+            }
+        }
+
+        public static void DefaultCreate<T>(this T[] array) where T : class, new()
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] == null)
+                {
+                    array[i] = new();
+                }
+            }
+        }
+
         /// <summary>
         /// 버튼의 Null상태를 확인한 후 액션을 제거 후 추가
         /// </summary>

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static Define;
@@ -32,8 +33,8 @@ public class CustomItem : EditorWindow
     public Stat baseStat;
     public AdditionalStat baseAdditional;
 
-    public Stat addAbility;
-    public AdditionalStat addAdditional;
+    //public Stat addAbility;
+    //public AdditionalStat addAdditional;
 
     public List<List<VisualElement>> itemList;
 
@@ -54,11 +55,12 @@ public class CustomItem : EditorWindow
         for (int i = 0; i < itemList.Capacity; i++)
             itemList.Add(new());
         limitStat = new(0, 0, 0, 0);
-        baseStat = new(0, 0, 0, 0);
-        addAbility = new(0, 0, 0, 0);
 
+        baseStat = new(0, 0, 0, 0);
         baseAdditional = new(0, 0, 0, 0);
-        addAdditional = new(0, 0, 0, 0);
+
+        //addAbility = new(0, 0, 0, 0);
+        //addAdditional = new(0, 0, 0, 0);
     }
 
     public void CreateGUI()
@@ -70,6 +72,7 @@ public class CustomItem : EditorWindow
         {
             allObjects.Add(AssetDatabase.LoadAssetAtPath<Sprite>(AssetDatabase.GUIDToAssetPath(guid)));
         }
+
         VisualElement root = rootVisualElement;
 
         CreatEctData(root);
@@ -82,25 +85,41 @@ public class CustomItem : EditorWindow
         };
         root.Add(button);
         // 왼쪽 창이 고정된 두 창 보기 만들기
-        var splitView = new TwoPaneSplitView(0, 250, TwoPaneSplitViewOrientation.Horizontal);
-
-        // 뷰를 루트 요소에 자식으로 추가하여 시각적 트리에 추가합니다
-        root.Add(splitView);
+        
 
         // TwoPaneSplitView에는 항상 두 개의 자식 요소가 필요합니다
-        var leftPane = new ListView();
-        splitView.Add(leftPane);
-        m_RightPane = new VisualElement();
-        splitView.Add(m_RightPane);
+        //var leftPane = new ListView();
+        //splitView.Add(leftPane);
+        //m_RightPane = new VisualElement();
+        //splitView.Add(m_RightPane);
 
 
-        // 모든 스프라이트의 이름으로 목록 보기 초기화
-        leftPane.makeItem = () => new Label();
-        leftPane.bindItem = (item, index) => { (item as Label).text = allObjects[index].name; };
-        leftPane.itemsSource = allObjects;
+        ////// 모든 스프라이트의 이름으로 목록 보기 초기화
+        //leftPane.makeItem = () => new Label();
+        //leftPane.bindItem = (item, index) => { (item as Label).text = allObjects[index].name; };
+        //leftPane.itemsSource = allObjects;
 
-        leftPane.selectionChanged += OnSpriteSelectionChange;
+        //leftPane.selectionChanged += OnSpriteSelectionChange;
     }
+    private void OnSpriteSelectionChange(IEnumerable<object> selectedItems)
+    {
+        // Clear all previous content from the pane
+        m_RightPane.Clear();
+
+        // Get the selected sprite
+        var selectedSprite = selectedItems.First() as Sprite;
+        if (selectedSprite == null)
+            return;
+
+        // Add a new Image control and display the sprite
+        var spriteImage = new Image();
+        spriteImage.scaleMode = ScaleMode.ScaleToFit;
+        spriteImage.sprite = selectedSprite;
+        sprite = selectedSprite;
+        // Add the Image control to the right-hand pane
+        m_RightPane.Add(spriteImage);
+    }
+
 
     private void CreatEctData(VisualElement root)
     {
@@ -128,7 +147,28 @@ public class CustomItem : EditorWindow
         AddIntegerElement(root, ItemType.Ect, "ItemPrice", true)
         .RegisterValueChangedCallback(evt =>
         { itemPrice = evt.newValue; });
+
+        var splitView = new TwoPaneSplitView(0, 300, TwoPaneSplitViewOrientation.Horizontal);
+        
+        //// 뷰를 루트 요소에 자식으로 추가하여 시각적 트리에 추가합니다
+        root.Add(splitView);
+        var spriteImage = new Image();
+        spriteImage.scaleMode = ScaleMode.ScaleToFit;
+
+        m_RightPane = new VisualElement();
+        splitView.Add(m_RightPane);
+
+        ObjectField spriteField = new ObjectField("Sprite");
+        spriteField.objectType = typeof(Sprite);
+        spriteField.RegisterValueChangedCallback(evt =>
+        {
+            sprite = (Sprite)evt.newValue;
+            spriteImage.sprite = sprite;
+        });
+        m_RightPane.Add(spriteField);
+        splitView.Add(spriteImage);
     }
+
     private void CreatConsumeData(VisualElement root)
     {
         AddEnumElement(root, ItemType.Consume, "HealType", addType)
@@ -172,7 +212,7 @@ public class CustomItem : EditorWindow
            { wearType = (Define.EquipType)evt.newValue; });
 
 
-        AddLabel(root, "Limit_Stat", FontStyle.Bold, 20);
+        AddLabel(root, ItemType.Equip, "Limit_Stat", FontStyle.Bold, 20);
 
 
 
@@ -197,7 +237,7 @@ public class CustomItem : EditorWindow
 
 
 
-        AddLabel(root, "baseAbility", FontStyle.Bold, 20);
+        AddLabel(root, ItemType.Equip, "baseAbility", FontStyle.Bold, 20);
 
 
 
@@ -241,10 +281,8 @@ public class CustomItem : EditorWindow
 
 
 
-        AddLabel(root, "AddAbility", FontStyle.Bold, 20);
-
-
-
+        /*
+        AddLabel(root,ItemType.Equip, "AddAbility", FontStyle.Bold, 20);
 
 
         AddIntegerElement(root, ItemType.Equip, "AddStr")
@@ -281,12 +319,14 @@ public class CustomItem : EditorWindow
         AddIntegerElement(root, ItemType.Equip, "AddSpeed")
            .RegisterValueChangedCallback(evt =>
            { this.addAdditional.speed = evt.newValue; });
+        */
     }
 
 
-    void AddLabel(VisualElement root, string labelName, FontStyle fontStyle, float fontSize = -1)
+    void AddLabel(VisualElement root,ItemType _itemType, string labelName, FontStyle fontStyle, float fontSize = -1)
     {
         Label label = new Label(labelName);
+        AddVisualElement(GetItemList(_itemType), root, label);
         label.style.unityFontStyleAndWeight = fontStyle;
         if (fontSize > 0)
         {
@@ -368,24 +408,6 @@ public class CustomItem : EditorWindow
     }
 
 
-    private void OnSpriteSelectionChange(IEnumerable<object> selectedItems)
-    {
-        // Clear all previous content from the pane
-        m_RightPane.Clear();
-
-        // Get the selected sprite
-        var selectedSprite = selectedItems.First() as Sprite;
-        if (selectedSprite == null)
-            return;
-
-        // Add a new Image control and display the sprite
-        var spriteImage = new Image();
-        spriteImage.scaleMode = ScaleMode.ScaleToFit;
-        spriteImage.sprite = selectedSprite;
-        sprite = selectedSprite;
-        // Add the Image control to the right-hand pane
-        m_RightPane.Add(spriteImage);
-    }
 
     private void MakeItem()
     {
@@ -407,7 +429,7 @@ public class CustomItem : EditorWindow
         asset.WarningItemType = itemType;
         asset.WarningItemInfo = itemInfo;
         asset.WarningItemName = itemName;
-        asset.WarningImgData = sprite;
+        asset.WarningIcon = sprite;
         asset.WarningPrice = itemPrice;
         return asset;
     }

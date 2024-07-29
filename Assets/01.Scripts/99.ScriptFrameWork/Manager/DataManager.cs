@@ -5,13 +5,22 @@ using UnityEngine;
 public class DataManager : Singleton<DataManager>
 {
     private GameData gameData;
-    public GameData GameData { get { return gameData; } }
+    private ItemData itemData;
 
+    public GameData GameData { get { return gameData; } }
+    public ItemData GameItemData { get { return itemData; } }
 #if UNITY_EDITOR
     private string path => Path.Combine(Application.dataPath, $"Resources/Data/SaveLoad");
 #else
     private string path => Path.Combine(Application.persistentDataPath, $"Resources/Data/SaveLoad");
 #endif
+
+    protected override void Awake()
+    {
+        base.Awake();
+        itemData = new(null);
+
+    }
 
     public void NewData()
     {

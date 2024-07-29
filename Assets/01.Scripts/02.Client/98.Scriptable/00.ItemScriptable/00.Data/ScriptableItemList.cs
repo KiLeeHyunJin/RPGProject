@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Define;
 
-[CreateAssetMenu]
 public class ScriptableItemList : ScriptableObject
 {
     [SerializeField] ItemType itemtype;
