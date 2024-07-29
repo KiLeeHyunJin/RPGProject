@@ -34,6 +34,7 @@ public class Utils
     {
         return $"{DataDefine.User}/{userId}/{DataDefine.Character}/{nickName}";
     }
+  
 
     /// <summary>
     /// 해당 주소의 폴더를 열어줍니다.
@@ -67,7 +68,7 @@ public class Utils
 
         if (!Directory.Exists(path))
         {
-            Debug.LogError("Directory does not exist: " + path);
+            Message.LogError("Directory does not exist: " + path);
             return new();
         }
 

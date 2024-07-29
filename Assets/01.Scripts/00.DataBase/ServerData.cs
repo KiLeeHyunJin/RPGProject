@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using static Define;
-
-
 public class ServerData
 {
     [Serializable]

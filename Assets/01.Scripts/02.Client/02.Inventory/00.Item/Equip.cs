@@ -25,7 +25,7 @@ public class Equip : Item
     public Stat baseStat; //기본 능력치
     public AdditionalStat baseAdditional;
 
-    public ( int itemData, int upgradeStat, int upgradeAdditional) ServerEquipData()
+    ( int itemData, int upgradeStat, int upgradeAdditional) ServerEquipData()
     {
         int returnItemData = default;
         returnItemData |= ((int)wearType).Shift(DataDefine.IntSize.One);

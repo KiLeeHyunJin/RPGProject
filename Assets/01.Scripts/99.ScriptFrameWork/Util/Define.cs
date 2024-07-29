@@ -4,6 +4,7 @@ public class Define
 {
     public readonly static int InventoryCount = 30;
     public readonly static int SlotDefaultSize = 2;
+    public readonly static int ItemBundleSize = 100;
 
     #region Directory
 
@@ -11,6 +12,11 @@ public class Define
     public readonly static string bundleTable = "/BundleTable.txt";
     public readonly static string android = "/Android";
     public readonly static string window = "/Windows";
+
+    public readonly static string ItemScripatablePath = "Assets/03.Prefabs/00.Item";
+    public readonly static string ItemScripatableEctPath = "/00.Ect";
+    public readonly static string ItemScripatableConsumePath = "/01.Consume";
+    public readonly static string ItemScripatableEquipPath = "/02.Equip";
 
     #endregion
 

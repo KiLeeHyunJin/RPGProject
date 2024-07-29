@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 
 namespace UnityEngine
 {
@@ -28,7 +29,7 @@ namespace UnityEngine
             if (co != null)
                 mono.StopCoroutine(co);
         }
-
+       
         /// <summary>
         /// 실행중인 코루틴을 중지하고 다시 실행합니다.
         /// </summary>

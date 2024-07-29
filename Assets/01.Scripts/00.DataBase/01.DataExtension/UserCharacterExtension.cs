@@ -1,7 +1,4 @@
-using static DataDefine;
-using static Define;
 using static ServerData;
-using static UnityEditor.Progress;
 
 public static class UserCharacterExtension
 {
@@ -106,7 +103,7 @@ public static class UserCharacterExtension
 
     #region Item
 
-    
+
 
 
 

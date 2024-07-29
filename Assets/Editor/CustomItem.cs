@@ -1,14 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static Define;
+
 public class CustomItem : EditorWindow
 {
     public string[] spriePath;
-    string scriptablePath = "Assets/03.Prefabs/00.Item";
     public VisualElement m_RightPane;
 
     public ItemType itemType;
@@ -53,7 +53,7 @@ public class CustomItem : EditorWindow
         itemList = new(Utils.GetEnumArray<Define.ItemType>().Length);
         for (int i = 0; i < itemList.Capacity; i++)
             itemList.Add(new());
-        limitStat = new(0,0,0,0);
+        limitStat = new(0, 0, 0, 0);
         baseStat = new(0, 0, 0, 0);
         addAbility = new(0, 0, 0, 0);
 
@@ -93,13 +93,13 @@ public class CustomItem : EditorWindow
         m_RightPane = new VisualElement();
         splitView.Add(m_RightPane);
 
-       
-        // 모든 스프라이트의 이름으로 목록 보기 초기화
-        //leftPane.makeItem = () => new Label();
-        //leftPane.bindItem = (item, index) => { (item as Label).text = allObjects[index].name; };
-        //leftPane.itemsSource = allObjects;
 
-        //leftPane.selectionChanged += OnSpriteSelectionChange;
+        // 모든 스프라이트의 이름으로 목록 보기 초기화
+        leftPane.makeItem = () => new Label();
+        leftPane.bindItem = (item, index) => { (item as Label).text = allObjects[index].name; };
+        leftPane.itemsSource = allObjects;
+
+        leftPane.selectionChanged += OnSpriteSelectionChange;
     }
 
     private void CreatEctData(VisualElement root)
@@ -108,16 +108,24 @@ public class CustomItem : EditorWindow
             .RegisterValueChangedCallback(evt =>
         { itemName = evt.newValue; });
 
-
         AddEnumElement(root, ItemType.Non, "ItemType", itemType)
            .RegisterValueChangedCallback(evt =>
-           { ChangeItemType((Define.ItemType)evt.newValue); });
+        { ChangeItemType((Define.ItemType)evt.newValue); });
 
-        AddTextElement(root, ItemType.Ect, "Infomation" , true, true)
+        AddIntegerElement(root, ItemType.Ect, "ItemCategory", true, Define.ItemBundleSize)
+            .RegisterValueChangedCallback(evt =>
+        { 
+            if(CheckCategory(evt.newValue,out string useName) == false)
+                UnityEditor.EditorUtility.DisplayDialog("Crash CategoryNum", $"이미 사용중인 CategoryValue입니다. \n 결과 {useName}: ", "확인");
+
+            category = evt.newValue;
+        });
+
+        AddTextElement(root, ItemType.Ect, "Infomation", true, true)
             .RegisterValueChangedCallback(evt =>
         { itemInfo = evt.newValue; });
 
-        AddIntegerElement(root, ItemType.Ect, "Infomation", true)
+        AddIntegerElement(root, ItemType.Ect, "ItemPrice", true)
         .RegisterValueChangedCallback(evt =>
         { itemPrice = evt.newValue; });
     }
@@ -154,11 +162,6 @@ public class CustomItem : EditorWindow
         AddIntegerElement(root, ItemType.Equip, "Level")
         .RegisterValueChangedCallback(evt =>
         { this.level = evt.newValue; });
-
-
-        AddIntegerElement(root, ItemType.Equip, "Category")
-        .RegisterValueChangedCallback(evt =>
-        { this.category = evt.newValue; });
 
         AddIntegerElement(root, ItemType.Equip, "PossableCount")
         .RegisterValueChangedCallback(evt =>
@@ -280,7 +283,7 @@ public class CustomItem : EditorWindow
            { this.addAdditional.speed = evt.newValue; });
     }
 
-    
+
     void AddLabel(VisualElement root, string labelName, FontStyle fontStyle, float fontSize = -1)
     {
         Label label = new Label(labelName);
@@ -292,7 +295,7 @@ public class CustomItem : EditorWindow
         root.Add(label);
     }
 
-    IntegerField AddIntegerElement(VisualElement root, ItemType _itemType, string labelName, bool display = true,int maxValue = int.MaxValue)
+    IntegerField AddIntegerElement(VisualElement root, ItemType _itemType, string labelName, bool display = true, int maxValue = int.MaxValue)
     {
         IntegerField field = new(labelName, maxValue);
         AddVisualElement(GetItemList(_itemType), root, field);
@@ -306,9 +309,9 @@ public class CustomItem : EditorWindow
     {
         EnumField field = new EnumField(labelName, type);
         AddVisualElement(GetItemList(_itemType), root, field);
-        field.style.display = display && (_itemType == ItemType.Equip || _itemType == ItemType.Non)? 
+        field.style.display = display && (_itemType == ItemType.Equip || _itemType == ItemType.Non) ?
             DisplayStyle.Flex : DisplayStyle.None;
-        
+
         return field;
     }
 
@@ -329,11 +332,10 @@ public class CustomItem : EditorWindow
 
     void AddVisualElement(List<VisualElement> typeList, VisualElement root, VisualElement visualElement)
     {
-        if(root != null)
-            root.Add(visualElement);
-        if(typeList != null)
-            typeList.Add(visualElement);
+        root?.Add(visualElement);
+        typeList?.Add(visualElement);
     }
+
     List<VisualElement> GetItemList(ItemType _itemType)
     {
         if (_itemType == ItemType.Non)
@@ -341,25 +343,27 @@ public class CustomItem : EditorWindow
         return itemList[(int)_itemType];
     }
 
-
- 
-
-
     private void ChangeItemType(ItemType _itemType)
     {
         itemType = _itemType;
         for (int i = 0; i < itemList.Count; i++)
         {
             DisplayStyle state = i == (int)_itemType ? DisplayStyle.Flex : DisplayStyle.None;
+
             List<VisualElement> list = itemList[i];
             for (int j = 0; j < list.Count; j++)
             {
                 list[j].style.display = state;
             }
         }
-        if(_itemType == ItemType.Consume)
+        if (_itemType == ItemType.Consume)
         {
             buff.style.display = efxType == ConsumeType.During ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
+        foreach (var list in itemList[(int)ItemType.Ect])
+        {
+            list.style.display = DisplayStyle.Flex;
         }
     }
 
@@ -378,7 +382,7 @@ public class CustomItem : EditorWindow
         var spriteImage = new Image();
         spriteImage.scaleMode = ScaleMode.ScaleToFit;
         spriteImage.sprite = selectedSprite;
-
+        sprite = selectedSprite;
         // Add the Image control to the right-hand pane
         m_RightPane.Add(spriteImage);
     }
@@ -403,6 +407,7 @@ public class CustomItem : EditorWindow
         asset.WarningItemType = itemType;
         asset.WarningItemInfo = itemInfo;
         asset.WarningItemName = itemName;
+        asset.WarningImgData = sprite;
         asset.WarningPrice = itemPrice;
         return asset;
     }
@@ -472,11 +477,39 @@ public class CustomItem : EditorWindow
     {
         return itemType switch
         {
-            ItemType.Equip => $"{scriptablePath}/02.Equip/{itemType}_{itemName}.asset",
-            ItemType.Consume => $"{scriptablePath}/01.Consume/{itemType}_{itemName}.asset",
-            ItemType.Ect => $"{scriptablePath}/00.Ect/{itemType}_{itemName}.asset",
-            ItemType.Non => $"{scriptablePath}/02.Equip/{itemType}_{itemName}.asset",
-            _ => $"{scriptablePath}/02.Equip/{itemType}_{itemName}.asset",
+            ItemType.Equip => $"{ItemScripatablePath}{Define.ItemScripatableEquipPath}/{itemType}_{itemName}.asset",
+            ItemType.Consume => $"{ItemScripatablePath}{Define.ItemScripatableConsumePath}/{itemType}_{itemName}.asset",
+            ItemType.Ect => $"{ItemScripatablePath}{Define.ItemScripatableEctPath}/{itemType}_{itemName}.asset",
+            ItemType.Non => null,
+            _ => null,
         };
+    }
+
+    private bool CheckCategory(int categoryValue, out string useName)
+    {
+        string[] path = {null};
+        path[0] = itemType switch
+        {
+            ItemType.Equip => $"{Define.ItemScripatablePath}{Define.ItemScripatableEquipPath}",
+            ItemType.Consume => $"{Define.ItemScripatablePath}{Define.ItemScripatableEquipPath}",
+            ItemType.Ect => $"{Define.ItemScripatablePath}{Define.ItemScripatableEctPath}",
+            ItemType.Non => null,
+            _ => null,
+        };
+        useName = null;
+        if (path[0] == null)
+            return false;
+
+        var allObjectGuids = AssetDatabase.FindAssets("t:ScriptableEctItem", path);
+        foreach (var guid in allObjectGuids)
+        {
+            ScriptableEctItem scriptableItem = AssetDatabase.LoadAssetAtPath<ScriptableEctItem>(AssetDatabase.GUIDToAssetPath(guid));
+            if (scriptableItem.Category == categoryValue)
+            {
+                useName = $"ItemName : {scriptableItem.ItemName} ObjectName : {scriptableItem.name}";
+                return false;
+            }
+        }
+        return true;
     }
 }
