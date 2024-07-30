@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterKeyManager : MonoBehaviour
+public class AbilityController : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -10,4 +10,9 @@ public class CharacterKeyManager : MonoBehaviour
         
     }
 
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
 }

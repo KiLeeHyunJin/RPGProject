@@ -1,16 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.U2D.Animation;
 using UnityEngine;
 using static Define;
 
-public class Inventory
+public class InventoryController
 {
     public List<List<Item>> slotData;
     public int[] slotCounts;
-
-    public Inventory(int equipCount, int consumeCount, int ectCount)
+    public InventoryController(ServerData.InventoryServerData inventoryData)
     {
-        slotCounts = new int[] { equipCount, consumeCount, ectCount };
+        (int equip, int consume, int ect) = inventoryData.ParseSlot();
+
+        slotCounts = new int[] { equip, consume, ect };
         slotData = new((int)ItemType.Non);
         for (int i = 0; i < slotData.Capacity; i++)
             slotData[i] = new(slotCounts[i]);

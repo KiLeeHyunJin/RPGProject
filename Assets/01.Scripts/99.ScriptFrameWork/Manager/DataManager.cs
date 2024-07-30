@@ -6,7 +6,7 @@ public class DataManager : Singleton<DataManager>
 {
     private GameData gameData;
     private ItemData itemData;
-
+    [SerializeField] ScriptableItemDataBase itemDataBase;
     public GameData GameData { get { return gameData; } }
     public ItemData GameItemData { get { return itemData; } }
 #if UNITY_EDITOR
@@ -18,7 +18,7 @@ public class DataManager : Singleton<DataManager>
     protected override void Awake()
     {
         base.Awake();
-        itemData = new(null);
+        itemData = new(itemDataBase);
 
     }
 
