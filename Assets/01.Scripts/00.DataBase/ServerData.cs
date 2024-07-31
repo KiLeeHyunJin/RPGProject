@@ -53,6 +53,18 @@ public class ServerData
             equip = new();
             consume = new();
         }
+        public InventoryServerData(int slotSize)
+        {
+            ect = new(slotSize);
+            equip = new(slotSize);
+            consume = new(slotSize);
+            for (int i = 0; i < slotSize; i++)
+            {
+                ect.Add(new ItemEctServerData());
+                consume.Add(new ItemEctServerData());
+                equip.Add(new ItemEquipServerData());
+            }
+        }
         public void SetInvenSize(int equipCount, int consumeCount, int ectCount)
         {
             equip.Capacity = equipCount;
@@ -67,9 +79,13 @@ public class ServerData
         public long money;
         public int slotCount;
     }
-
+    [Serializable]
     public class ItemEctServerData
     {
+        public ItemEctServerData()
+        {
+            code = 0;
+        }
         public int code;       //종류 , 개수 , 카테고리
         public (int itemType, int count, int category) ParseCode()
         {
@@ -83,6 +99,8 @@ public class ServerData
         {
             Item ect = new();
             ect.Init(ParseCode());
+            if (ect.count <= 0)
+                return null;
             return ect;
         }
     }
@@ -90,6 +108,10 @@ public class ServerData
     [Serializable]
     public class ItemEquipServerData : ItemEctServerData
     {
+        public ItemEquipServerData()
+        {
+            code = 0;
+        }
         public int itemData;   //장착타입, 장착 레벨 , 작수,
         public int upgradeStat;//힘, 민첩, 지력, 운,
         public int upgradeAdditional;//공격, 마법, 방어, 이속, 

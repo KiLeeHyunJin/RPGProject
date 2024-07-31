@@ -1,5 +1,4 @@
 #if !FUSION_DEV
-#pragma warning disable
 
 #region Assets/Photon/Fusion/Runtime/AssemblyAttributes/FusionAssemblyAttributes.Common.cs
 

@@ -57,11 +57,12 @@ public class CreateCharacter : MonoBehaviour
         string msg = usernameExists ? "사용할 수 없는 닉네임입니다." : "사용가능한 닉네임입니다.";
         Utils.ShowInfo(msg);
         Manager.FireBase.LoadUser(userId, null);
+        //return usernameExists;
     }
 
 
     //캐릭터 생성
-    void CreateCharacterData()
+    async void CreateCharacterData()
     {
         if (point > 0)
         {
@@ -69,8 +70,20 @@ public class CreateCharacter : MonoBehaviour
             return;
         }
 
-        CharacterServerData uploadCharacterData = //OnCreateCharacter();
-        new() { nickName = this.nickName };
+        if(await CheckIfUsernameExists(nickName))
+        {
+            Utils.ShowInfo("사용할 수 없는 닉네임입니다.");
+            return;
+        }
+        CreateData();
+
+    }
+
+    void CreateData()
+    {
+        CharacterServerData uploadCharacterData = 
+            new() { nickName = this.nickName,   inventory = new(Define.SlotDefaultSize)  };
+
         Name saveName =
             new() { nickName = this.nickName, userId = this.userId };
 
@@ -90,7 +103,6 @@ public class CreateCharacter : MonoBehaviour
             }
         });
     }
-
 
 
     //캐릭터 삭제

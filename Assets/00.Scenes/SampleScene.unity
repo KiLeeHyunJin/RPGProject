@@ -378,19 +378,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 130727157}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1366035368}
-        m_TargetAssemblyTypeName: CreateCharacter, Assembly-CSharp
-        m_MethodName: UploadCharacter
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &130727157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -767,7 +755,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1366035369}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ItemTest, Assembly-CSharp
         m_MethodName: ParseItem
         m_Mode: 1
@@ -1141,7 +1129,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1366035369}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ItemTest, Assembly-CSharp
         m_MethodName: SaveItem
         m_Mode: 1
@@ -1977,8 +1965,8 @@ GameObject:
   - component: {fileID: 1366035365}
   - component: {fileID: 1366035367}
   - component: {fileID: 1366035366}
-  - component: {fileID: 1366035369}
   - component: {fileID: 1366035368}
+  - component: {fileID: 1366035369}
   m_Layer: 5
   m_Name: Login
   m_TagString: Untagged
@@ -2071,7 +2059,7 @@ MonoBehaviour:
   point: 0
   create: {fileID: 130727156}
   check: {fileID: 1462389439}
-  remove: {fileID: 0}
+  remove: {fileID: 1792579263}
   addStr: {fileID: 0}
 --- !u!114 &1366035369
 MonoBehaviour:
@@ -2082,9 +2070,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 1366035364}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed23f4cace5042a408ec067d3ba60b5d, type: 3}
+  m_Script: {fileID: 11500000, guid: c4d721851384e1b4d8b250b7bf566be7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventory:
+    slotCounts: 
+  ability: {fileID: 0}
+  userId: 
+  characterId: 
+  characterData:
+    nickName: 
+    jobLv: 0
+    cloth: 0
+    skin: 0
+    ability:
+      speed: 0
+      atck: 0
+      other: 0
+      stat: 0
+      skills: 
+      point: 0
+    inventory:
+      consume: []
+      ect: []
+      equip: []
+      money: 0
+      slotCount: 0
 --- !u!1 &1408229850
 GameObject:
   m_ObjectHideFlags: 0
@@ -2435,19 +2446,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1462389440}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1366035368}
-        m_TargetAssemblyTypeName: CreateCharacter, Assembly-CSharp
-        m_MethodName: CheckCharacterName
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1462389440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3273,19 +3272,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1792579264}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1366035368}
-        m_TargetAssemblyTypeName: CreateCharacter, Assembly-CSharp
-        m_MethodName: Remove
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1792579264
 MonoBehaviour:
   m_ObjectHideFlags: 0

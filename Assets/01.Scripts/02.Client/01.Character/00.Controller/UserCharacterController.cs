@@ -4,12 +4,12 @@ using UnityEditor.U2D.Animation;
 using UnityEngine;
 using static ServerData;
 
-public class CharacterController : NetworkBehaviour
+public class UserCharacterController :MonoBehaviour// NetworkBehaviour
 {
-    InventoryController inventory;
-    AbilityController ability;
+    [SerializeField] InventoryController inventory;
+    [SerializeField] AbilityController ability;
 
-    KeyController keyController;
+    [SerializeField] KeyController keyController;
 
     [SerializeField] string userId;
     [SerializeField] string characterId;
@@ -17,7 +17,7 @@ public class CharacterController : NetworkBehaviour
     [SerializeField] CharacterServerData characterData;
 
 
-    private void Awake()
+    private void Start()
     {
 
     }
@@ -44,15 +44,10 @@ public class CharacterController : NetworkBehaviour
 
 
 
-    private void Start()
-    {
-
-    }
-
-    public override void FixedUpdateNetwork()
-    {
-        base.FixedUpdateNetwork();
+    //public override void FixedUpdateNetwork()
+    //{
+    //    base.FixedUpdateNetwork();
     
-    }
+    //}
 
 }

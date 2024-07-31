@@ -1,22 +1,66 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.U2D.Animation;
 using UnityEngine;
 using static Define;
+using static ServerData;
 
+[Serializable]
 public class InventoryController
 {
     public List<List<Item>> slotData;
     public int[] slotCounts;
-    public InventoryController(ServerData.InventoryServerData inventoryData)
+    public InventoryController(InventoryServerData inventoryData)
     {
         (int equip, int consume, int ect) = inventoryData.ParseSlot();
 
         slotCounts = new int[] { equip, consume, ect };
         slotData = new((int)ItemType.Non);
+ 
         for (int i = 0; i < slotData.Capacity; i++)
             slotData[i] = new(slotCounts[i]);
+
+        List<ItemEctServerData> listEct = inventoryData.ect;
+        List<ItemEctServerData> listConsume = inventoryData.consume;
+        List<ItemEquipServerData> listEquip = inventoryData.equip;
+
+        Item item;
+
+        for (int i = 0; i < slotData[(int)ItemType.Ect].Count; i++)
+        {
+            item = listEct[i].ExtractItem();
+            if(item != null)
+            {
+                slotData[(int)ItemType.Ect].Add(Manager.Data.GameItemData.GetEctItem(item.itemType, item.category, item.count));
+            }
+        }
+        for (int i = 0; i < slotData[(int)ItemType.Consume].Count; i++)
+        {
+            item = listConsume[i].ExtractItem();
+            if(item != null)
+            {
+                slotData[(int)ItemType.Consume].Add(Manager.Data.GameItemData.GetConsumeItem(item.itemType, item.category, item.count));
+            }
+        }
+
+        for (int i = 0; i < slotData[(int)ItemType.Equip].Count; i++)
+        {
+            Equip equipItem = listEquip[i].ExtractItem();
+            if(equipItem != null)
+            {
+                (Stat upgradeStat, AdditionalStat additional) = listEquip[i].ParseUpgradeStat();
+                int possibleCount = equipItem.possableCount;
+                equipItem = Manager.Data.GameItemData.GetEquipItem(equipItem.itemType, equipItem.category, equipItem.count);
+
+                equipItem.upgradeStat = upgradeStat;
+                equipItem.upgradeAdditional = additional;
+                equipItem.possableCount = possibleCount;
+            }
+            slotData[(int)ItemType.Equip].Add(equipItem);
+        }
     }
+
 
     public int GetSlotCount(ItemType getType)
     {

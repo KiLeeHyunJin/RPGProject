@@ -6,6 +6,9 @@ public class DataDefine
 {
     public readonly static string SearchNickName = "nickNames";
     public readonly static string UseNickName = "useName";
+    public readonly static string NickName = "nickName";
+
+
     public readonly static string User = "users";
     public readonly static string UserId = "userId";
     public readonly static string Character = "characters";
@@ -13,7 +16,6 @@ public class DataDefine
     public readonly static string Inventory = "inventory";
     public readonly static string Job = "job";
     public readonly static string Level = "level";
-    public readonly static string NickName = "nickName";
     public readonly static string Skill = "skill";
     public readonly static string Stat = "stat";
 
