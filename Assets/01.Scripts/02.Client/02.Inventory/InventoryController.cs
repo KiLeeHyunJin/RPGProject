@@ -7,7 +7,7 @@ using static Define;
 using static ServerData;
 
 [Serializable]
-public class InventoryController
+public partial class InventoryController
 {
     public List<List<Item>> slotData;
     public int[] slotCounts;
@@ -61,7 +61,10 @@ public class InventoryController
         }
     }
 
+    public void UseItem(ItemType useType, int idx)
+    {
 
+    }
     public int GetSlotCount(ItemType getType)
     {
         if (getType == ItemType.Non)

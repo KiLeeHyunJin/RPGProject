@@ -4,12 +4,13 @@ using System.Text;
 using UnityEngine.InputSystem;
 using static Define;
 
-public class KeyController
+public partial class KeyController
 {
     readonly string keyMapName;
     readonly List<bool> usedKey;
 
     InputActionMap actionMap;
+    UserCharacterController controller;
     public List<KeyData> keyDataSet;
     public List<int> keyDataServer;
     bool this[Key key]
@@ -18,12 +19,16 @@ public class KeyController
         set { usedKey[(int)key] = value; }
     }
 
-    public KeyController(InputActionAsset inputActions)
+    public KeyController(InputActionAsset inputActions, UserCharacterController userController)
     {
-        keyMapName = "Player";
+        keyMapName = "DynamicKeySetting";
+        controller = userController;
         Key[] keysArray = Utils.GetEnumArray<Key>();
-        usedKey = new((int)keysArray[Define.EndIndex]);
-        keyDataServer = new((int)keysArray[Define.EndIndex]);
+        int endNum = (int)keysArray[Define.EndIndex];
+
+        keyDataSet = new(endNum);
+        usedKey = new(endNum);
+        keyDataServer = new(endNum);
 
         Init(inputActions, keysArray);
     }
@@ -36,29 +41,88 @@ public class KeyController
         //액션 맵을 생성합니다. 
         actionMap = inputActions.FindActionMap(keyMapName);
         if (actionMap == null)
-            inputActions.AddActionMap(keyMapName);
+            actionMap = inputActions.AddActionMap(keyMapName);
 
         StringBuilder stringBuilder = new();
-
+        InputAction inputAction;
         for (int i = 0; i < keysArray.Length; i++)
         {
             stringBuilder.Append(keysArray[i].ToString());
-            if (actionMap.FindAction(stringBuilder.ToString()) == null)
-                actionMap.AddAction(keysArray[i].ToString(), InputActionType.Button, binding: $"<Keyboard>/{keysArray[i]}");
+            inputAction = actionMap.FindAction(stringBuilder.ToString());
+            if (inputAction == null)
+            {
+                actionMap.AddAction(keysArray[i].ToString(), InputActionType.Button, binding: $"<Keyboard>/{keysArray[i]}").performed += (cal) => { TestKey(); };
+            }
+            else
+                inputAction.Reset();
+
             stringBuilder.Clear();
         }
         //인풋시스템을 활성화합니다.
         inputActions.Enable();
     }
-
-    public void LoadKeySet()
+    public void TestKey()
     {
-
+        UnityEngine.Message.Log("sdad");
     }
+    public void ResetKey()
+    {
+        Key[] keysArray = Utils.GetEnumArray<Key>();
+        StringBuilder stringBuilder = new();
+        InputAction inputAction;
+        actionMap.Disable();
+        for (int i = 0; i < keysArray.Length; i++)
+        {
+            stringBuilder.Append(keysArray[i].ToString());
+            inputAction = actionMap.FindAction(stringBuilder.ToString());
+            if (inputAction != null)
+            {
+                inputAction.Reset();
+                inputAction.RemoveAction();
+            }
+
+            stringBuilder.Clear();
+        }
+        actionMap.Enable();
+    }
+
+    public void LoadKeySet(ServerData.ServerKeyData keyData)
+    {
+        int[] keyArray = keyData.keyData;
+        for (int i = 0; i < keyArray.Length; i++)
+        {
+            if (keyArray[i] == 0)
+                continue;
+            
+            KeyData keyParseData = ParseKeySlotData(keyArray[i]);
+            this[keyParseData.key] = true;
+            keyDataSet[(int)keyParseData.key] = keyParseData;
+            SetKeyMapping(keyParseData.slotType,keyParseData.idx, actionMap.FindAction(keyParseData.key.ToString()));
+        }
+    }
+
+
+    void SetKeyMapping(QuickSlotType slotType, int idx, InputAction inputAction)
+    {
+        switch (slotType)
+        {
+            case QuickSlotType.Default: //기본 제공 스킬
+                break;
+            case QuickSlotType.Item: //아이템 사용
+                inputAction.Reset();
+                inputAction.performed += (callBackt)=> controller.Inventory.UseItem(ItemType.Consume, idx);
+                break;
+            case QuickSlotType.Skill: //스킬 사용
+                break;
+        }
+    }
+
 
     public void RemoveKey(Key keyCode)
     {
         keyDataServer[(int)keyCode] = 0;
+        this[keyCode] = false;
+
     }
 
     public void AddKey(Key keyCode, Action action,Define.QuickSlotType quickSlotType, int idx , InputActionType inputType = InputActionType.Button)
@@ -95,13 +159,14 @@ public class KeyController
         keyDataServer[(int)keyCode] = setServerData;
     }
 
-    (Key key, QuickSlotType quickSlot, int idx) ParseKeySlotData(int value)
+    KeyData ParseKeySlotData(int value)
     {
         int setServerData = value;
-        Key key = (Key)setServerData.ExtractByte(DataDefine.IntSize.One);
-        QuickSlotType quickSlot = (QuickSlotType)setServerData.ExtractByte(DataDefine.IntSize.Two);
-        int idx = setServerData.ExtractByte(DataDefine.IntSize.Three);
-        return (key, quickSlot, idx);
+        KeyData keyData = new();
+        keyData.key = (Key)setServerData.ExtractByte(DataDefine.IntSize.One);
+        keyData.slotType = (QuickSlotType)setServerData.ExtractByte(DataDefine.IntSize.Two);
+        keyData.idx = setServerData.ExtractByte(DataDefine.IntSize.Three);
+        return keyData;
     }
 
     public struct KeyData
@@ -110,7 +175,7 @@ public class KeyController
         public QuickSlotType slotType;
         public int idx;
     }
-
-   
 }
+
+
 

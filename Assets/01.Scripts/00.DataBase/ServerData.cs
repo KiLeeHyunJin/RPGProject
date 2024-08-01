@@ -29,7 +29,14 @@ public class ServerData
 
         public AbilityServerData ability;      //능력치
         public InventoryServerData inventory;  //인벤
+        public ServerKeyData keySet;
     }
+    [Serializable]
+    public class ServerKeyData
+    {
+        public int[] keyData;
+    }
+
     [Serializable]
     public class AbilityServerData
     {
