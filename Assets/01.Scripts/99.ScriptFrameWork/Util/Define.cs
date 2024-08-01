@@ -7,6 +7,8 @@ public class Define
     public readonly static int InventoryCount = 30;
     public readonly static int ItemBundleSize = 100;
 
+
+
     #region Directory
 
     public readonly static string dir = "./Bundle";
@@ -25,7 +27,13 @@ public class Define
 
     //마지막 배열을 요소를 가리킨다
     public static Index EndIndex = ^1;
-
+    
+    public enum QuickSlotType
+    {
+        Default,
+        Item,
+        Skill,
+    }
     public enum UIEvent
     {
         Click,
@@ -58,13 +66,13 @@ public class Define
         Weapon
     }
 
-    public enum ConsumeType
+    public enum ConsumeEffectType
     {
         Heal,
         During,
     }
 
-    public enum HealType
+    public enum ConsumeType
     {
         Hp,
         Mp,

@@ -13,7 +13,7 @@ public class LoginPanel : MonoBehaviour
     [SerializeField] Button loginButton; //로그인 버튼
     [SerializeField] Button resetPasswordButton; //비밀번호 재설정 버튼
 
-
+    [SerializeField] Toggle saveAccountToggle;
     private void Awake()
     {
         signUpButton.onClick.AddListener(SignUp);
@@ -22,7 +22,41 @@ public class LoginPanel : MonoBehaviour
     }
     private void Start()
     {
+        LoadAccount();
         SetInteractable(true);
+    }
+
+    private void LoadAccount()
+    {
+        if (saveAccountToggle == null)
+            return;
+
+        if (PlayerPrefs.HasKey(DataDefine.SaveAccount) && 
+            PlayerPrefs.GetInt(DataDefine.SaveAccount, 0) > 0)
+        {
+            if (PlayerPrefs.HasKey(DataDefine.Account))
+            {
+                emailInputField.text = PlayerPrefs.GetString(DataDefine.Account, "");
+                saveAccountToggle.isOn = true;
+                return;
+            }
+        }
+        saveAccountToggle.isOn = false;
+    }
+
+    private void SaveAccount()
+    {
+        if (saveAccountToggle == null)
+            return;
+
+        if(saveAccountToggle.isOn)
+        {
+            PlayerPrefs.SetInt(DataDefine.SaveAccount, 1);
+            PlayerPrefs.SetString(DataDefine.Account, emailInputField.text);
+            return;
+        }
+        PlayerPrefs.SetInt(DataDefine.SaveAccount, 0);
+        PlayerPrefs.SetString(DataDefine.Account, "");
     }
 
     private void SignUp()
@@ -37,6 +71,7 @@ public class LoginPanel : MonoBehaviour
 
     private void Login()
     {
+        SaveAccount();
         string id = emailInputField.text;
         string pw = passInputField.text;
         passInputField.text = ""; //비밀번호 입력란 초기화

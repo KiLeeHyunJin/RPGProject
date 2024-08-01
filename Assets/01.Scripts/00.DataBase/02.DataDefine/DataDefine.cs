@@ -20,6 +20,9 @@ public class DataDefine
     public readonly static string Stat = "stat";
 
 
+    public readonly static string SaveAccount = "SaveAccount";
+    public readonly static string Account = "Account";
+
 
     public readonly static int Byte = 8;
 

@@ -2,14 +2,15 @@ using Fusion;
 using System.Collections;
 using UnityEditor.U2D.Animation;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using static ServerData;
 
 public class UserCharacterController :MonoBehaviour// NetworkBehaviour
 {
+    [SerializeField] KeyController keyController;
     [SerializeField] InventoryController inventory;
     [SerializeField] AbilityController ability;
 
-    [SerializeField] KeyController keyController;
 
     [SerializeField] string userId;
     [SerializeField] string characterId;
@@ -19,7 +20,8 @@ public class UserCharacterController :MonoBehaviour// NetworkBehaviour
 
     private void Start()
     {
-
+        PlayerInput input = GetComponent<PlayerInput>();
+        keyController = new(input.actions);
     }
 
     [ContextMenu("Do Something")]
