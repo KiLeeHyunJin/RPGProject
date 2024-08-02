@@ -1,69 +1,54 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static Define;
 
 [Serializable]
 public partial class KeyController
 {
     const string KeyMapName = "DynamicKeySetting";
     const string KeyBindingFirstName = "<Keyboard>/";
+
     readonly UserCharacterController controller;
-    readonly Action<InputAction.CallbackContext>[] keyActionArray;
+    readonly KeyActionData[] keyActionArray;
 
-    [SerializeField] List<int> keyDataServer;
-
-    public List<KeyData> keyDataSet;
-    List<KeyData> KeyDataList { get { return keyDataSet; } }
-    bool this[Key key] { get { return keyDataSet[(int)key].state; } }
-
+    KeyActionData this[Key keyCode] { get { return keyActionArray[(int)keyCode]; } }
+    [SerializeField]
+    readonly List<int> keyDataServer;
+    //키의 액션 다양하게 
+    //키 저장을 위한 keyDataServer 구조체 또는 직렬화 클래스
     public KeyController(InputActionAsset inputActions, UserCharacterController userController)
     {
         controller = userController;
         Key[] keysArray = Utils.GetEnumArray<Key>();
-        int endNum = keysArray.Length;
+        keyDataServer = new(keysArray.Length);
 
+        inputActions.Disable();
         InputActionMap actionMap = inputActions.FindActionMap(KeyMapName);
-        if (actionMap == null)
-            actionMap = inputActions.AddActionMap(KeyMapName);
-
-        keyDataSet = new(endNum);
-        keyDataServer = new(endNum);
-        keyActionArray = new Action<InputAction.CallbackContext>[endNum];
-        Init(actionMap, keysArray);
+        actionMap ??= inputActions.AddActionMap(KeyMapName);
+        Init(actionMap, keysArray, out keyActionArray);
+        inputActions.Enable();
     }
 
-    void Init(InputActionMap actionMap, Key[] keysArray)
+    void Init(InputActionMap actionMap, Key[] keysArray, out KeyActionData[] keyActionDatas)
     {
         InputAction inputAction;
-        actionMap.Disable();
+        keyActionDatas = new KeyActionData[keysArray.Length];
         for (int i = 0; i < keysArray.Length; i++)
         {
-            int idx = i;
             keyDataServer.Add(0);
-            keyActionArray[i] = (call) =>TestKey();
-            KeyDataList.Add(new() { key = keysArray[i] });
+
             inputAction = actionMap.FindAction(keysArray[i].ToString());
-            if (inputAction != null)
-            {
-                inputAction.RemoveAction();
-            }
-
-            InputAction action = actionMap.AddAction(keysArray[i].ToString(), binding: $"{KeyBindingFirstName}{keysArray[i]}");
-
-            action.performed += (call) => { keyActionArray[idx]?.Invoke(call); };
+            inputAction?.RemoveAction();
+            inputAction = actionMap.AddAction(keysArray[i].ToString(), binding: $"{KeyBindingFirstName}{keysArray[i]}");
+            keyActionDatas[(int)keysArray[i]] = new(inputAction, (call) =>Test());
         }
-        actionMap.Enable();
+        keyActionDatas[(int)Key.V].Attach(new(null, (call) => Test2(), null));
     }
 
-
-
-    public void TestKey()
-    {
-        UnityEngine.Message.Log("sdad");
-    }
+    void Test() => Debug.Log("fgsdgsasd");
+    void Test2() => Debug.Log("324235352");
+    public void SwapTest() => SwapKey(Key.X, Key.V);
 
     public void LoadKeySet(ServerData.ServerKeyData keyData)
     {
@@ -74,56 +59,54 @@ public partial class KeyController
             if (keyParseData.state == false)
                 continue;
 
-            KeyDataList[(int)keyParseData.key] = keyParseData;
-            keyActionArray[(int)keyParseData.key] = keyParseData.slotType switch
+            KeyActionCallbackBundle callbackBundle = keyParseData.slotType switch
             {
-                QuickSlotType.Default => null,
-                QuickSlotType.Item => (callBackt) => controller.Inventory.UseItem(ItemType.Consume, keyParseData.idx),
-                QuickSlotType.Skill => null,
+                Define.QuickSlotType.Default => null,
+                Define.QuickSlotType.Item => new(null ,(callBackt) => controller.Inventory.UseItem(Define.ItemType.Consume, keyParseData.idx) ,null ),
+                Define.QuickSlotType.Skill => null,
                 _ => null,
             };
-
-            if (keyActionArray[(int)keyParseData.key] == null)
-                return;
+            this[keyParseData.key]?.Attach(callbackBundle);
         }
     }
 
-
-
-
-    public void ResetKey()
+    public void AttachKey(Key keyCode, KeyActionCallbackBundle callbackBundle, Define.QuickSlotType quickSlotType, int idx, InputActionType inputType = InputActionType.Button)
     {
-        for (int i = 0; i < keyActionArray.Length; i++)
-        {
-            keyActionArray[i] = null;
-        }
-    }
-
-    public void AddKey(Key keyCode, Action action, Define.QuickSlotType quickSlotType, int idx, InputActionType inputType = InputActionType.Button)
-    {
-        RemoveKey(keyCode);
-
         SetKeyDataServer(keyCode, quickSlotType, idx);
-        void inputAction(InputAction.CallbackContext call) { action?.Invoke(); }
-        keyActionArray[(int)keyCode] = inputAction;
+        this[keyCode].Attach(callbackBundle);
     }
+
+
+
+    public void AttachCallbackMethod(Key keyCode, KeyActionCallbackBundle callbackBundle)
+    {
+        this[keyCode].Attach(callbackBundle);
+    }
+
 
     public void RemoveKey(Key keyCode)
     {
         keyDataServer[(int)keyCode] = 0;
-        KeyDataList[(int)keyCode].Remove();
-
-        keyActionArray[(int)keyCode] = null;
+        this[keyCode].Remove();
     }
 
-    void SetKeyDataServer(Key keyCode, Define.QuickSlotType quickSlotType, int idx, bool state = true)
+    public void SwapKey(Key keyCode1, Key keyCode2)
+    {
+        KeyActionCallbackBundle key1CallbackBundle = this[keyCode1].GetCallBackMethod();
+        KeyActionCallbackBundle key2CallbackBundle = this[keyCode2].GetCallBackMethod();
+
+        this[keyCode1].Attach(key2CallbackBundle);
+        this[keyCode2].Attach(key1CallbackBundle);
+    }
+
+    void SetKeyDataServer(Key keyCode = Key.LeftMeta, Define.QuickSlotType quickSlotType = Define.QuickSlotType.Default, int idx = -1)
     {
         int setServerData = default;
         setServerData |= ((int)keyCode).Shift(DataDefine.IntSize.One);
         setServerData |= ((int)quickSlotType).Shift(DataDefine.IntSize.One);
         setServerData |= idx.Shift(DataDefine.IntSize.Two);
-        setServerData |= state ? int.MaxValue.Shift(DataDefine.IntSize.Four) : 0;
-        KeyDataList[(int)keyCode].Add(keyCode, quickSlotType, idx);
+        setServerData |= int.MaxValue.Shift(DataDefine.IntSize.Four);
+
         keyDataServer[(int)keyCode] = setServerData;
     }
 
@@ -133,30 +116,83 @@ public partial class KeyController
         KeyData keyData = new()
         {
             key = (Key)setServerData.ExtractByte(DataDefine.IntSize.One),
-            slotType = (QuickSlotType)setServerData.ExtractByte(DataDefine.IntSize.Two),
+            slotType = (Define.QuickSlotType)setServerData.ExtractByte(DataDefine.IntSize.Two),
             idx = setServerData.ExtractByte(DataDefine.IntSize.Three),
             state = setServerData.ExtractByte(DataDefine.IntSize.Four) > 0
         };
         return keyData;
     }
+
+
+
     [Serializable]
     public class KeyData
     {
         public Key key;
-        public QuickSlotType slotType;
+        public Define.QuickSlotType slotType;
         public int idx;
         public bool state;
+    }
+
+    public class KeyActionCallbackBundle
+    {
+        public Action<InputAction.CallbackContext> started;
+        public Action<InputAction.CallbackContext> performed;
+        public Action<InputAction.CallbackContext> canceled;
+        public KeyActionCallbackBundle(
+            Action<InputAction.CallbackContext> _started = null,
+            Action<InputAction.CallbackContext> _performed = null,
+            Action<InputAction.CallbackContext> _cancled = null)
+        {
+            started = _started;
+            performed = _performed;
+            canceled = _cancled;
+        }
+    }
+
+    class KeyActionData
+    {
+        readonly InputAction input;
+        KeyActionCallbackBundle callbackBundle;
+        bool used;
+        public KeyActionData(InputAction _input, Action<InputAction.CallbackContext> _performed = null)
+        {
+            input = _input;
+            used = _performed == null;
+            if (used == false)
+            {
+                input.Disable();
+            }
+            callbackBundle = new(null, _performed,null);
+            input.started += (call) => callbackBundle.started?.Invoke(call);
+            input.performed += (call) => callbackBundle.performed?.Invoke(call);
+            input.canceled += (call) => callbackBundle.canceled?.Invoke(call);
+        }
+
         public void Remove()
         {
-            idx = -1;
-            state = false;
+            if (used)
+            {
+                input.Disable();
+                used = false;
+            }
+            callbackBundle.started = null;
+            callbackBundle.performed = null;
+            callbackBundle.canceled = null;
         }
-        public void Add(Key _key, QuickSlotType _slotType, int _idx)
+        public void Attach(KeyActionCallbackBundle _callbackBundle)
         {
-            key = _key;
-            slotType = _slotType;
-            idx = _idx;
-            state = true;
+            if (used == false)
+            {
+                input.Enable();
+                used = true;
+            }
+            callbackBundle = _callbackBundle;
+        }
+
+        public KeyActionCallbackBundle GetCallBackMethod()
+        {
+            return new(callbackBundle.started, callbackBundle.performed, callbackBundle.performed);
         }
     }
 

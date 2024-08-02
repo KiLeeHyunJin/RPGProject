@@ -3,35 +3,34 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static ServerData;
-public partial class KeyController { }
-public partial class InventoryController { }
 
-public class UserCharacterController :MonoBehaviour// NetworkBehaviour
+
+[RequireComponent(typeof(PlayerInput))]
+public class UserCharacterController : MonoBehaviour// NetworkBehaviour
 {
+    internal KeyController KeyController { get { return keyController; } }
+    internal InventoryController Inventory { get { return inventory; } }
+
     [SerializeField] KeyController keyController;
-    internal KeyController KeyController        { get { return keyController; } }
     [SerializeField] InventoryController inventory;
-    internal InventoryController Inventory      { get { return inventory; }}
 
     [SerializeField] AbilityController ability;
-
+    [SerializeField] CharacterServerData characterData;
 
     [SerializeField] string userId;
     [SerializeField] string characterId;
     
-    [SerializeField] CharacterServerData characterData;
 
 
     private void Start()
     {
-        PlayerInput input = GetComponent<PlayerInput>();
-
-        keyController = new(input.actions, this);
+        keyController = new(GetComponent<PlayerInput>().actions, this);
     }
-    [ContextMenu("ResetKey")]
-    public void ResetKey()
+
+    [ContextMenu("Do Swap")]
+    public void Test()
     {
-        keyController.ResetKey();
+        keyController.SwapTest();
     }
     [ContextMenu("Do Something")]
     public void Load()
@@ -41,14 +40,18 @@ public class UserCharacterController :MonoBehaviour// NetworkBehaviour
 
     void LoadCharacterData(CharacterServerData _characterData)
     {
+        if(_characterData == null)
+        {
+            Message.LogWarning($"characterData Load Failed");
+            return;
+        }
         characterData = _characterData;
         PlayerInput input = GetComponent<PlayerInput>();
         
         keyController = new(input.actions, this);
-        keyController.LoadKeySet(_characterData.keySet);
+        KeyController.LoadKeySet(_characterData.keySet);
 
         StartCoroutine(InventoryInitRoutine());
-
     }
 
     IEnumerator InventoryInitRoutine()
@@ -67,3 +70,5 @@ public class UserCharacterController :MonoBehaviour// NetworkBehaviour
     //}
 
 }
+public partial class KeyController { }
+public partial class InventoryController { }
