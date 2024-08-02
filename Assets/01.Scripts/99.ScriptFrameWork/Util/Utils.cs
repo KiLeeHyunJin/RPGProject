@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Utils
 {
-
     public static void ShowInfo(string info)
     {
         PopUpUI panel = Manager.UI.ShowPopUpUI("InfoPanel");
