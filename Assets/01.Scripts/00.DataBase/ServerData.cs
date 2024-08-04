@@ -106,7 +106,7 @@ public class ServerData
         {
             Item ect = new();
             ect.Init(ParseCode());
-            if (ect.count <= 0)
+            if (ect.Count <= 0)
                 return null;
             return ect;
         }
@@ -150,10 +150,12 @@ public class ServerData
         }
         new public Equip ExtractItem()
         {
-            Equip equip = new();
-            equip.Init(ParseCode());
-            equip.EquipInit(ParseData());
-            (equip.upgradeStat, equip.upgradeAdditional) = ParseUpgradeStat();
+            (int type, int count, int category) = ParseCode();
+            (Stat upgradeStat, AdditionalStat upgradeAdditional) = ParseUpgradeStat(); //강화정보
+            
+            Equip equip = Manager.Data.GameItemData.GetEquipItem((Define.ItemType)type, count, category) ;
+            equip.EquipInit(ParseData()); //아이템 기본 정보 저장(부위, 레벨, 강화횟수)
+            equip.InitServerData(upgradeStat, upgradeAdditional);
             return equip;
         }
     }

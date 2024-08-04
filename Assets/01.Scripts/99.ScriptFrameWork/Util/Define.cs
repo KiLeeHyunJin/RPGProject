@@ -63,7 +63,8 @@ public class Define
         Pants,
         Shoes,
         Glove,
-        Weapon
+        Weapon,
+        END
     }
 
     public enum ConsumeEffectType
@@ -79,5 +80,18 @@ public class Define
     }
 
 
+    public enum InteractionType
+    {
+        press,
+        hold,
+        tab
+    }
 
+    public enum PressBehaviorType
+    {
+        PressOnly = 0,
+        ReleaseOnly = 1,
+        PressAndRelease = 2,
+        None = 3,
+    }
 }

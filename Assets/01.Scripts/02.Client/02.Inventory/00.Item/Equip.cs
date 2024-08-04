@@ -19,19 +19,33 @@ public class Equip : Item
         baseStat = _baseStat;
         baseAdditional = _baseAdditional;
     }
-    public int possableCount;
+    public void InitServerData(Stat _upgradeStat, AdditionalStat _upgradeAdditional)
+    {
+        upgradeStat = _upgradeStat;
+        upgradeAdditional = _upgradeAdditional;
+    }
 
-    public Stat upgradeStat;
-    public AdditionalStat upgradeAdditional;
+    int possableCount;
+    public int PossableCount { get { return possableCount; } }
+
+    Stat upgradeStat;
+    public Stat UpgradeStat { get { return upgradeStat; } }
+    AdditionalStat upgradeAdditional;
+    public AdditionalStat UpgradeAdditional { get { return upgradeAdditional; } }
 
 
-    public EquipType wearType;
-    public int level;
+    EquipType wearType;
+    public EquipType WearType { get { return wearType; } }
+    int level;
+    public int Level { get { return level; } }
 
-    public Stat limitStat; //착용 제한
+    Stat limitStat; //착용 제한
+    public Stat LimitStat { get { return limitStat; } }
 
-    public Stat baseStat; //기본 능력치
-    public AdditionalStat baseAdditional;
+    Stat baseStat; //기본 능력치
+    public Stat BaseStat { get { return baseStat; } }
+    AdditionalStat baseAdditional;
+    public AdditionalStat BaseAdditional { get { return baseAdditional; } }
 
     ( int itemData, int upgradeStat, int upgradeAdditional) ServerEquipData()
     {
@@ -58,4 +72,6 @@ public class Equip : Item
         equipData.upgradeAdditional = upgradeAdditional;
         return equipData;
     }
+
+
 }

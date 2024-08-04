@@ -30,7 +30,7 @@ public class UserCharacterController : MonoBehaviour// NetworkBehaviour
     [ContextMenu("Do Swap")]
     public void Test()
     {
-        keyController.SwapTest();
+        keyController.TestCode();
     }
     [ContextMenu("Do Something")]
     public void Load()

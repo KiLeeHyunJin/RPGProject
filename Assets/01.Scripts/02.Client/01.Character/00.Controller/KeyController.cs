@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static KeyController.InteractionKeyEnumGroup;
-using static System.Runtime.CompilerServices.RuntimeHelpers;
-using static UnityEditor.Progress;
+using static Define;
 
 [Serializable]
 public partial class KeyController
@@ -17,10 +14,10 @@ public partial class KeyController
     readonly UserCharacterController controller;
     readonly KeyActionData[] keyActionArray;
     readonly InputActionMap actionMap;
-    KeyActionData this[Key keyCode] { get { return keyActionArray[(int)keyCode]; } }
+    KeyActionData this[Key keyCode] { get { return keyActionArray[(int)keyCode]; } set { keyActionArray[(int)keyCode] = value; } }
     [SerializeField]
     readonly List<int> keyDataServer;
-    //키의 액션 다양하게 
+
     //키 저장을 위한 keyDataServer 구조체 또는 직렬화 클래스
     public KeyController(InputActionAsset inputActions, UserCharacterController userController)
     {
@@ -51,20 +48,18 @@ public partial class KeyController
             inputAction = actionMap.FindAction(keyCode.ToString());
             inputAction?.RemoveAction();
             inputAction = actionMap.AddAction(keyCode.ToString(), binding: $"{KeyBindingFirstName}{keyCode}");
-            //inputAction.ChangeBinding(0).WithInteraction($"{InteractionType.press}({PressType.behavior}={(int)PressBehaviorType.PressOnly},{PressType.pressPoint}={1})");
-            //inputAction.Disable();
-            keyActionDatas[(int)keyCode] = new(keyCode, inputAction, (call) =>Test());
+            inputAction.Disable();
+            keyActionDatas[(int)keyCode] = new(keyCode, inputAction);
         }
-        //keyActionDatas[(int)Key.V].Attach(new(_performed : (call) => { Test2();}));
+        keyActionArray[(int)Key.V].Attach(new(_performed : (call)=>Test2()));
+        keyActionArray[(int)Key.G].Attach(new(_performed : (call)=> Test()));
     }
-
     void Test() => Debug.Log("fgsdgsasd");
     void Test2() => Debug.Log("324235352");
-    public void SwapTest()
+    public void TestCode()
     {
-        ChangeKeyType(Key.G, InputActionType.Value, InteractionType.press, $"{PressType.behavior}={(int)PressBehaviorType.PressOnly}", $"{PressType.pressPoint}={1}");
+        SwapKey(Key.G, Key.V);
     }
-
     public void LoadKeySet(ServerData.ServerKeyData keyData)
     {
         int[] keyArray = keyData.keyData;
@@ -77,7 +72,7 @@ public partial class KeyController
             KeyActionCallbackBundle callbackBundle = keyParseData.slotType switch
             {
                 Define.QuickSlotType.Default => null,
-                Define.QuickSlotType.Item => new(null ,(callBackt) => controller.Inventory.UseItem(Define.ItemType.Consume, keyParseData.idx) ,null ),
+                Define.QuickSlotType.Item => new(null, (callBackt) => controller.Inventory.UseItem(Define.ItemType.Consume, keyParseData.idx), null),
                 Define.QuickSlotType.Skill => null,
                 _ => null,
             };
@@ -99,16 +94,28 @@ public partial class KeyController
 
     public void SwapKey(Key keyCode1, Key keyCode2)
     {
-        KeyActionCallbackBundle key1CallbackBundle = this[keyCode1].GetCallBackMethod();
-        KeyActionCallbackBundle key2CallbackBundle = this[keyCode2].GetCallBackMethod();
+        this[keyCode1].ChangeKeyName(keyCode2, out Action key1Action);
+        this[keyCode2].ChangeKeyName(keyCode1, out Action key2Action);
 
-        this[keyCode1].Attach(key2CallbackBundle);
-        this[keyCode2].Attach(key1CallbackBundle);
+        key1Action?.Invoke();
+        key2Action?.Invoke();
+
+        KeyActionData keyData = this[keyCode1];
+        this[keyCode1] = this[keyCode2];
+        this[keyCode2] = keyData;
     }
 
-    public void ChangeKeyType(Key keyCode, InputActionType _actionType, InteractionType interactionType,params string[] parameters)
+    public void ChangeActionType(Key keyCode, InputActionType _actionType)
     {
-        this[keyCode].ChangeActionType(in actionMap, _actionType, interactionType, parameters);
+        this[keyCode].ChangeActionType(in actionMap, _actionType);
+    }
+    public void ChangeInteractionPress(Key keyCode, PressBehaviorType pressType = PressBehaviorType.None, float pressPointValue = -1)
+    {
+        this[keyCode].ChangeInteractionPress(pressType, pressPointValue);
+    }
+    public void ChangeInteractionOther(Key keyCode, InteractionType interactionType, float durationValue = -1, float pressPointValue = -1)
+    {
+        this[keyCode].ChangeInteractionOther(interactionType, durationValue, pressPointValue);
     }
 
     void SetKeyDataServer(Key keyCode = Key.LeftMeta, Define.QuickSlotType quickSlotType = Define.QuickSlotType.Default, int idx = -1)
@@ -164,11 +171,11 @@ public partial class KeyController
 
     class KeyActionData
     {
-        readonly Key keyCode;
+        Key keyCode;
         InputAction input;
         KeyActionCallbackBundle callbackBundle;
         bool used;
-        public KeyActionData(Key _keyCode,InputAction _input, Action<InputAction.CallbackContext> _performed = null)
+        public KeyActionData(Key _keyCode, InputAction _input, Action<InputAction.CallbackContext> _performed = null)
         {
             input = _input;
             keyCode = _keyCode;
@@ -177,7 +184,7 @@ public partial class KeyController
             {
                 input.Disable();
             }
-            callbackBundle = new(null, _performed,null);
+            callbackBundle = new(null, _performed, null);
             input.started += (call) => callbackBundle.started?.Invoke(call);
             input.performed += (call) => callbackBundle.performed?.Invoke(call);
             input.canceled += (call) => callbackBundle.canceled?.Invoke(call);
@@ -204,79 +211,114 @@ public partial class KeyController
             callbackBundle = _callbackBundle;
         }
 
-        public void ChangeActionType(in InputActionMap actionMap, InputActionType _actionType, InteractionType interactionType, string[] parameters)
+        public void ChangeKeyName(Key _keyCode, out Action renamed)
         {
-            bool state = input.type != _actionType;
+            input.Disable();
 
-            if(string.IsNullOrEmpty(input.bindings[0].interactions) == false)
+            keyCode = _keyCode;
+            input.Rename($"{(int)_keyCode}");
+            input.ChangeBinding(0)
+                .WithName(keyCode.ToString())
+                .WithPath($"{KeyBindingFirstName}{keyCode}");
+
+            renamed = ()=> 
             {
-                string checkInteraction = input.bindings[0].interactions.Split("(")[0];
-                if (state == false &&
-                    string.Equals(checkInteraction, interactionType.ToString()))
+                input.Rename(keyCode.ToString());
+                input.Enable();
+            };
+        }
+
+        public void ChangeInteractionPress(PressBehaviorType behaviorType, float pressPointValue)
+        {
+            StringBuilder sb = null;
+            bool changedState = false;
+
+            if (behaviorType != PressBehaviorType.None)
+            {
+                changedState = true;
+                sb = new($"(behavior={(int)behaviorType}");
+            }
+
+            if (pressPointValue >= 0)
+            {
+                if (changedState == false)
                 {
-                    return;
+                    changedState = true;
+                    sb = new("(");
                 }
+                else
+                {
+                    sb.Append(",");
+                }
+                sb.Append($"pressPoint={pressPointValue}");
             }
 
-            Debug.Log("Change Oper");
-            StringBuilder sb = new();
-            if (parameters != null)
+            sb?.Append(")");
+
+            if (changedState)
             {
-                sb.Append("(");
-                for (int i = 0; i < parameters.Length - 1; i++)
-                    sb.Append($"{parameters[i]},");
-                sb.Append($"{parameters[^1]})");
+                input.Disable();
+                input.ChangeBinding(0).WithInteraction($"press{sb}");
+                input.Enable();
             }
+        }
+        public void ChangeInteractionOther(InteractionType interactionType, float durationValue, float pressPointValue)
+        {
+            StringBuilder sb = null;
+            bool changedState = default;
+            if (durationValue >= 0)
+            {
+                changedState = true;
+                sb = new($"(duration={durationValue}");
+            }
+
+            if (pressPointValue >= 0)
+            {
+                if (changedState == false)
+                {
+                    changedState = true;
+                    sb = new("(");
+                }
+                else
+                {
+                    sb.Append(",");
+                }
+                sb.Append($"pressPoint={pressPointValue}");
+            }
+
+            sb?.Append(")");
+
+            if (changedState)
+            {
+                input.Disable();
+                input.ChangeBinding(0).WithInteraction($"{interactionType}{sb}");
+                input.Enable();
+            }
+        }
+
+        public void ChangeActionType(in InputActionMap actionMap, InputActionType _actionType)
+        {
+            if (input.type == _actionType)
+                return;
 
             actionMap.Disable();
-            if (state)
-            {
-                input.RemoveAction();
-                input = actionMap.AddAction(
-                    keyCode.ToString(), 
-                    type: _actionType, 
-                    binding: $"{KeyBindingFirstName}{keyCode}");
-                input.started += (call) => callbackBundle.started?.Invoke(call);
-                input.performed += (call) => callbackBundle.performed?.Invoke(call);
-                input.canceled += (call) => callbackBundle.canceled?.Invoke(call);
-            }
-            input.ChangeBinding(0).WithInteraction($"{interactionType}{sb}");
+            string _interaction = input.interactions;
+            input.RemoveAction();
+            input = actionMap.AddAction(
+                keyCode.ToString(),
+                type: _actionType,
+                binding: $"{KeyBindingFirstName}{keyCode}",
+                interactions : _interaction);
+            input.started += (call) => callbackBundle.started?.Invoke(call);
+            input.performed += (call) => callbackBundle.performed?.Invoke(call);
+            input.canceled += (call) => callbackBundle.canceled?.Invoke(call);
+
             actionMap.Enable();
         }
         public KeyActionCallbackBundle GetCallBackMethod()
         {
             return new(callbackBundle.started, callbackBundle.performed, callbackBundle.performed);
         }
-    }
-
-
-    public class InteractionKeyEnumGroup
-    { 
-        public enum InteractionType
-        {
-            press,
-            hold,
-            tab
-        }
-
-        public enum PressType
-        {
-            behavior,
-            pressPoint,
-        }
-        public enum PressBehaviorType
-        {
-            PressOnly = 0,
-            ReleaseOnly = 1,
-            PressAndRelease = 2,
-        }
-
-        public enum Otherype
-        { 
-            duration,
-            pressPoint,
-        }
-
     }
 
 }
