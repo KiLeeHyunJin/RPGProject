@@ -4,17 +4,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.U2D.Animation;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using static Define;
 using static ServerData;
 
 [Serializable]
 public partial class InventoryController
 {
+    UserCharacterController characterController;
     public List<List<Item>> slotData;
     public Equip[] wearSlotData;
     public int[] slotCounts;
-    public InventoryController(InventoryServerData inventoryData)
+    public InventoryController(UserCharacterController owner, InventoryServerData inventoryData)
     {
+        characterController = owner;
         (int equip, int consume, int ect) = inventoryData.ParseSlot();
 
         slotCounts = new int[] { equip, consume, ect };
@@ -64,6 +67,11 @@ public partial class InventoryController
         {
             slotData[(int)useType][idx]?.Used();
         }
+    }
+
+    public void SetKeyUsedType(Key keyCode)
+    {
+        characterController.KeyController.ChangeInteractionRemove(keyCode);
     }
 
     public KeyController.KeyActionCallbackBundle GetUsedItemKeyAttachCallback(int idx)

@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static ServerData;
 
-
-[RequireComponent(typeof(PlayerInput))]
 public class UserCharacterController : MonoBehaviour// NetworkBehaviour
 {
     internal KeyController KeyController { get { return keyController; } }
@@ -19,12 +17,16 @@ public class UserCharacterController : MonoBehaviour// NetworkBehaviour
 
     [SerializeField] string userId;
     [SerializeField] string characterId;
-    
 
+
+    private void Awake()
+    {
+
+    }
 
     private void Start()
     {
-        keyController = new(GetComponent<PlayerInput>().actions, this);
+        keyController = new(this, gameObject.GetOrAddComponent<PlayerInput>());
     }
 
     [ContextMenu("Do Swap")]
@@ -46,19 +48,19 @@ public class UserCharacterController : MonoBehaviour// NetworkBehaviour
             return;
         }
         characterData = _characterData;
-        PlayerInput input = GetComponent<PlayerInput>();
         
-        keyController = new(input.actions, this);
+        StartCoroutine(InventoryInitRoutine());
+
+        keyController = new(this, gameObject.GetOrAddComponent<PlayerInput>());
         KeyController.LoadKeySet(_characterData.keySet);
 
-        StartCoroutine(InventoryInitRoutine());
     }
 
     IEnumerator InventoryInitRoutine()
     {
         while (Manager.Data.GameItemData == null)
             yield return new WaitForSeconds(0.15f);
-        inventory = new(characterData.inventory);
+        inventory = new(this,characterData.inventory);
     }
 
 
