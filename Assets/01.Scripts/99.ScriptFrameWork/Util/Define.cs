@@ -79,6 +79,15 @@ public class Define
         Mp,
     }
 
+    public enum SkillType
+    { 
+        Passive,
+        Active,
+    }
+
+
+
+
 
     public enum InteractionType
     {
