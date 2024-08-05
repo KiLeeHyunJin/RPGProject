@@ -1,18 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class AbilityController : MonoBehaviour
+public partial class AbilityController
 {
-    // Start is called before the first frame update
-    void Start()
+    Stat[] stats;
+    AdditionalStat[] additionals;
+    UserCharacterController characterController;
+    public AbilityController(UserCharacterController owner)
     {
-        
+        characterController = owner;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void UpdateAbilityValue()
     {
-        
+
     }
 }

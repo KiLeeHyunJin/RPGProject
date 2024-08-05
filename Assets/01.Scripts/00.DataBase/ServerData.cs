@@ -102,14 +102,6 @@ public class ServerData
 
             return (_type, _count, _category);
         }
-        public Item ExtractItem()
-        {
-            Item ect = new();
-            ect.Init(ParseCode());
-            if (ect.Count <= 0)
-                return null;
-            return ect;
-        }
     }
 
     [Serializable]
@@ -119,17 +111,13 @@ public class ServerData
         {
             code = 0;
         }
-        public int itemData;   //장착타입, 장착 레벨 , 작수,
+        public int itemData;   // 작수,
         public int upgradeStat;//힘, 민첩, 지력, 운,
         public int upgradeAdditional;//공격, 마법, 방어, 이속, 
-        public (Define.EquipType wearType, int level, int possable) ParseData()
+
+        public int ParseData()
         {
-            return
-                (
-                    (Define.EquipType)itemData.ExtractByte(DataDefine.IntSize.One),
-                    itemData.ExtractByte(DataDefine.IntSize.Two),
-                    itemData.ExtractByte(DataDefine.IntSize.Three)
-                );
+            return itemData.ExtractByte(DataDefine.IntSize.One);
         }
 
         public (Stat stat, AdditionalStat additional) ParseUpgradeStat()
@@ -148,14 +136,14 @@ public class ServerData
 
             return (stat, additional);
         }
-        new public Equip ExtractItem()
+
+        public Equip ExtractItem()
         {
             (int type, int count, int category) = ParseCode();
             (Stat upgradeStat, AdditionalStat upgradeAdditional) = ParseUpgradeStat(); //강화정보
             
-            Equip equip = Manager.Data.GameItemData.GetEquipItem((Define.ItemType)type, count, category) ;
-            equip.EquipInit(ParseData()); //아이템 기본 정보 저장(부위, 레벨, 강화횟수)
-            equip.InitServerData(upgradeStat, upgradeAdditional);
+            (Equip equip, Action<int, Stat, AdditionalStat> InitServerData) = Manager.Data.GameItemData.GetEquipItem((Define.ItemType)type, count, category) ;
+            InitServerData(ParseData(),upgradeStat, upgradeAdditional);
             return equip;
         }
     }

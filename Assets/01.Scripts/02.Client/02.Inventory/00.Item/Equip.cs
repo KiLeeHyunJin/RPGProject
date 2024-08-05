@@ -1,17 +1,42 @@
 using System;
+using UnityEngine;
 using static Define;
 using static ServerData;
 
 [Serializable]
 public class Equip : Item
 {
-    public void EquipInit((EquipType wearType, int level, int possable) _value)
+    public int PossableCount { get { return possableCount; } }
+    int possableCount;
+    public Stat UpgradeStat { get { return upgradeStat; } }
+    Stat upgradeStat;
+    public AdditionalStat UpgradeAdditional { get { return upgradeAdditional; } }
+    AdditionalStat upgradeAdditional;
+    public EquipType WearType { get { return wearType; } }
+    EquipType wearType;
+    public int Level { get { return level; } }
+    int level;
+    public Stat LimitStat { get { return limitStat; } }
+    Stat limitStat; //착용 제한
+    public Stat BaseStat { get { return baseStat; } }
+    Stat baseStat; //기본 능력치
+    public AdditionalStat BaseAdditional { get { return baseAdditional; } }
+    AdditionalStat baseAdditional;
+
+    public Equip(
+        out Action<(int itemType, int count, int category)> _Init, 
+        out Action<string, string, int, Sprite, int> _SetEctData, 
+        out Action<EquipType, int, Stat, Stat, AdditionalStat> _SetEquip,
+        out Action<int, Stat, AdditionalStat> _InitServerData) : base(out _Init, out _SetEctData)
     {
-        wearType = _value.wearType;
-        level = _value.level;
-        possableCount = _value.possable;
+        _SetEquip = SetEquipData;
+        _InitServerData = InitServerData;
     }
-    public void SetEquipData(EquipType _wearType, int _level, Stat _limitStat, Stat _baseStat, AdditionalStat _baseAdditional)
+
+
+    #region EquipInit
+
+    void SetEquipData(EquipType _wearType, int _level, Stat _limitStat, Stat _baseStat, AdditionalStat _baseAdditional)
     {
         wearType = _wearType;
         level = _level;
@@ -19,47 +44,18 @@ public class Equip : Item
         baseStat = _baseStat;
         baseAdditional = _baseAdditional;
     }
-    public void InitServerData(Stat _upgradeStat, AdditionalStat _upgradeAdditional)
+
+    void InitServerData(int possable, Stat _upgradeStat, AdditionalStat _upgradeAdditional)
     {
         upgradeStat = _upgradeStat;
         upgradeAdditional = _upgradeAdditional;
+        possableCount = possable;
     }
-
-    int possableCount;
-    public int PossableCount { get { return possableCount; } }
-
-    Stat upgradeStat;
-    public Stat UpgradeStat { get { return upgradeStat; } }
-    AdditionalStat upgradeAdditional;
-    public AdditionalStat UpgradeAdditional { get { return upgradeAdditional; } }
+    #endregion
 
 
-    EquipType wearType;
-    public EquipType WearType { get { return wearType; } }
-    int level;
-    public int Level { get { return level; } }
 
-    Stat limitStat; //착용 제한
-    public Stat LimitStat { get { return limitStat; } }
-
-    Stat baseStat; //기본 능력치
-    public Stat BaseStat { get { return baseStat; } }
-    AdditionalStat baseAdditional;
-    public AdditionalStat BaseAdditional { get { return baseAdditional; } }
-
-    ( int itemData, int upgradeStat, int upgradeAdditional) ServerEquipData()
-    {
-        int returnItemData = default;
-        returnItemData |= ((int)wearType).Shift(DataDefine.IntSize.One);
-        returnItemData |= level.Shift(DataDefine.IntSize.Two);
-        returnItemData |= possableCount.Shift(DataDefine.IntSize.Three);
-
-        int returnUpgradeStat = upgradeStat.ServerData();
-        int returnUpgradeAdditional = upgradeAdditional.ServerData();
-
-        return (returnItemData,  returnUpgradeStat, returnUpgradeAdditional);
-    }
-
+    #region EquipCapsule
     public ItemEquipServerData ServerEquip()
     {
         ItemEquipServerData equipData = new();
@@ -72,6 +68,22 @@ public class Equip : Item
         equipData.upgradeAdditional = upgradeAdditional;
         return equipData;
     }
+
+    (int itemData, int upgradeStat, int upgradeAdditional) ServerEquipData()
+    {
+        int returnItemData = default;
+        returnItemData |= possableCount.Shift(DataDefine.IntSize.One);
+
+        int returnUpgradeStat = upgradeStat.ServerData();
+        int returnUpgradeAdditional = upgradeAdditional.ServerData();
+
+        return (returnItemData, returnUpgradeStat, returnUpgradeAdditional);
+    }
+    #endregion EquipCapsule
+
+
+
+
 
 
 }

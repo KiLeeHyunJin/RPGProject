@@ -4,14 +4,19 @@ using static Define;
 [Serializable]
 public class Item : IUseable
 {
-    public void Init((int itemType, int count, int category) value)
+    public Item(out Action<(int itemType, int count, int category)> _Init,out Action<string, string, int, Sprite, int> _SetEctData)
+    {
+        _Init = Init;
+        _SetEctData = SetEctData;
+    }
+    void Init((int itemType, int count, int category) value)
     {
         itemType = (ItemType)value.itemType;
         count = value.count;
         category = value.category;
     }
 
-    public void SetEctData(string _name, string _info, int _price, Sprite _icon, int _count)
+    void SetEctData(string _name, string _info, int _price, Sprite _icon, int _count)
     {
         count = _count;
         itemName = _name;
@@ -20,21 +25,20 @@ public class Item : IUseable
         icon = _icon;
     }
 
-    ItemType itemType;
     public ItemType ItemType { get { return itemType; } }
-    int category;
+    ItemType itemType;
     public int Category { get { return category; } }
-    int count;
+    int category;
     public int Count { get { return count; } }
-
-    string itemName;
+    int count;
     public string ItemName { get { return itemName; } }
-    string info;
+    string itemName;
     public string Info { get { return info; } }
-    int price;
+    string info;
     public int Price { get { return price; } }
-    Sprite icon;
+    int price;
     public Sprite Icon { get { return icon; } }
+    Sprite icon;
 
 
     public int ServerItemData()
@@ -46,15 +50,41 @@ public class Item : IUseable
 
         return returnValue;
     }
-    public virtual void AddItem(int addCount)
+    public void AddItem(int addCount)
     {
         count += addCount;
     }
-    public virtual void RemoveItem(int removeCount)
+
+    public void MinuseItem(int removeCount)
     {
+        if(Count < removeCount)
+        {
+            Message.LogError($"{itemName}의 소지 개수를 넘어서는 차감이 실행되었습니다. ");
+        }
+        else if(int.Equals(removeCount, Count))
+        {
+            RemoveItem();
+            return;
+        }
         count -= removeCount;
     }
     public virtual void Used()
     {
+
     }
+
+    protected virtual void RemoveItem()
+    {
+        itemType = ItemType.Non;
+
+        category = default;
+        count = default;
+        price = default;
+
+        itemName = null;
+        info = null;
+        icon = null;
+    }
+
+
 }

@@ -13,10 +13,13 @@ public class TestInventory : MonoBehaviour
     public void Parse()
     {
         equip = serverData.ExtractItem();
+
     }
     [ContextMenu("Capsule")]
     public void Capsule()
     {
         serverData = equip.ServerEquip();
+
+        //equip.SetEquipData
     }
 }

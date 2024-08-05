@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 using static Define;
 
 [Serializable]
-public partial class KeyController
+public class KeyController
 {
     const string KeyMapName = "DynamicKeySetting";
     const string KeyBindingFirstName = "<Keyboard>/";
@@ -44,9 +44,9 @@ public partial class KeyController
 
 
     //키 저장을 위한 keyDataServer 구조체 또는 직렬화 클래스
-    public KeyController(UserCharacterController userController, PlayerInput input)
+    public KeyController(UserCharacterController owner, PlayerInput input)
     {
-        characterController = userController;
+        characterController = owner;
         Key[] keysArray = Utils.GetEnumArray<Key>();
         keyDataServer = new(keysArray.Length);
 

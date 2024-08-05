@@ -260,10 +260,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventory:
+    wearSlotData: []
     slotCounts: 
-  ability: {fileID: 0}
-  userId: 
-  characterId: 
   characterData:
     nickName: 
     jobLv: 0
@@ -282,6 +280,10 @@ MonoBehaviour:
       equip: []
       money: 0
       slotCount: 0
+    keySet:
+      keyData: 
+  userId: 
+  characterId: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

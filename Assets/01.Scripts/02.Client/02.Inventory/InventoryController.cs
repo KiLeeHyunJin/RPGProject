@@ -1,17 +1,14 @@
-using Fusion;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.U2D.Animation;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static Define;
 using static ServerData;
 
 [Serializable]
-public partial class InventoryController
+public class InventoryController
 {
-    UserCharacterController characterController;
+    readonly UserCharacterController characterController;
     public List<List<Item>> slotData;
     public Equip[] wearSlotData;
     public int[] slotCounts;
@@ -22,7 +19,7 @@ public partial class InventoryController
 
         slotCounts = new int[] { equip, consume, ect };
         slotData = new((int)ItemType.Non);
- 
+
         for (int i = 0; i < slotData.Capacity; i++)
             slotData[i] = new(slotCounts[i]);
 
@@ -41,15 +38,15 @@ public partial class InventoryController
             (itemType, count, category) = listEct[i].ParseCode();
             if (count > 0)
             {
-                slotData[(int)ItemType.Ect].Add(Manager.Data.GameItemData.GetEctItem((Define.ItemType)itemType, category, count));
+                slotData[(int)ItemType.Ect].Add(Manager.Data.GameItemData.GetItem((Define.ItemType)itemType, category, count));
             }
         }
         for (int i = 0; i < slotData[(int)ItemType.Consume].Count; i++)
         {
             (itemType, count, category) = listConsume[i].ParseCode();
-            if(count > 0) 
+            if (count > 0)
             {
-                slotData[(int)ItemType.Consume].Add(Manager.Data.GameItemData.GetConsumeItem((Define.ItemType)itemType, category, count));
+                slotData[(int)ItemType.Consume].Add(Manager.Data.GameItemData.GetItem((Define.ItemType)itemType, category, count));
             }
         }
 
@@ -60,111 +57,237 @@ public partial class InventoryController
         }
     }
 
-    public void UseItem(ItemType useType, int idx)
+    public void UseItem(ItemType type, int idx)
     {
-        if (useType == ItemType.Equip || 
-            useType == ItemType.Consume)
+        if (type == ItemType.Equip ||
+            type == ItemType.Consume)
         {
-            slotData[(int)useType][idx]?.Used();
+            CheckData(type, idx);
+            slotData[(int)type][idx]?.Used();
         }
     }
 
     public void SetKeyUsedType(Key keyCode)
     {
-        characterController.KeyController.ChangeInteractionRemove(keyCode);
+        //characterController.KeyController.ChangeInteractionRemove(keyCode);
     }
 
     public KeyController.KeyActionCallbackBundle GetUsedItemKeyAttachCallback(int idx)
     {
         int callIdx = idx;
-        return new KeyController.KeyActionCallbackBundle(_performed : (call) => UseItem(ItemType.Consume, callIdx));
+        return new KeyController.KeyActionCallbackBundle(_performed: (call) => UseItem(ItemType.Consume, callIdx));
     }
 
     public int GetSlotCount(ItemType getType)
     {
-        if (getType == ItemType.Non)
-            return -1;
-        return slotCounts[(int)getType];
+        return getType switch
+        {
+            ItemType.Equip => slotData[(int)getType].Count,
+            ItemType.Consume => slotData[(int)getType].Count,
+            ItemType.Ect => slotData[(int)getType].Count,
+            ItemType.Non => -1,
+            _ => -1,
+        };
+    }
+
+    public int GetItemCount(ItemType type, int idx)
+    {
+        CheckData(type, idx);
+        return slotData[(int)type][idx].Count;
     }
 
     public FieldItem DropItem(ItemType type, int idx, int itemId, int count)
     {
-        FieldItem drop = new();
+        slotData[(int)type][idx]?.Used();
 
-        drop.Init(slotData[(int)type][idx].Icon,type, itemId, count);
+        FieldItem drop = Manager.Resource.Load<FieldItem>("Item/FieldItem");
+        if (drop == null)
+        {
+            Message.LogError("FieldItem의 Resource Load가 실패하였습니다.");
+            return null;
+        }
 
+        PooledObject pooled = Manager.Pool.GetPool(drop, characterController.transform.position, Quaternion.identity);
+        if (pooled == null)
+        {
+            Message.LogError("FieldItem의 GetPool이 실패하였습니다.");
+            return null;
+        }
+
+        drop = pooled as FieldItem;
+        if (drop == null)
+        {
+            Message.LogError("GetPool을 통한 객체의 다운 캐스팅이 실패하였습니다.");
+            return null;
+        }
+
+        drop.Init(slotData[(int)type][idx].Icon, type, itemId, count);
         return drop;
     }
 
-    public bool GetItem(FieldItem item)
+    public bool PickItem(FieldItem item)
     {
         ItemType type = item.ItemType;
         int category = item.ItemId;
         int count = item.Count;
 
-        if(int.Equals(type, (int)ItemType.Equip) == false)
+        if (int.Equals(type, ItemType.Equip) == false)
         {
-            int findIndex = FindItem(item.ItemType, category);
-            if (findIndex >= 0)
+            (bool findState, bool blankState ) = GetSearchOrBlankSlot(type, category, out int idx);
+
+            if (findState)
             {
-                slotData[(int)type][findIndex].AddItem(count);
+                slotData[(int)type][idx].AddItem(count);
                 return true;
             }
-        }
-
-
-        //비어있는 슬롯이 있는지 탐색
-
-        Item getItem = null;
-        switch (type)
-        {
-            case ItemType.Equip:
-                getItem = Manager.Data.GameItemData.GetEquipItem(type, count, category);
-                break;
-            case ItemType.Consume:
-                getItem = Manager.Data.GameItemData.GetConsumeItem(type, count, category);
-                break;
-            case ItemType.Ect:
-                getItem = Manager.Data.GameItemData.GetEctItem(type, count, category);
-                break;
-            default:
-                break;
-        }
-        if (getItem == null)
-        {
+            if (blankState &&
+                GetItem(type, category, count, out Item addItem))
+            {
+                SetInItem(addItem, idx);
+                return true;
+            }
             return false;
         }
-        //비어있는 슬롯에 아이템 추가
 
+
+        if (GetFindBlankSlot(type, out int blankIdx) == false)
+            return false;
+        if (GetItem(type, category, count, out Item getItem) == false)
+            return false;
+        SetInItem(getItem, blankIdx);
         return true;
     }
 
-
-
-    //슬롯을 찾으면 해당 슬롯 번호 반환
-    //없을 경우 -1
-    int FindItem(ItemType type, int id)
+    bool GetFindBlankSlot(ItemType type, out int blankIdx)
     {
         List<Item> searchList = slotData[(int)type];
         for (int i = 0; i < searchList.Count; i++)
         {
-            if (int.Equals(searchList[i].Category,id))
+            if (searchList[i] == null ||
+                searchList[i].Count == 0)
             {
-                return i;
+                blankIdx = i;
+                return true;
             }
+        }
+        blankIdx = -1;
+        return false;
+    }
+    public void SwapSlot(ItemType type, int idx_1, int idx_2)
+    {
+        List<Item> itemList = slotData[(int)type];
+
+        Item item_1     = itemList[idx_1];
+        itemList[idx_1] = itemList[idx_2];
+        itemList[idx_2] = item_1;
+    }
+
+
+    bool GetItem(ItemType itemType, int category, int count, out Item getItem)
+    {
+        getItem = itemType switch
+        {
+            ItemType.Equip => Manager.Data.GameItemData.GetItem(itemType, count, category),
+            ItemType.Consume => Manager.Data.GameItemData.GetItem(itemType, count, category),
+            ItemType.Ect => Manager.Data.GameItemData.GetItem(itemType, count, category),
+            ItemType.Non => null,
+            _ => null,
+        };
+        return getItem != null;
+    }
+
+    void SetInItem(Item item, int idx)
+    {
+        slotData[(int)item.ItemType][idx] = item;
+    }
+
+    //슬롯을 찾으면 해당 슬롯 번호 반환
+    //없을 경우 -1
+    int GetFindItemSlot(ItemType type, int id)
+    {
+        List<Item> searchList = slotData[(int)type];
+        for (int i = 0; i < searchList.Count; i++)
+        {
+            if (searchList[i] == null)
+                continue;
+            if (int.Equals(searchList[i].Category, id))
+                return i;
         }
         return -1;
     }
 
-    public void RemoveItem(ItemType type, int idx)
+    (bool findItem, bool findBlank) GetSearchOrBlankSlot(ItemType type, int id, out int idx)
     {
-        if (slotData[(int)type][idx] != null)
-            slotData[(int)type][idx] = null;
+        List<Item> searchList = slotData[(int)type];
+        (int find, int blank) = (-1, -1);
+        for (int i = 0; i < searchList.Count; i++)
+        {
+            if (searchList[i] == null ||
+                searchList[i].Count <= 0)
+            {
+                if (blank < 0)
+                    blank = i;
+            }
+            else if (int.Equals(searchList[i].Category, id))
+            {
+                idx = find;
+                return (true, false);
+            }
+        }
+
+        if (blank >= 0)
+        {
+            idx = blank;
+            return (false, true);
+        }
+
+        idx = -1;
+        return (false, false);
     }
 
-    public void SwapItem()
+    int RemoveItemSlot(ItemType type, int idx)
     {
+        List<Item> searchList = slotData[(int)type];
+        CheckData(type, idx, searchList);
 
+        int count = searchList[idx].Count;
+        slotData[(int)type][idx].MinuseItem(count);
+        return count;
     }
+
+    void MinuseItem(ItemType type, int idx, int count = -1)
+    {
+        List<Item> searchList = slotData[(int)type];
+
+        CheckData(type, idx, searchList);
+
+        searchList[idx].MinuseItem(count);
+    }
+
+
+    void CheckData(ItemType type, int idx, List<Item> searchList = null)
+    {
+        searchList ??= slotData[(int)type];
+
+        if (searchList[idx] == null)
+        {
+            Message.LogWarning($"{type}의 {idx}번째 아이템은 소지중이지 않습니다. - Null Refer");
+            return;
+        }
+
+        if (searchList[idx].Count <= 0)
+        {
+            Message.LogWarning($"{type}의 {idx}번째 아이템의 개수는 0 이하입니다. - Out Range");
+            return;
+        }
+        if (int.Equals(searchList[idx].ItemType, type))
+        {
+            Message.LogWarning($"{type}의  {idx}번째 아이템의 타입은 {searchList[idx].ItemType}입니다.(삭제 시도가 이루어진 아이템입니다.) - Not Type");
+            return;
+        }
+    }
+
+
+
 
 }

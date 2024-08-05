@@ -1,19 +1,29 @@
 using System;
+using UnityEngine;
 using static Define;
 [Serializable]
-public class Consume : Item, IKeyAttachable
+public  class Consume : Item, IKeyAttachable
 {
-    ConsumeType useType;
     public ConsumeType UseType { get { return useType; } }
-    ConsumeEffectType efxType;
+    ConsumeType useType;
     public ConsumeEffectType EfxType { get { return efxType; } }
-    int value;
+    ConsumeEffectType efxType;
     public int Value { get { return value; } }
-    int duringValue;
+    int value;
+
     public int DuringValue { get { return duringValue; } }
+    int duringValue;
+
+    public Consume(
+        out Action<(int itemType, int count, int category)> _Init, 
+        out Action<string, string, int, Sprite, int> _SetEctData,
+        out Action<ConsumeType, ConsumeEffectType, int , int > _SetConsumeData) : base(out _Init, out _SetEctData)
+    {
+        _SetConsumeData = SetConsumeData;
+    }
 
 
-    public void SetConsumeData(ConsumeType _useType, ConsumeEffectType _efxType, int _value, int _during)
+    void SetConsumeData(ConsumeType _useType, ConsumeEffectType _efxType, int _value, int _during)
     {
         useType = _useType;
         efxType = _efxType;

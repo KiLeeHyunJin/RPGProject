@@ -1,4 +1,3 @@
-using Fusion;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,8 +5,8 @@ using static ServerData;
 
 public class UserCharacterController : MonoBehaviour// NetworkBehaviour
 {
-    internal KeyController KeyController { get { return keyController; } }
-    internal InventoryController Inventory { get { return inventory; } }
+    public KeyController KeyController { get { return keyController; } }
+    public InventoryController Inventory { get { return inventory; } }
 
     [SerializeField] KeyController keyController;
     [SerializeField] InventoryController inventory;
@@ -42,14 +41,16 @@ public class UserCharacterController : MonoBehaviour// NetworkBehaviour
 
     void LoadCharacterData(CharacterServerData _characterData)
     {
-        if(_characterData == null)
+        if (_characterData == null)
         {
             Message.LogWarning($"characterData Load Failed");
             return;
         }
         characterData = _characterData;
-        
+
         StartCoroutine(InventoryInitRoutine());
+
+        ability = new(this);
 
         keyController = new(this, gameObject.GetOrAddComponent<PlayerInput>());
         KeyController.LoadKeySet(_characterData.keySet);
@@ -60,7 +61,7 @@ public class UserCharacterController : MonoBehaviour// NetworkBehaviour
     {
         while (Manager.Data.GameItemData == null)
             yield return new WaitForSeconds(0.15f);
-        inventory = new(this,characterData.inventory);
+        inventory = new(this, characterData.inventory);
     }
 
 
@@ -68,9 +69,10 @@ public class UserCharacterController : MonoBehaviour// NetworkBehaviour
     //public override void FixedUpdateNetwork()
     //{
     //    base.FixedUpdateNetwork();
-    
+
     //}
 
+
+
+
 }
-public partial class KeyController { }
-public partial class InventoryController { }
