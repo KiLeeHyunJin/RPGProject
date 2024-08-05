@@ -214,21 +214,21 @@ public class CustomItem : EditorWindow
 
         AddIntegerElement(root, ItemType.Equip, "LimitStr")
         .RegisterValueChangedCallback(evt =>
-        { this.limitStat.str = evt.newValue; });
+        { this.limitStat.WarningStr = evt.newValue; });
 
 
         AddIntegerElement(root, ItemType.Equip, "LimitDef")
         .RegisterValueChangedCallback(evt =>
-        { this.limitStat.def = evt.newValue; });
+        { this.limitStat.WarningDef = evt.newValue; });
 
         AddIntegerElement(root, ItemType.Equip, "LimitMan")
         .RegisterValueChangedCallback(evt =>
-        { this.limitStat.man = evt.newValue; });
+        { this.limitStat.WarningMan = evt.newValue; });
 
 
         AddIntegerElement(root, ItemType.Equip, "LimitLuk")
         .RegisterValueChangedCallback(evt =>
-        { this.limitStat.luk = evt.newValue; });
+        { this.limitStat.WarningLuk = evt.newValue; });
 
 
 
@@ -239,20 +239,20 @@ public class CustomItem : EditorWindow
 
         AddIntegerElement(root, ItemType.Equip, "Str")
         .RegisterValueChangedCallback(evt =>
-        { this.baseStat.str = evt.newValue; });
+        { this.baseStat.WarningStr = evt.newValue; });
 
 
         AddIntegerElement(root, ItemType.Equip, "Def")
         .RegisterValueChangedCallback(evt =>
-        { this.baseStat.def = evt.newValue; });
+        { this.baseStat.WarningDef = evt.newValue; });
 
         AddIntegerElement(root, ItemType.Equip, "Man")
         .RegisterValueChangedCallback(evt =>
-        { this.baseStat.man = evt.newValue; });
+        { this.baseStat.WarningMan = evt.newValue; });
 
         AddIntegerElement(root, ItemType.Equip, "Luk")
         .RegisterValueChangedCallback(evt =>
-        { this.baseStat.luk = evt.newValue; });
+        { this.baseStat.WarningLuk = evt.newValue; });
 
 
 

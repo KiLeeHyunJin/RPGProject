@@ -9,10 +9,18 @@ public struct Stat
         man = _man;
         luk = _luk;
     }
-    public int def;
-    public int luk;
-    public int man;
-    public int str;
+    public int WarningDef { set { str = value; } }
+    public int Def { get { return str; } }
+    int def;
+    public int WarningLuk { set { str = value; } }
+    public int Luk { get { return str; } }
+    int luk;
+    public int WarningMan { set { str = value; } }
+    public int Man { get { return str; } }
+    int man;
+    public int WarningStr { set { str = value; } }
+    public int Str { get { return str; } }
+    int str;
     public int ServerData()
     {
         int returnValue = default;
