@@ -258,21 +258,21 @@ public class CustomItem : EditorWindow
 
         AddIntegerElement(root, ItemType.Equip, "Power")
         .RegisterValueChangedCallback(evt =>
-        { this.baseAdditional.power = evt.newValue; });
+        { this.baseAdditional.WarningPower = evt.newValue; });
 
 
         AddIntegerElement(root, ItemType.Equip, "Magic")
         .RegisterValueChangedCallback(evt =>
-        { this.baseAdditional.magic = evt.newValue; });
+        { this.baseAdditional.WarningMagic = evt.newValue; });
 
         AddIntegerElement(root, ItemType.Equip, "Defence")
           .RegisterValueChangedCallback(evt =>
-          { this.baseAdditional.defence = evt.newValue; });
+          { this.baseAdditional.WarningDefence = evt.newValue; });
 
 
         AddIntegerElement(root, ItemType.Equip, "Speed")
            .RegisterValueChangedCallback(evt =>
-           { this.baseAdditional.speed = evt.newValue; });
+           { this.baseAdditional.WarningSpeed = evt.newValue; });
 
     }
 
