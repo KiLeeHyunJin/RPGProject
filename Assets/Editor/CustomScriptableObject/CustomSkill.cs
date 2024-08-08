@@ -69,7 +69,7 @@ public class CustomSkill : EditorWindow
     }
     public CustomSkill()
     {
-        skillDic = new(((int)Define.ActiveSkillType.END) * ((int)Define.PassiveSkillType.END))
+        skillDic = new()
         {
             { GetKey(SkillType.Active,    (int)ActiveSkillType.Buff),          new() },
             { GetKey(SkillType.Active,    (int)ActiveSkillType.Attack),        new() },
@@ -96,6 +96,7 @@ public class CustomSkill : EditorWindow
         Button button = new(() => { Create(); })
         {   text = "CreateSkill"  };
         root.Add(button);
+        ChangeType();
     }
 
     void BaseData(VisualElement root)
@@ -146,6 +147,9 @@ public class CustomSkill : EditorWindow
 
     void ActiveAttack(VisualElement root)
     {
+        skillType = SkillType.Active;
+        activeSkillType = ActiveSkillType.Attack;
+
         AddEnumElement(root, "ElementType", elementType)
         .RegisterValueChangedCallback(evt =>
         { this.elementType = (ElementType)evt.newValue; });
@@ -173,19 +177,24 @@ public class CustomSkill : EditorWindow
 
     void ActiveBuff(VisualElement root)
     {
+        skillType = SkillType.Active;
+        activeSkillType = ActiveSkillType.Buff;
 
-      
 
     }
 
     void PassivePermanent(VisualElement root)
     {
+        skillType = SkillType.Passive;
+        passiveSkillType = PassiveSkillType.Permanent;
 
     }
 
     void PassiveProbability(VisualElement root)
     {
-
+        skillType = SkillType.Passive;
+        passiveSkillType = PassiveSkillType.Probability
+            ;
     }
 
     IntegerField AddIntegerElement(VisualElement root, string labelName, bool display = true, int maxValue = int.MaxValue, bool combineIgnore = false)
@@ -263,13 +272,15 @@ public class CustomSkill : EditorWindow
         };
     }
 
+
+
     List<VisualElement> GetItemList()
     {
         int detailType = GetDetailValue();
         int key = GetKey(skillType,detailType);
         if (skillDic.TryGetValue(key, out List<VisualElement> skillList))
-            return null;
-        return skillList;
+            return skillList;
+        return null;
     }
 
     void AddVisualElement(List<VisualElement> typeList, VisualElement root, VisualElement visualElement, bool combineIgnore)
@@ -344,11 +355,12 @@ public class CustomSkill : EditorWindow
     private void ChangeType()
     {
         int currentKey = GetKey(skillType, GetDetailValue());
+        Debug.Log(currentKey);
         DisplayStyle state;
         foreach (var typePair in skillDic)
         {
             state = int.Equals(typePair.Key, currentKey) ? DisplayStyle.Flex : DisplayStyle.None;
-
+            Debug.Log(typePair.Key);
             for (int i = 0; i < typePair.Value.Count; i++)
             {
                 if(int.Equals(typePair.Value[i].style.display, state) == false)
