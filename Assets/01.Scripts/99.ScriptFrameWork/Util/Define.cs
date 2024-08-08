@@ -22,6 +22,10 @@ public class Define
     public readonly static string ItemScripatableConsumePath = "/01.Consume";
     public readonly static string ItemScripatableEquipPath = "/02.Equip";
 
+    public readonly static string SkillScripatableWorriorPath = "/00.Worrior";
+    public readonly static string SkillScripatableArcherPath = "/01.Archer";
+    public readonly static string SkillScripatableWizardPath = "/02.Wizard";
+
     #endregion
 
 
@@ -67,6 +71,15 @@ public class Define
         END
     }
 
+    public enum JobType
+    { 
+        Worrior,
+        Archer,
+        Wizard,
+
+    }
+
+
     public enum ConsumeEffectType
     {
         Heal,
@@ -89,21 +102,28 @@ public class Define
     { 
         Passive,
         Active,
+        END
     }
 
     public enum PassiveSkillType
     {
         Permanent,
-        Probability
+        Probability,
+        END
     }
 
     public enum ActiveSkillType
     {
         Buff,
         Attack,
+        END
     }
 
-
+    public enum ElementType
+    {
+        Physical,
+        Magic,
+    }
 
 
 

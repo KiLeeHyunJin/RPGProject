@@ -75,7 +75,7 @@ public class CustomItem : EditorWindow
         CreatConsumeData(root);
         CreatEquipData(root);
 
-        Button button = new Button(() => { MakeItem(); })
+        Button button = new(() => { MakeItem(); })
         {
             text = "MakeItem"
         };
@@ -309,15 +309,15 @@ public class CustomItem : EditorWindow
         return field;
     }
 
-    TextField AddTextElement(VisualElement root, ItemType _itemType, string labelName, bool display = true, bool? multi = null)
+    TextField AddTextElement(VisualElement root, ItemType _itemType, string labelName, bool display = true, bool multi = false)
     {
         TextField field = new TextField(labelName);
         field.style.display = display && (_itemType == ItemType.Equip || _itemType == ItemType.Non) ?
             DisplayStyle.Flex : DisplayStyle.None;
 
-        if (multi.HasValue)
+        if (multi)
         {
-            field.multiline = multi.Value;
+            field.multiline = multi;
         }
         AddVisualElement(GetItemList(_itemType), root, field);
         return field;
