@@ -79,10 +79,28 @@ public class Define
         Mp,
     }
 
+    public enum CoolTimeType
+    {
+        Has,
+        None
+    }
+
     public enum SkillType
     { 
         Passive,
         Active,
+    }
+
+    public enum PassiveSkillType
+    {
+        Permanent,
+        Probability
+    }
+
+    public enum ActiveSkillType
+    {
+        Buff,
+        Attack,
     }
 
 
