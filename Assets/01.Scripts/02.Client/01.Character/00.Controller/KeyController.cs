@@ -5,6 +5,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static Define;
 
+/// <summary>
+/// 입력 키 컨트롤러 
+/// </summary>
 [Serializable]
 public class KeyController
 {

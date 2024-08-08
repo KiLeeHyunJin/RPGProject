@@ -9,6 +9,13 @@ public struct Stat
         man = _man;
         luk = _luk;
     }
+    public Stat((int _str, int _def, int _man, int _luk)value)
+    {
+        str = value._str;
+        def = value._def;
+        man = value._man;
+        luk = value._luk;
+    }
     public int WarningDef { set { str = value; } }
     public int Def { get { return str; } }
     int def;

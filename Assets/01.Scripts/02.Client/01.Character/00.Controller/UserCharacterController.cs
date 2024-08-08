@@ -2,7 +2,9 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static ServerData;
-
+/// <summary>
+/// 유저 캐릭터 컨트롤러
+/// </summary>
 public class UserCharacterController : MonoBehaviour// NetworkBehaviour
 {
     public KeyController KeyController { get { return keyController; } }
@@ -50,7 +52,7 @@ public class UserCharacterController : MonoBehaviour// NetworkBehaviour
 
         StartCoroutine(InventoryInitRoutine());
 
-        ability = new(this);
+        ability = new(this, _characterData.ability);
 
         keyController = new(this, gameObject.GetOrAddComponent<PlayerInput>());
         KeyController.LoadKeySet(_characterData.keySet);

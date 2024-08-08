@@ -75,17 +75,15 @@ public static class UserCharacterExtension
                 ability.stat.ExtractByte(DataDefine.IntSize.Four)
             );
     }
-    public static (int ability, int zero, int one, int two, int three, int four) ParsPoint(this AbilityServerData ability)
+    public static int[] ParsPoint(this AbilityServerData ability)
     {
-        return
-            (
-                ability.point.ExtractByte(DataDefine.LongSize.One),
-                ability.point.ExtractByte(DataDefine.LongSize.Two),
-                ability.point.ExtractByte(DataDefine.LongSize.Three),
-                ability.point.ExtractByte(DataDefine.LongSize.Four),
-                ability.point.ExtractByte(DataDefine.LongSize.Five),
-                ability.point.ExtractByte(DataDefine.LongSize.Six)
-            );
+        return new int[] 
+        {
+                ability.point.ExtractByte(DataDefine.IntSize.One),
+                ability.point.ExtractByte(DataDefine.IntSize.Two),
+                ability.point.ExtractByte(DataDefine.IntSize.Three),
+                ability.point.ExtractByte(DataDefine.IntSize.Four)
+        };
     }
     #endregion Stat
 

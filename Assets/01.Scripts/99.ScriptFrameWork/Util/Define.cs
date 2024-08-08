@@ -125,6 +125,25 @@ public class Define
         Magic,
     }
 
+    public enum CharacterStateType
+    { 
+        Hp,
+        Mp,
+        Exp
+    }
+    public enum CharacterPointType
+    { 
+        Ability,
+        Zero,
+        One,
+        Two
+    }
+    public enum CharacterAbilityStateType
+    { 
+        Ability,
+        Equip,
+    }
+
 
 
     public enum InteractionType

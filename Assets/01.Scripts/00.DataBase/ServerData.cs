@@ -40,6 +40,10 @@ public class ServerData
     [Serializable]
     public class AbilityServerData
     {
+        public int hp;
+        public int mp;
+        public int exp;
+
         public int speed;       //이동속도, 점프력,  공격속도, 추가타)
         public int atck;        //물리공격, 마법공격, 치명 데미지)
         public int other;       //명중률, 치명률, 방어력, 회피력, 
@@ -48,7 +52,7 @@ public class ServerData
 
         public string skills;
 
-        public long point;      //능력치, 0차, 1차, 2차, 3차, 4차   
+        public int point;      //능력치, 0차, 1차, 2차s
     }
 
     [Serializable]
