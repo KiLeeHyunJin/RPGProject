@@ -10,10 +10,11 @@ public class UserCharacterController : MonoBehaviour// NetworkBehaviour
     public KeyController KeyController { get { return keyController; } }
     public InventoryController Inventory { get { return inventory; } }
 
-    [SerializeField] KeyController keyController;
-    [SerializeField] InventoryController inventory;
+    [SerializeField] KeyController keyController;           //키
+    [SerializeField] InventoryController inventory;         //아이템
 
-    [SerializeField] AbilityController ability;
+    [SerializeField] SkillController skill;
+    [SerializeField] AbilityController ability;             //능력치
     [SerializeField] CharacterServerData characterData;
 
     [SerializeField] string userId;
