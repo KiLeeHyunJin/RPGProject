@@ -114,7 +114,7 @@ public class KeyController
             KeyActionCallbackBundle callbackBundle = keyParseData.slotType switch
             {
                 Define.QuickSlotType.Default => null,
-                Define.QuickSlotType.Item => new(null, (callBackt) => characterController.Inventory.UseItem(Define.ItemType.Consume, keyParseData.idx), null),
+                Define.QuickSlotType.Item => new(null, (callBackt) => characterController.InventoryController.UseItem(Define.ItemType.Consume, keyParseData.idx), null),
                 Define.QuickSlotType.Skill => null,
                 _ => null,
             };
@@ -124,7 +124,7 @@ public class KeyController
                 case QuickSlotType.Default:
                     break;
                 case QuickSlotType.Item:
-                    callbackBundle = new(null, (callBackt) => characterController.Inventory.UseItem(Define.ItemType.Consume, keyParseData.idx), null);
+                    callbackBundle = new(null, (callBackt) => characterController.InventoryController.UseItem(Define.ItemType.Consume, keyParseData.idx), null);
 
                     break;
                 case QuickSlotType.Skill:

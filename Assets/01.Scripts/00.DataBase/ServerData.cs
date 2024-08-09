@@ -8,6 +8,7 @@ public class ServerData
         public string nickName;
         public string userId;
     }
+
     [Serializable]
     public class UserServerData
     {
@@ -30,6 +31,7 @@ public class ServerData
         public AbilityServerData ability;      //능력치
         public InventoryServerData inventory;  //인벤
         public ServerKeyData keySet;
+        public SkillServerData skill;
     }
     [Serializable]
     public class ServerKeyData
@@ -54,6 +56,27 @@ public class ServerData
 
         public int point;      //능력치, 0차, 1차, 2차s
     }
+
+    [Serializable]
+    public class SkillServerData
+    {
+        public SkillServerData()
+        {
+            skillDatas = new SkillDataServerData[(int)Define.CharacterPointType.END];
+        }
+        public SkillDataServerData[] skillDatas;
+    }
+
+    [Serializable]
+    public class SkillDataServerData
+    {
+        public SkillDataServerData()
+        {
+            skillData = new int[(int)Define.SkillDefaultSize];
+        }
+        public int[] skillData;
+    }
+
 
     [Serializable]
     public class InventoryServerData
@@ -90,6 +113,7 @@ public class ServerData
         public long money;
         public int slotCount;
     }
+
     [Serializable]
     public class ItemEctServerData
     {

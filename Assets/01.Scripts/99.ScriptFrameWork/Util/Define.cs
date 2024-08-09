@@ -3,6 +3,8 @@ using System;
 public class Define
 {
     public readonly static int SlotDefaultSize = 2;
+    public readonly static int SkillDefaultSize = 5;
+
 
     public readonly static int InventoryCount = 30;
     public readonly static int ItemBundleSize = 100;
@@ -136,7 +138,8 @@ public class Define
         Ability,
         Zero,
         One,
-        Two
+        Two,
+        END
     }
     public enum CharacterAbilityStateType
     { 

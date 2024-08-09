@@ -7,15 +7,19 @@ using static ServerData;
 /// </summary>
 public class UserCharacterController : MonoBehaviour// NetworkBehaviour
 {
-    public KeyController KeyController { get { return keyController; } }
-    public InventoryController Inventory { get { return inventory; } }
+    public KeyController KeyController              { get { return keyController; } }
+    public InventoryController InventoryController  { get { return inventoryController; } }
+    public SkillController SkillController          { get { return skillController; } }
+    public AbilityController AbilityController      { get { return abilityController; } }
 
-    [SerializeField] KeyController keyController;           //키
-    [SerializeField] InventoryController inventory;         //아이템
+    [SerializeField] KeyController          keyController;           //키
+    [SerializeField] InventoryController    inventoryController;         //아이템
+    [SerializeField] SkillController        skillController;
+    [SerializeField] AbilityController      abilityController;             //능력치
 
-    [SerializeField] SkillController skill;
-    [SerializeField] AbilityController ability;             //능력치
-    [SerializeField] CharacterServerData characterData;
+
+    [SerializeField] ScriptableSkillBundle  skillBundle;
+    [SerializeField] CharacterServerData    characterData;
 
     [SerializeField] string userId;
     [SerializeField] string characterId;
@@ -53,7 +57,8 @@ public class UserCharacterController : MonoBehaviour// NetworkBehaviour
 
         StartCoroutine(InventoryInitRoutine());
 
-        ability = new(this, _characterData.ability);
+        abilityController = new(this, _characterData.ability);
+        skillController = new(this, skillBundle, _characterData.skill);
 
         keyController = new(this, gameObject.GetOrAddComponent<PlayerInput>());
         KeyController.LoadKeySet(_characterData.keySet);
@@ -64,7 +69,7 @@ public class UserCharacterController : MonoBehaviour// NetworkBehaviour
     {
         while (Manager.Data.GameItemData == null)
             yield return new WaitForSeconds(0.15f);
-        inventory = new(this, characterData.inventory);
+        inventoryController = new(this, characterData.inventory);
     }
 
 
