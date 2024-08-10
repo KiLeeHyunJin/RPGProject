@@ -12,10 +12,10 @@ public class UserCharacterController : MonoBehaviour// NetworkBehaviour
     public SkillController SkillController          { get { return skillController; } }
     public AbilityController AbilityController      { get { return abilityController; } }
 
-    [SerializeField] KeyController          keyController;           //키
-    [SerializeField] InventoryController    inventoryController;         //아이템
-    [SerializeField] SkillController        skillController;
-    [SerializeField] AbilityController      abilityController;             //능력치
+    [SerializeField] KeyController          keyController;              //키
+    [SerializeField] InventoryController    inventoryController;        //아이템
+    [SerializeField] SkillController        skillController;            //스킬 
+    [SerializeField] AbilityController      abilityController;          //능력치
 
 
     [SerializeField] ScriptableSkillBundle  skillBundle;
@@ -38,8 +38,11 @@ public class UserCharacterController : MonoBehaviour// NetworkBehaviour
     [ContextMenu("Do Swap")]
     public void Test()
     {
-        keyController.TestCode();
+        CharacterServerData testData = new();
+        Manager.FireBase.SaveCharacter(userId, characterId, in testData);
     }
+
+
     [ContextMenu("Do Something")]
     public void Load()
     {

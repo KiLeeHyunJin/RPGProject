@@ -22,10 +22,18 @@ public class ServerData
     //앞이 낮은 위치 뒤가 높은 위치 
     public class CharacterServerData
     {
+        public CharacterServerData()
+        {
+            ability = new();
+            inventory = new();
+            keySet = new();
+            skill = new();
+        }
         public string nickName; //닉네임
         public short jobLv;     //직업, 레벨(1바이트 씩)
 
-        public long cloth;      //모자, 상의, 하의, 신발, 장갑, 무기, 
+        public int cloth;      //모자, 상의, 하의, 신발
+        public int otherCloth; // 무기, 장갑,
         public int skin;        //머리, 얼굴, 피부    (1바이트 씩)
 
         public AbilityServerData ability;      //능력치
@@ -51,8 +59,6 @@ public class ServerData
         public int other;       //명중률, 치명률, 방어력, 회피력, 
 
         public int stat;        //스탯 (1바이트 씩)
-
-        public string skills;
 
         public int point;      //능력치, 0차, 1차, 2차s
     }

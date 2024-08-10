@@ -1,22 +1,25 @@
+using System;
+using UnityEngine;
 using static Define;
 using static ServerData;
-
-public partial class AbilityController
+[Serializable]
+public class AbilityController
 {
     readonly UserCharacterController characterController;
 
-    Stat[] stats;
-    AdditionalStat[] additionals;
+    [SerializeField] Stat[] stats;
+    [SerializeField] AdditionalStat[] additionals;
 
-    int[] points;
-    int[] state;
+    [SerializeField] int[] points;
+    [SerializeField] int[] state;
+
     public AbilityController(UserCharacterController owner, AbilityServerData abilityServerData)
     {
         characterController = owner;
 
         points = abilityServerData.ParsPoint();
-        state = new int[] { abilityServerData.hp, abilityServerData.mp, abilityServerData.exp };
         stats = new Stat[] { new(abilityServerData.ParseStat()) };
+        state = new int[] { abilityServerData.hp, abilityServerData.mp, abilityServerData.exp };
     }
 
     public int GetCharacterPoint(CharacterPointType characterPoint)

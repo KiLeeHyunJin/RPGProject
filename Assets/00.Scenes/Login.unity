@@ -259,20 +259,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4d721851384e1b4d8b250b7bf566be7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventory:
+  inventoryController:
     wearSlotData: []
     slotCounts: 
+  skillBundle: {fileID: 0}
   characterData:
     nickName: 
     jobLv: 0
     cloth: 0
+    otherCloth: 0
     skin: 0
     ability:
+      hp: 0
+      mp: 0
+      exp: 0
       speed: 0
       atck: 0
       other: 0
       stat: 0
-      skills: 
       point: 0
     inventory:
       consume: []
@@ -282,8 +286,14 @@ MonoBehaviour:
       slotCount: 0
     keySet:
       keyData: 
-  userId: 
-  characterId: 
+    skill:
+      skillDatas:
+      - skillData: 0000000000000000000000000000000000000000
+      - skillData: 0000000000000000000000000000000000000000
+      - skillData: 0000000000000000000000000000000000000000
+      - skillData: 0000000000000000000000000000000000000000
+  userId: Test
+  characterId: Tester
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
