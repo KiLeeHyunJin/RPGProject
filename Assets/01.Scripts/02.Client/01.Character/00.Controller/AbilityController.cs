@@ -24,9 +24,9 @@ public class AbilityController
     {
         characterController = owner;
 
-        points = abilityServerData.ParsPoint();
-        stats = new Stat[] { new(abilityServerData.ParseStat()) };
-        state = new int[] { abilityServerData.hp, abilityServerData.mp, abilityServerData.exp };
+        //points = abilityServerData.ParsPoint();
+        //stats = new Stat[] { new(abilityServerData.ParseStat()) };
+        //state = new int[] { abilityServerData.hp, abilityServerData.mp, abilityServerData.exp };
         ability = new(abilityServerData);
     }
 
@@ -56,7 +56,7 @@ public class AbilityController
         Stat wearStats = characterStat;
         AdditionalStat additionalStat = characterAdditionals;
 
-        Equip[] wearEquips = characterController.Inventory.wearSlotData;
+        Equip[] wearEquips = characterController.InventoryController.wearSlotData;
         foreach (Equip wearData in wearEquips)
         {
             if (wearData == null)

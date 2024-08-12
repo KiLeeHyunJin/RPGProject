@@ -7,15 +7,17 @@ using static ServerData;
 /// </summary>
 public class UserCharacterController : MonoBehaviour// NetworkBehaviour
 {
-    public KeyController KeyController              { get { return keyController; } }
-    public InventoryController InventoryController  { get { return inventoryController; } }
-    public SkillController SkillController          { get { return skillController; } }
-    public AbilityController AbilityController      { get { return abilityController; } }
+    public ComboActionQueueController ComboController   { get { return comboController; } }
+    public KeyController KeyController                  { get { return keyController; } }
+    public InventoryController InventoryController      { get { return inventoryController; } }
+    public SkillController SkillController              { get { return skillController; } }
+    public AbilityController AbilityController          { get { return abilityController; } }
 
-    [SerializeField] KeyController          keyController;              //키
-    [SerializeField] InventoryController    inventoryController;        //아이템
-    [SerializeField] SkillController        skillController;            //스킬 
-    [SerializeField] AbilityController      abilityController;          //능력치
+    [SerializeField] ComboActionQueueController     comboController;
+    [SerializeField] KeyController              keyController;              //키
+    [SerializeField] InventoryController        inventoryController;        //아이템
+    [SerializeField] SkillController            skillController;            //스킬 
+    [SerializeField] AbilityController          abilityController;          //능력치
 
 
     [SerializeField] ScriptableSkillBundle  skillBundle;
@@ -27,7 +29,7 @@ public class UserCharacterController : MonoBehaviour// NetworkBehaviour
 
     private void Awake()
     {
-
+        comboController = new();
     }
 
     private void Start()
@@ -62,9 +64,9 @@ public class UserCharacterController : MonoBehaviour// NetworkBehaviour
 
         abilityController = new(this, _characterData.ability);
         skillController = new(this, skillBundle, _characterData.skill);
-
         keyController = new(this, gameObject.GetOrAddComponent<PlayerInput>());
         KeyController.LoadKeySet(_characterData.keySet);
+
 
     }
 

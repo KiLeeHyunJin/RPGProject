@@ -29,6 +29,8 @@ public class KeyController
 
     void Test() => Debug.Log("fgsdgsasd");
     void Test2() => Debug.Log("324235352");
+
+
     int temp = 0;
     public void TestCode()
     {
@@ -82,9 +84,11 @@ public class KeyController
             inputAction?.RemoveAction();
             inputAction = actionMap.AddAction(keyCode.ToString(), binding: $"{KeyBindingFirstName}{keyCode}");
             inputAction.Disable();
-            keyActionDatas[(int)keyCode] = new(keyCode, inputAction);
+            keyActionDatas[(int)keyCode] = new(characterController ,keyCode, inputAction);
         }
         InitMove(actionMap);
+
+
         this[Key.V].Attach(new(_performed : (call)=>Test2()));
         this[Key.G].Attach(new(_performed : (call)=> Test()));
     }
@@ -252,8 +256,8 @@ public class KeyController
     {
         Key keyCode;
         bool used;
-
         InputAction input;
+        readonly UserCharacterController characterController;
         KeyActionCallbackBundle callbackBundle;
         KeyActionCallbackBundle CallbackBundle 
         { 
@@ -264,11 +268,12 @@ public class KeyController
             }
         }
 
-        public KeyActionData(Key _keyCode, InputAction _input, Action<InputAction.CallbackContext> _performed = null)
+        public KeyActionData(UserCharacterController _characterController ,Key _keyCode, InputAction _input, Action<InputAction.CallbackContext> _performed = null)
         {
             input = _input;
             keyCode = _keyCode;
             used = _performed == null;
+            characterController = _characterController;
             if (used == false)
             {
                 input.Disable();
@@ -431,6 +436,11 @@ public class KeyController
         public KeyActionCallbackBundle GetCallBackMethod()
         {
             return new(callbackBundle.Started, callbackBundle.Performed, callbackBundle.Performed);
+        }
+
+        void CallKey(InputAction.CallbackContext context)
+        {
+            characterController.ComboController.AddCommandToComboSequence(keyCode);
         }
     }
 
