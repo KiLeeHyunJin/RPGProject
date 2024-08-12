@@ -21,7 +21,7 @@ public class InventoryController
         slotData = new((int)ItemType.Non);
 
         for (int i = 0; i < slotData.Capacity; i++)
-            slotData[i] = new(slotCounts[i]);
+            slotData.Add(new(slotCounts[i]));
 
         wearSlotData = new Equip[(int)EquipType.END];
 

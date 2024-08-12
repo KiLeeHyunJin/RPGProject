@@ -1,8 +1,10 @@
+using System;
+using UnityEngine;
 using Unity.Burst.CompilerServices;
 using static Define;
 using static ServerData;
-
-public partial class AbilityController
+[Serializable]
+public class AbilityController
 {
     readonly UserCharacterController characterController;
     readonly Ability ability;
@@ -21,6 +23,10 @@ public partial class AbilityController
     public AbilityController(UserCharacterController owner, AbilityServerData abilityServerData)
     {
         characterController = owner;
+
+        points = abilityServerData.ParsPoint();
+        stats = new Stat[] { new(abilityServerData.ParseStat()) };
+        state = new int[] { abilityServerData.hp, abilityServerData.mp, abilityServerData.exp };
         ability = new(abilityServerData);
     }
 

@@ -7,21 +7,21 @@ using static ServerData;
 public class Equip : Item
 {
     public int PossableCount { get { return possableCount; } }
-    int possableCount;
+    [SerializeField] int possableCount;
     public Stat UpgradeStat { get { return upgradeStat; } }
-    Stat upgradeStat;
+    [SerializeField] Stat upgradeStat;
     public AdditionalStat UpgradeAdditional { get { return upgradeAdditional; } }
-    AdditionalStat upgradeAdditional;
+    [SerializeField] AdditionalStat upgradeAdditional;
     public EquipType WearType { get { return wearType; } }
-    EquipType wearType;
+    [SerializeField] EquipType wearType;
     public int Level { get { return level; } }
-    int level;
+    [SerializeField] int level;
     public Stat LimitStat { get { return limitStat; } }
-    Stat limitStat; //착용 제한
+    [SerializeField] Stat limitStat; //착용 제한
     public Stat BaseStat { get { return baseStat; } }
-    Stat baseStat; //기본 능력치
+    [SerializeField] Stat baseStat; //기본 능력치
     public AdditionalStat BaseAdditional { get { return baseAdditional; } }
-    AdditionalStat baseAdditional;
+    [SerializeField] AdditionalStat baseAdditional;
 
     public Equip(
         out Action<(int itemType, int count, int category)> _Init, 

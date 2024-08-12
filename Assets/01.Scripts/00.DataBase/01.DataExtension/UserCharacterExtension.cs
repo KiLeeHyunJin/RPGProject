@@ -11,18 +11,26 @@ public static class UserCharacterExtension
     {
         return character.jobLv.ExtractByte(DataDefine.ShortSize.Two);
     }
-    public static (int cap, int shirt, int pant, int shoes, int glove, int weapon) ParseCloth(this CharacterServerData character)
+    public static (int cap, int shirt, int pant, int shoes) ParseCloth(this CharacterServerData character)
     {
         return
             (
-                character.cloth.ExtractByte(DataDefine.LongSize.One),
-                character.cloth.ExtractByte(DataDefine.LongSize.Two),
-                character.cloth.ExtractByte(DataDefine.LongSize.Three),
-                character.cloth.ExtractByte(DataDefine.LongSize.Four),
-                character.cloth.ExtractByte(DataDefine.LongSize.Five),
-                character.cloth.ExtractByte(DataDefine.LongSize.Six)
+                character.cloth.ExtractByte(DataDefine.IntSize.One),
+                character.cloth.ExtractByte(DataDefine.IntSize.Two),
+                character.cloth.ExtractByte(DataDefine.IntSize.Three),
+                character.cloth.ExtractByte(DataDefine.IntSize.Four)
             );
     }
+
+    public static (int weapon, int glove) ParseOtherCloth(this CharacterServerData character)
+    {
+        return
+            (
+                character.otherCloth.ExtractByte(DataDefine.IntSize.One),
+                character.otherCloth.ExtractByte(DataDefine.IntSize.Two)
+            );
+    }
+
     public static (int hair, int face, int skin) ParseSkin(this CharacterServerData character)
     {
         return

@@ -29,8 +29,6 @@ public class ItemData
         Action<(int itemType, int count, int category)> _Init;
         Action<string, string, int, Sprite, int> _SetEctData;
 
-
-
         switch (type)
         {
             case ItemType.Equip:
