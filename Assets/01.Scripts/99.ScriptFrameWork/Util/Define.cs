@@ -144,7 +144,13 @@ public class Define
         Equip,
     }
 
-
+    public enum CharacterStatType
+    {
+        Str,
+        Def,
+        Man,
+        Luk
+    }
 
     public enum InteractionType
     {

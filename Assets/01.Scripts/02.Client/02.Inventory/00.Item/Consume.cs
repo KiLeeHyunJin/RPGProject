@@ -12,6 +12,7 @@ public  class Consume : Item, IKeyAttachable
     int value;
 
     public int DuringValue { get { return duringValue; } }
+
     int duringValue;
 
     public Consume(

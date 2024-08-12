@@ -32,4 +32,13 @@ public struct AdditionalStat
         returnValue |= speed.Shift(DataDefine.IntSize.Four);
         return returnValue;
     }
+
+    public static AdditionalStat operator +(AdditionalStat inValue, AdditionalStat currentValue)
+    {
+        return new AdditionalStat(
+            inValue.power + currentValue.power,
+            inValue.magic + currentValue.magic,
+            inValue.defence + currentValue.defence,
+            inValue.speed + currentValue.speed);
+    }
 }

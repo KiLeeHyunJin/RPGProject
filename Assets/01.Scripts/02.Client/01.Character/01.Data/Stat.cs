@@ -1,4 +1,5 @@
 using System;
+using UnityEditor.Experimental.GraphView;
 [Serializable]
 public struct Stat
 {
@@ -16,6 +17,8 @@ public struct Stat
         man = value._man;
         luk = value._luk;
     }
+
+  
     public int WarningDef { set { str = value; } }
     public int Def { get { return str; } }
     int def;
@@ -37,4 +40,13 @@ public struct Stat
         returnValue |= luk.Shift(DataDefine.IntSize.Four);
         return returnValue;
     }
+
+        public static Stat operator +(Stat inValue, Stat currentValue)
+        {
+            return new Stat(
+                inValue.str + currentValue.str,
+                inValue.def + currentValue.def,
+                inValue.man + currentValue.man,
+                inValue.luk + currentValue.luk);
+        }
 }
